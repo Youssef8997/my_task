@@ -47,7 +47,7 @@ class layoutCuibt extends Cubit<mytasks> {
     ),
     AppBar(
       toolbarHeight: 40,
-      title: const Text("All task"),
+      title: const Text("insight"),
     ),
   ];
   List<BottomNavyBarItem> ItemNav = [
@@ -74,9 +74,9 @@ class layoutCuibt extends Cubit<mytasks> {
         activeColor: Colors.pink),
     BottomNavyBarItem(
         icon: const Icon(
-          Icons.event,
+          Icons.insert_chart,
         ),
-        title: const Text('calender '),
+        title: const Text('insight '),
         activeColor: Colors.blue),
   ];
   void ChangeIndex(index) {
