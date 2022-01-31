@@ -5,25 +5,15 @@ import 'package:flutter/material.dart';
 
 class insight extends StatelessWidget {
   @override
-  Widget build(BuildContext context) => Container(
-    padding:EdgeInsets.all(20),
-    child: LineChart(
-      LineChartData(
-          maxX: 10,
-          minX: 0,
-          minY:0,
-          maxY:6,
-          lineBarsData: [
-            LineChartBarData(
-              spots: [
-                FlSpot(4,0)
-              ]
-            )
-          ])
+  Widget build(BuildContext context) {
+    return Container(
+      child:Column(
+        children: [
+          Container(
 
-
-
-      ),
-  );
-
+          )
+        ],
+      ) ,
+    );
+  }
 }
