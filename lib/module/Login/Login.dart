@@ -3,7 +3,7 @@ import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:hexcolor/hexcolor.dart';
+
 import 'package:my_task/Componads/Com.dart';
 import 'package:my_task/Componads/my%20textformfild.dart';
 import 'package:my_task/Componads/mybutton.dart';

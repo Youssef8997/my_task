@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:my_task/Componads/Com.dart';
+import 'package:my_task/module/Gamespointer/jokarpoint/JokarPoint.dart';
 
 class GamePointer extends StatelessWidget {
   @override
@@ -6,22 +8,25 @@ class GamePointer extends StatelessWidget {
     return Column(
       children: [
         Pointscore(),
-        Rewgame( icon:  Icon(Icons.style,size: 40,),text:  "Jokar"),
+        InWell( icon:  Icon(Icons.style,size: 40,),text:  "Jokar",context:context  ),
         SizedBox(height: 30,),
-        Rewgame(icon:  Icon(Icons.sports_basketball,size: 40,),text: "football"),
+        InWell(icon:  Icon(Icons.sports_basketball,size: 40,color: Colors.blue),text: "football"),
         SizedBox(height: 30,),
-        Rewgame( icon: Icon(Icons.sports_volleyball,size: 40,),text:  "volleyball"),
+        InWell( icon: Icon(Icons.sports_volleyball,size: 40,color: Colors.deepOrange),text:  "volleyball"),
         SizedBox(height: 30,),
       ],
     );
   }
 
-  Row Rewgame({required Widget icon,required String text}) {
-    return Row(children:  [
-      icon,
-      const SizedBox(width: 10,),
-      Text(text,style: TextStyle(fontSize: 25.0,fontWeight: FontWeight.bold),),
-    ],);
+  InkWell InWell({required Widget icon,required String text,context}) {
+    return InkWell(
+      onTap: ()=>NEV(bool:true,context: context,page: JokarPoint()),
+      child: Row(children:  [
+        icon,
+        const SizedBox(width: 10,),
+        Text(text,style: TextStyle(fontSize: 25.0,fontWeight: FontWeight.bold),),
+      ],),
+    );
   }
 }
 
