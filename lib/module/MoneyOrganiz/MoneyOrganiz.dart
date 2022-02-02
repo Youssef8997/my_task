@@ -7,32 +7,52 @@ class MoneyOraganize extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
-    double precent = .3;
+    double sallary=0;
+    double sallaryAfter=0;
+    double precent =( sallaryAfter/sallary);
 
     return SafeArea(
       top: true,
-      minimum: EdgeInsets.only(top: 20),
+
+      minimum: sallary!=0?const EdgeInsets.only(top: 20):EdgeInsets.only(top: 0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          precentge_circular(size, precent),
-         Expanded(
-           child: GridView.count(
-             crossAxisCount: 2,
-             children: List.generate(Category.length, (index) =>Catogry_Avatar(Category[index])),
-             scrollDirection:Axis.horizontal,
-             physics: BouncingScrollPhysics( ),
+          if(sallary!=0)
+          precentge_circular(size, precent)
+          else
+            Stack(
+              children: [
+                Wallpaperstack(size),
+                Center(child: const Text("Please Enter your sallary",style: TextStyle(
+                  fontWeight: FontWeight.w900,
+                  fontSize: 20.0,
+                  fontStyle: FontStyle.italic,
+                  color: Colors.white
+
+                ),)),
+              ],
+            ),
 
 
-
-
-
-           ),
-         )
+          if(sallary!=0)
+            CirculeCatogery()
 
         ],
       ),
     );
+  }
+
+  Expanded CirculeCatogery() {
+    return Expanded(
+         child: GridView.count(
+           crossAxisCount: 2,
+           children: List.generate(Category.length, (index) =>Catogry_Avatar(Category[index])),
+           scrollDirection:Axis.horizontal,
+           physics: const BouncingScrollPhysics( ),
+
+         ),
+       );
   }
 
   Column Catogry_Avatar(CategoryModel model) {
@@ -51,7 +71,7 @@ class MoneyOraganize extends StatelessWidget {
         ),
         Text(
           model.title!,
-          style: TextStyle(fontWeight: FontWeight.bold),
+          style: const TextStyle(fontWeight: FontWeight.bold),
         ),
       ],
     );
@@ -75,6 +95,15 @@ arcBackgroundColor:Colors.blueGrey ,
         curve: Curves.easeInCubic,
         arcType: ArcType.FULL,
       ),
+    );
+  }
+  SizedBox Wallpaperstack(Size size) {
+    return SizedBox(
+      height: size.height-150,
+      width: size.width,
+      child: Image.network(
+          "https://i.pinimg.com/736x/84/4d/4e/844d4efabe3090669106e4c5fd81ca04.jpg",
+          fit: BoxFit.fill),
     );
   }
 }
@@ -107,11 +136,8 @@ class CategoryModel {
     title: "Travel"
 ,  ),
   CategoryModel(
-      Photo: "https://thumbs.dreamstime.com/b/travel-logo-vector-illustration-black-airplane-isolated-white-115729130.jpg",
-    title: "Travel"
+    Photo: "https://images.creativemarket.com/0.1.0/ps/6709868/1820/1214/m1/fpnw/wm0/logo-template-44-.jpg?1563600810&s=be7f251c961b5b5a02423aa4acd264f0",
+    title: "money saving"
 ,  ),
-  CategoryModel(
-      Photo: "https://thumbs.dreamstime.com/b/travel-logo-vector-illustration-black-airplane-isolated-white-115729130.jpg",
-    title: "Travel"
-,  ),
+
 ];
