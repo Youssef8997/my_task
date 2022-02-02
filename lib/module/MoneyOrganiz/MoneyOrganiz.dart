@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:my_task/lib/sherdeprefrence/sherdhelp.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 
@@ -9,22 +10,34 @@ class MoneyOraganize extends StatelessWidget {
   var SalaryContoralr=TextEditingController();
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
-    double sallary= 0;
+    double sallary=sherdprefrence.getdate(key: "salary")!=null?sherdprefrence.getdate(key: "salary"):0;
     double sallaryAfter=sallary;
     double precent =( sallaryAfter/sallary);
+    return SafeArea(
+      top: true,
+      minimum:const EdgeInsets.only(top: 20),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          if(sallary!=0)
+          precentge_circular(size, precent),
+          if(sallary!=0)
+          CirculeCatogery()
+          else
+            Stack0salary(size),
 
+
+
+
+
+        ],
+      ),
+    );
+  }
+
+  Widget Stack0salary(Size size) {
     return SingleChildScrollView(
-      child: SafeArea(
-        top: true,
-
-        minimum: sallary!=0?const EdgeInsets.only(top: 20):EdgeInsets.only(top: 0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            if(sallary!=0)
-            precentge_circular(size, precent)
-            else
-              Stack(
+      child: Stack(
                 alignment: AlignmentDirectional.topCenter,
                 children: [
                   Wallpaperstack(size),
@@ -47,24 +60,15 @@ class MoneyOraganize extends StatelessWidget {
                           prefixIcon: Icon(Icons.money,color: Colors.green,)
                         ),
                         onFieldSubmitted: (String){
-                          
+                          sherdprefrence.setdate(key: "salary", value: double.parse(String));
                         },
                       ),
                     ),
                   )
                 ],
               ),
-
-
-            if(sallary!=0)
-              CirculeCatogery()
-
-          ],
-        ),
-      ),
     );
   }
-
   Positioned Textupmoney() {
     return const Positioned(
                   top:80,
@@ -79,11 +83,14 @@ class MoneyOraganize extends StatelessWidget {
 
   Expanded CirculeCatogery() {
     return Expanded(
+
          child: GridView.count(
+           scrollDirection:Axis.horizontal,
+           physics: const BouncingScrollPhysics(),
            crossAxisCount: 2,
            children: List.generate(Category.length, (index) =>Catogry_Avatar(Category[index])),
-           scrollDirection:Axis.horizontal,
-           physics: const BouncingScrollPhysics( ),
+
+
 
          ),
        );

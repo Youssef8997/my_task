@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:my_task/Componads/Com.dart';
+import 'package:my_task/lib/sherdeprefrence/sherdhelp.dart';
 import 'package:my_task/module/AddTasks/AddTasks.dart';
 import 'package:my_task/module/AllTaks/AllTasks.dart';
 import 'package:my_task/module/MoneyOrganiz/MoneyOrganiz.dart';
@@ -38,6 +39,16 @@ class layoutCuibt extends Cubit<mytasks> {
     AppBar(
       title: const Text("business"),
       toolbarHeight: 40,
+      actions: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            Icon(Icons.attach_money,color: Colors.green,),
+            Text("${sherdprefrence.getdate(key: "salary")}"),
+            SizedBox(width: 10,)
+          ],
+        )
+      ],
     ),
     AppBar(
       title: const Text("Game Point"),
