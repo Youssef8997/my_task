@@ -7,13 +7,13 @@ class GamePointer extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Pointscore(),
-        InWell( icon:  Icon(Icons.style,size: 40,),text:  "Jokar",context:context  ),
-        SizedBox(height: 30,),
-        InWell(icon:  Icon(Icons.sports_basketball,size: 40,color: Colors.blue),text: "football"),
-        SizedBox(height: 30,),
-        InWell( icon: Icon(Icons.sports_volleyball,size: 40,color: Colors.deepOrange),text:  "volleyball"),
-        SizedBox(height: 30,),
+        const Pointscore(),
+        InWell( icon:  const Icon(Icons.style,size: 40,),text:  "Jokar",context:context  ),
+        const SizedBox(height: 30,),
+        InWell(icon:  const Icon(Icons.sports_basketball,size: 40,color: Colors.blue),text: "football"),
+        const SizedBox(height: 30,),
+        InWell( icon: const Icon(Icons.sports_volleyball,size: 40,color: Colors.deepOrange),text:  "volleyball"),
+        const SizedBox(height: 30,),
       ],
     );
   }
@@ -24,7 +24,7 @@ class GamePointer extends StatelessWidget {
       child: Row(children:  [
         icon,
         const SizedBox(width: 10,),
-        Text(text,style: TextStyle(fontSize: 25.0,fontWeight: FontWeight.bold),),
+        Text(text,style: const TextStyle(fontSize: 25.0,fontWeight: FontWeight.bold),),
       ],),
     );
   }
