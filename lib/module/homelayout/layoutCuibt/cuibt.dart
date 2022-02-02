@@ -38,7 +38,6 @@ class layoutCuibt extends Cubit<mytasks> {
     AppBar(
       title: const Text("business"),
       toolbarHeight: 40,
-
     ),
     AppBar(
       title: const Text("Game Point"),

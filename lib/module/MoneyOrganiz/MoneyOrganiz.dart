@@ -1,46 +1,80 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 
 class MoneyOraganize extends StatelessWidget {
   @override
+  var SalaryContoralr=TextEditingController();
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
-    double sallary=0;
-    double sallaryAfter=0;
+    double sallary= 0;
+    double sallaryAfter=sallary;
     double precent =( sallaryAfter/sallary);
 
-    return SafeArea(
-      top: true,
+    return SingleChildScrollView(
+      child: SafeArea(
+        top: true,
 
-      minimum: sallary!=0?const EdgeInsets.only(top: 20):EdgeInsets.only(top: 0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          if(sallary!=0)
-          precentge_circular(size, precent)
-          else
-            Stack(
-              children: [
-                Wallpaperstack(size),
-                Center(child: const Text("Please Enter your sallary",style: TextStyle(
-                  fontWeight: FontWeight.w900,
-                  fontSize: 20.0,
-                  fontStyle: FontStyle.italic,
-                  color: Colors.white
+        minimum: sallary!=0?const EdgeInsets.only(top: 20):EdgeInsets.only(top: 0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            if(sallary!=0)
+            precentge_circular(size, precent)
+            else
+              Stack(
+                alignment: AlignmentDirectional.topCenter,
+                children: [
+                  Wallpaperstack(size),
+                  Textupmoney(),
+                  Positioned(
+                     top: 200,
+                    right: 20,
+                    left: 20,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.grey[300],
+                        borderRadius: BorderRadiusDirectional.circular(25.0)
+                      ),
+                      child: TextFormField(
+                        controller: SalaryContoralr,
+                        keyboardType: TextInputType.number,
+                        decoration:InputDecoration(
+                          border:InputBorder.none,
+                           hintText: "Write your salary",
+                          prefixIcon: Icon(Icons.money,color: Colors.green,)
+                        ),
+                        onFieldSubmitted: (String){
+                          
+                        },
+                      ),
+                    ),
+                  )
+                ],
+              ),
 
-                ),)),
-              ],
-            ),
 
+            if(sallary!=0)
+              CirculeCatogery()
 
-          if(sallary!=0)
-            CirculeCatogery()
-
-        ],
+          ],
+        ),
       ),
     );
+  }
+
+  Positioned Textupmoney() {
+    return const Positioned(
+                  top:80,
+                  child:  Text("Please Enter your salary",style: TextStyle(
+                fontWeight: FontWeight.w900,
+                fontSize: 20.0,
+                fontStyle: FontStyle.italic,
+                color: Colors.white
+
+              ),));
   }
 
   Expanded CirculeCatogery() {
@@ -102,7 +136,7 @@ arcBackgroundColor:Colors.blueGrey ,
       height: size.height-150,
       width: size.width,
       child: Image.network(
-          "https://i.pinimg.com/736x/84/4d/4e/844d4efabe3090669106e4c5fd81ca04.jpg",
+          "https://i.pinimg.com/564x/f9/03/8b/f9038bf30b6832c298cf495a0bdeba68.jpg",
           fit: BoxFit.fill),
     );
   }
