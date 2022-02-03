@@ -67,7 +67,7 @@ class MoneyOraganize extends StatelessWidget {
                     border: InputBorder.none,
                     hintText: "Write your salary",
                     prefixIcon: Icon(
-                      Icons.money,
+                      Icons.attach_money,
                       color: Colors.green,
                     )),
                 onFieldSubmitted: (String) {

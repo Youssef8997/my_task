@@ -20,6 +20,8 @@ class layoutCuibt extends Cubit<mytasks> {
   late Database datab;
   List<Map> tasks=[];
   List<Map> task=[];
+  List<Map> Budget=[];
+  List<Map> BudgetAfter=[];
   PageController pageController = PageController();
   var currentStep=0;
   var firstvalue="5 Min";
@@ -100,19 +102,19 @@ class layoutCuibt extends Cubit<mytasks> {
     datab =
         await openDatabase("endtask.db", version: 1, onCreate: (datab, version) {
       print("create data base");
-      datab.execute(
-              'CREATE TABLE TASKS (id INTEGER PRIMARY KEY,title TEXT,desc TEXT,data TEXT ,time STRING,repeat INTEGER,priority TEXT)')
-      //datab.execute('CREATE TABLE TASK (id INTEGER PRIMARY KEY,title TEXT,data TEXT ,time STRING,status TEXT)')
-          .then((value) {
-        print("creat table");
+      datab.execute('CREATE TABLE TASKS (id INTEGER PRIMARY KEY,title TEXT,desc TEXT,data TEXT ,time STRING,repeat INTEGER,priority TEXT)');
+          datab.execute('CREATE TABLE BUDGET (id INTEGER PRIMARY KEY,title TEXT,desc TEXT,MONEY num, MONEYAfter num,data STRING,catogry TEXT)')
+              .then((value) {
         emit(CreateDataBaseSucssesful());
       }).catchError((error) {
         print("error is${error.toString()}");
         emit(CreateDataBaseError());
       });
     }, onOpen: (datab) {
+          print("creat TASKS,BUDGET");
       print("open data base");
       getdate(datab).then((value) {
+        getBUDGETafterchange();
         task=value;
         task.forEach((element) {
          if(element["data"]==Ondate)
@@ -130,6 +132,9 @@ class layoutCuibt extends Cubit<mytasks> {
   Future<List<Map>> getdate(datab) async {
     return  await datab.rawQuery('SELECT*FROM TASKS');
   }
+  Future<List<Map>> getdatebudget(datab) async {
+    return  await datab.rawQuery('SELECT*FROM BUDGET');
+  }
   void getdataafterchange(){
     getdate(datab).then((value) {
       task=[];
@@ -138,6 +143,17 @@ class layoutCuibt extends Cubit<mytasks> {
       task.forEach((element) {
         if(element["data"]==Ondate)
           tasks.add(element);
+        emit(GetDataBaseSucssesful());
+      });
+    });
+  }
+  void getBUDGETafterchange(){
+    getdatebudget(datab).then((value) {
+      Budget=[];
+      BudgetAfter=[];
+      Budget=value;
+      BudgetAfter.forEach((element) {
+        BudgetAfter.add(element);
         emit(GetDataBaseSucssesful());
       });
     });
