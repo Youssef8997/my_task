@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:my_task/Componads/Com.dart';
+import 'package:my_task/module/SpalshScreen/Spalsh.dart';
 import 'package:my_task/module/homelayout/layout.dart';
 import 'package:my_task/module/homelayout/layoutCuibt/cuibt.dart';
 import 'lib/sherdeprefrence/sherdhelp.dart';
@@ -44,7 +45,7 @@ class MyApp extends StatelessWidget {
                     fontStyle: FontStyle.italic
 
                   ))),
-          home: homelayout(),
+          home: Spalsh(),
         ));
   }
 }
