@@ -68,16 +68,18 @@ class _HomeTasksState extends State<HomeTasks> {
                     topRight: Radius.circular(100),
                   ),
                 ),
-                child: ListView.separated(
-                  physics: const BouncingScrollPhysics(),
-                    itemBuilder: (context, index)
-                    {
-                      if(tasj[index]["data"]==ondate||tasj[index]["data"]=="")
-                      return TaskCard(tasj[index], context);
-                      else return SizedBox(height:0,) ;
-                      },
-                    separatorBuilder: (context,index)=>const SizedBox(height: 1,),
-                    itemCount: tasj.length),
+                child: Expanded(
+                  child: ListView.separated(
+                    physics: const BouncingScrollPhysics(),
+                      itemBuilder: (context, index)
+                      {
+                        if(tasj[index]["data"]==ondate||tasj[index]["data"]=="")
+                        return TaskCard(tasj[index], context);
+                        else return SizedBox(height:0,) ;
+                        },
+                      separatorBuilder: (context,index)=>const SizedBox(height: 1,),
+                      itemCount: tasj.length),
+                ),
               );
   }
 
@@ -344,13 +346,13 @@ blur:3,
               children: [
 
                 Positioned(
-                    left:45,
-                    top: 280,
+                    left:50,
+                    top: 285,
                     right: 100,
                     child: emptydialogcontainer(taskHighColors, TASKS)),
                 Positioned(
                     left:55,
-                    top: 285,
+                    top: 280,
                     right:100,
                     child: emptydialogcontainer(TaskMedColors, TASKS)),
                 AlertDialog(

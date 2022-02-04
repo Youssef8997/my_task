@@ -1,11 +1,19 @@
+import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:hexcolor/hexcolor.dart';
 import 'package:my_task/lib/sherdeprefrence/sherdhelp.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 
-class MoneyOraganize extends StatelessWidget {
+class MoneyOraganize extends StatefulWidget {
+  @override
+  State<MoneyOraganize> createState() => _MoneyOraganizeState();
+}
+var controlar =PageController(
+  initialPage: 0
+);
+class _MoneyOraganizeState extends State<MoneyOraganize> {
   @override
   var SalaryContoralr = TextEditingController();
 
@@ -17,16 +25,19 @@ class MoneyOraganize extends StatelessWidget {
     double sallaryAfter = sallary;
     double precent = (sallaryAfter / sallary);
     return SafeArea(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          if (sallary != 0)
-            EndWidget(size, precent,sallaryAfter)
-          else Stack0salary(size),
-        ],
+      child: PageView(
+        controller: controlar,
+scrollDirection: Axis.horizontal,
+      children: [
+        EndWidget(size, precent,sallaryAfter),
+        Stack0salary(size,sallary)
+      ],
+
       ),
     );
   }
+
+
   Widget EndWidget(size, precent,sallaryAfter) {
     return Stack(
       children: [
@@ -45,42 +56,86 @@ class MoneyOraganize extends StatelessWidget {
       ],
     );
   }
-  Widget Stack0salary(Size size) {
-    return SingleChildScrollView(
-      child: Stack(
-        alignment: AlignmentDirectional.topCenter,
-        children: [
-          Wallpaperstack(size),
-          Textupmoney(),
-          Positioned(
-            top: 200,
-            right: 20,
-            left: 20,
-            child: Container(
-              decoration: BoxDecoration(
-                  color: Colors.grey[300],
-                  borderRadius: BorderRadiusDirectional.circular(25.0)),
-              child: TextFormField(
-                controller: SalaryContoralr,
-                keyboardType: TextInputType.number,
-                decoration: InputDecoration(
-                    border: InputBorder.none,
-                    hintText: "Write your salary",
-                    prefixIcon: Icon(
-                      Icons.attach_money,
-                      color: Colors.green,
-                    )),
-                onFieldSubmitted: (String) {
-                  sherdprefrence.setdate(
-                      key: "salary", value: double.parse(String));
-                },
+
+  Widget Stack0salary(Size size,sallary) {
+    return ConditionalBuilder(
+        condition:sallary!=0 ,
+        builder: (context){
+          return Stack(
+            alignment: AlignmentDirectional.center,
+            children: [
+              Wallpaperstack(size),
+              Transactions()
+            ],
+          );
+
+        },
+        fallback:(context){
+          return Stack(
+          alignment: AlignmentDirectional.topCenter,
+          children: [
+            Wallpaperstack(size),
+            Textupmoney(),
+            Positioned(
+              top: 200,
+              right: 20,
+              left: 20,
+              child: Container(
+                decoration: BoxDecoration(
+                    color: Colors.grey[300],
+                    borderRadius: BorderRadiusDirectional.circular(25.0)),
+                child: TextFormField(
+                  controller: SalaryContoralr,
+                  keyboardType: TextInputType.number,
+                  decoration: const InputDecoration(
+                      border: InputBorder.none,
+                      hintText: "Write your salary",
+                      prefixIcon: Icon(
+                        Icons.attach_money,
+                        color: Colors.green,
+                      )),
+                  onFieldSubmitted: (String) {
+                    setState(() {
+                      sherdprefrence.setdate(
+                          key: "salary", value: double.parse(String));
+                    });
+
+                  },
+                ),
               ),
-            ),
-          )
-        ],
-      ),
+            )
+          ],
+        );}
     );
+
+
   }
+
+  Container Transactions() {
+    return Container(
+              width: 135,
+              height: 135,
+              decoration: BoxDecoration(
+                color: Colors.white,
+borderRadius: BorderRadiusDirectional.circular(25)
+
+              ),
+               child: Column(
+                 children: [
+                   Catogry_Avatar(Category[0]),
+                   SizedBox(height:10,),
+                   Text(
+                       "200LE",
+                     style: TextStyle(
+                       fontSize: 15,
+                       fontWeight: FontWeight.bold
+                     ),
+                   ),
+                 ],
+               ),
+            );
+  }
+
   Positioned Textupmoney() {
     return const Positioned(
         top: 80,
@@ -93,6 +148,7 @@ class MoneyOraganize extends StatelessWidget {
               color: Colors.white),
         ));
   }
+
   Widget CirculeCatogery() {
     return GridView.count(
       scrollDirection: Axis.horizontal,
@@ -102,27 +158,28 @@ class MoneyOraganize extends StatelessWidget {
           Category.length, (index) => Catogry_Avatar(Category[index])),
     );
   }
+
   Column Catogry_Avatar(CategoryModel model) {
     return Column(
       children: [
         CircleAvatar(
           radius: 51,
           backgroundColor: Colors.pinkAccent,
+          foregroundColor: Colors.white,
           child: CircleAvatar(
-            backgroundImage: NetworkImage(
+            foregroundColor: Colors.white,
+            backgroundImage: AssetImage(
               model.Photo!,
             ),
             radius: 50.0,
             backgroundColor: Colors.white,
           ),
         ),
-        Text(
-          model.title!,
-          style: const TextStyle(fontWeight: FontWeight.bold,color: Colors.pinkAccent),
-        ),
+
       ],
     );
   }
+
   Widget precentge_circular(Size size, double precent,) {
     return SizedBox(
       height: size.height * .3,
@@ -132,10 +189,12 @@ class MoneyOraganize extends StatelessWidget {
         lineWidth: 10,
         percent: precent,
         center: Text("${(precent * 100).ceil()}%",
-            style: TextStyle(color: Colors.white,
-            fontWeight: FontWeight.bold)),
-        progressColor: HexColor("#ED9797"),
-        arcBackgroundColor: Colors.blueGrey,
+            style: const TextStyle(color: Colors.white,
+            fontWeight: FontWeight.bold,
+            fontSize: 20
+            )),
+        progressColor: Colors.blueGrey,
+        arcBackgroundColor: Colors.white54,
         animation: true,
         addAutomaticKeepAlive: true,
         animationDuration: 1200,
@@ -145,12 +204,13 @@ class MoneyOraganize extends StatelessWidget {
       ),
     );
   }
+
   SizedBox Wallpaperstack(Size size) {
     return SizedBox(
       height: size.height - 150,
       width: size.width,
       child: Image.network(
-          "https://i.pinimg.com/564x/f9/03/8b/f9038bf30b6832c298cf495a0bdeba68.jpg",
+          "https://i.pinimg.com/564x/50/d3/94/50d3946207b67b305a24886f1d593c50.jpg",
           fit: BoxFit.fill),
     );
   }
@@ -166,32 +226,29 @@ class CategoryModel {
 List<CategoryModel> Category = [
   CategoryModel(
     Photo:
-        "https://static.mbshosting.co.uk/eis-bw/media/New%20brand%20icons/PNGs/House%20illustration%201.png",
+        "lib/Image/House illustration 1.png",
     title: "home",
   ),
   CategoryModel(
     Photo:
-        "https://www.logopik.com/wp-content/uploads/edd/2018/07/Clothing-Logo-Vector.png",
+        "lib/Image/Clothing-Logo-Vector.png",
     title: "Clothes",
   ),
   CategoryModel(
     Photo:
-        "https://www.pinclipart.com/picdir/middle/336-3368754_healthcare-it-solution-provider-health-insurance-logo-png.png",
+        "lib/Image/helthcare.jpg",
     title: "Health care",
   ),
   CategoryModel(
-    Photo:
-        "https://cdn3.vectorstock.com/i/1000x1000/30/87/group-young-friends-having-fun-together-vector-26803087.jpg",
+    Photo:"lib/Image/group-young-friends-having-fun-together-vector-26803087.jpg",
     title: "fun",
   ),
   CategoryModel(
-    Photo:
-        "https://thumbs.dreamstime.com/b/travel-logo-vector-illustration-black-airplane-isolated-white-115729130.jpg",
+    Photo:"lib/Image/travel-logo-vector-illustration-black-airplane-isolated-white-115729130.jpg",
     title: "Travel",
   ),
   CategoryModel(
-    Photo:
-        "https://images.creativemarket.com/0.1.0/ps/6709868/1820/1214/m1/fpnw/wm0/logo-template-44-.jpg?1563600810&s=be7f251c961b5b5a02423aa4acd264f0",
+    Photo:"lib/Image/logo-template-44-.jpg",
     title: "money saving",
   ),
 ];
