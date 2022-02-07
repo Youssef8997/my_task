@@ -2,7 +2,6 @@ import 'package:bottom_navy_bar/bottom_navy_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
-import 'package:my_task/Componads/Com.dart';
 import 'package:my_task/lib/sherdeprefrence/sherdhelp.dart';
 import 'package:my_task/module/AddTasks/AddTasks.dart';
 import 'package:my_task/module/AllTaks/AllTasks.dart';
@@ -10,29 +9,39 @@ import 'package:my_task/module/MoneyOrganiz/MoneyOrganiz.dart';
 import 'package:my_task/module/MyTasks/MyTasks.dart';
 import 'package:my_task/module/homelayout/layoutCuibt/loginstates.dart';
 import 'package:sqflite/sqflite.dart';
-
-import '../../../Componads/my textformfild.dart';
 import '../../Gamespointer/GamePointer.dart';
 class layoutCuibt extends Cubit<mytasks> {
-  layoutCuibt() : super(mytasksstateinis());
+  layoutCuibt() : super(mytasksstateinisal());
   static layoutCuibt get(context) => BlocProvider.of(context);
   var MyIndex = 0;
   late Database datab;
   List<Map> tasks=[];
   List<Map> task=[];
   List<Map> Budget=[];
-  List<Map> BudgetAfter=[];
-  PageController pageController = PageController();
+  double sallary=sherdprefrence.getdate(key: "salary") != null
+      ? sherdprefrence.getdate(key: "salary")
+      : 0;
+   late double sallaryAfter =Budget.isNotEmpty?double.parse(Budget[Budget.length-1]["MONEYAfter"].toString()):sherdprefrence.getdate(key: "salary");
   var currentStep=0;
+  bool bottomshown=false;
+  var kayscafold=GlobalKey<ScaffoldState>();
+  var kayform=GlobalKey<FormState>();
   var firstvalue="5 Min";
   var Scondvalue="low";
   var Ondate=DateFormat.yMMMd().format(DateTime.now());
+  var titleContoralr = TextEditingController();
+  var desContoralr = TextEditingController();
+  var catagoryContoralr = TextEditingController();
+  var dataContoralr = TextEditingController();
+  var moneyContoralr = TextEditingController();
+  var controlar = PageController(initialPage: 0);
   List body = [
     HomeTasks(),
     MoneyOraganize(),
     GamePointer(),
     insight(),
   ];
+
   List<PreferredSizeWidget> appbar = [
     AppBar(
       title: const Text("Today Task"),
@@ -41,16 +50,6 @@ class layoutCuibt extends Cubit<mytasks> {
     AppBar(
       title: const Text("business"),
       toolbarHeight: 40,
-      actions: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            Icon(Icons.attach_money,color: Colors.green,),
-            Text("${sherdprefrence.getdate(key: "salary")}"),
-            SizedBox(width: 10,)
-          ],
-        )
-      ],
     ),
     AppBar(
       title: const Text("Game Point"),
@@ -111,20 +110,24 @@ class layoutCuibt extends Cubit<mytasks> {
         emit(CreateDataBaseError());
       });
     }, onOpen: (datab) {
-          print("creat TASKS,BUDGET");
+
       print("open data base");
       getdate(datab).then((value) {
-        getBUDGETafterchange();
         task=value;
         task.forEach((element) {
          if(element["data"]==Ondate)
            tasks.add(element);
         });
         print(tasks);
-
+emit(GetDatatasksSucssesful());
       }).catchError((Error){
         print("the error is ${Error.toString()}");
         emit(GetDataBaseError());
+      });
+      getdatebudget(datab).then((value) {
+        Budget = [];
+        Budget = value;
+        emit(GetDatabudgetSucssesful());
       });
     });
   }
@@ -143,32 +146,53 @@ class layoutCuibt extends Cubit<mytasks> {
       task.forEach((element) {
         if(element["data"]==Ondate)
           tasks.add(element);
-        emit(GetDataBaseSucssesful());
+        emit(GetDatatasksSucssesful());
       });
     });
   }
   void getBUDGETafterchange(){
     getdatebudget(datab).then((value) {
       Budget=[];
-      BudgetAfter=[];
       Budget=value;
-      BudgetAfter.forEach((element) {
-        BudgetAfter.add(element);
-        emit(GetDataBaseSucssesful());
-      });
+print(Budget);
+emit(getsallaryafter());
     });
   }
   //insert new task in Datebase
-  Future insert({required title, required desc, required time, required date, required repeat, required priority}) async
-  {
+  Future insert({required title, required desc, required time, required date, required repeat, required priority}) async {
     await datab.transaction((txn) {
-      txn
-          .rawInsert(
+      txn.rawInsert(
               'INSERT INTO TASKS(title,desc,time,data,repeat,priority)VALUES("$title","$desc","$time","$date","$repeat","$priority")')
 
           .then((value) {
         print("$value insertetd sucsseffly");
         getdataafterchange();
+      }).catchError((error) {
+        print(" the error is ${error.toString()}");
+        emit(InsertDataBaseError());
+      });
+      return getname();
+    });
+  }
+  //insert new budget in Datebase
+  Future insertbudget({required title, required desc, required MONEY, required data, required catogry}) async {
+    await datab.transaction((txn) {
+      txn.rawInsert(
+              'INSERT INTO BUDGET(title,desc,MONEY,MONEYAfter,data,catogry)VALUES("$title","$desc","$MONEY","${sallaryAfter-MONEY}","$data","$catogry")')
+          .then((value) {
+        print("$value inserted successes");
+        getdatebudget(datab).then((value) {
+          Budget=[];
+          Budget=value;
+          print(Budget);
+          changeprecent(sallaryAfter-MONEY);
+          emit(getsallaryafter());
+        });
+       titleContoralr.clear();
+    desContoralr.clear();
+      moneyContoralr.clear();
+      dataContoralr.clear();
+      catagoryContoralr.clear();
       }).catchError((error) {
         print(" the error is ${error.toString()}");
         emit(InsertDataBaseError());
@@ -252,6 +276,23 @@ class layoutCuibt extends Cubit<mytasks> {
       emit(OnPressedonStepper());
     }
   }
-
-
+  void changeprecent(value){
+    print(sallaryAfter);
+    sallaryAfter=double.parse(value.toString());
+    emit(getsallaryafter());
+    print("this is after ${sallaryAfter}");
+  }
+  void changesallary(value){
+    sherdprefrence.setdate(key: "salary", value: double.parse(value));
+    sallary=sherdprefrence.getdate(key: "salary");
+    emit(getsallary());
+  }
+void Catogerye(value){
+  catagoryContoralr.text = "  ${value}";
+  emit(changeCatogery());
+}
+void budgetdate(value){
+  dataContoralr.text = DateFormat.yMMMd().format(value!);
+  emit(changedate());
+}
   }

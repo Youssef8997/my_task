@@ -32,7 +32,7 @@ class MyApp extends StatelessWidget {
                     systemNavigationBarContrastEnforced: true,
                     systemStatusBarContrastEnforced: true,
                     statusBarColor: maincolor,
-                    systemNavigationBarColor:maincolor,
+                    systemNavigationBarColor:Colors.teal,
                     statusBarIconBrightness: Brightness.dark,
                     statusBarBrightness: Brightness.dark,
 

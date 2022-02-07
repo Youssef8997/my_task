@@ -15,6 +15,7 @@ class homelayout extends StatelessWidget {
         listener: (context,state){},
         builder: (context,state){
           return Scaffold(
+            key: cuibt.kayscafold,
             appBar:cuibt.appbar[cuibt.MyIndex],
              body:cuibt.body[cuibt.MyIndex],
               bottomNavigationBar: BottomNavyBar(
@@ -25,7 +26,6 @@ class homelayout extends StatelessWidget {
             onItemSelected: (index){cuibt.ChangeIndex(index);},
             items: cuibt.ItemNav
               ),
-
 
           );
         }
