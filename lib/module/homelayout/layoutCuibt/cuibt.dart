@@ -288,7 +288,7 @@ emit(getsallaryafter());
     emit(getsallary());
   }
 void Catogerye(value){
-  catagoryContoralr.text = "  ${value}";
+  catagoryContoralr.text ="${value}";
   emit(changeCatogery());
 }
 void budgetdate(value){

@@ -74,7 +74,9 @@ class _HomeTasksState extends State<HomeTasks> {
                       itemBuilder: (context, index)
                       {
                         if(tasj[index]["data"]==ondate||tasj[index]["data"]=="")
-                        return TaskCard(tasj[index], context);
+                        return Hero(
+                          tag: "yy",
+                            child: TaskCard(tasj[index], context));
                         else return SizedBox(height:0,) ;
                         },
                       separatorBuilder: (context,index)=>const SizedBox(height: 1,),
@@ -333,7 +335,6 @@ onDateChange: (value){
     );
   }
   settingDialog(context,TASKS,color) {
-    var cuibt = layoutCuibt.get(context);
     return showDialog(
         context: context,
         builder: (context) {
@@ -359,7 +360,9 @@ blur:3,
                   clipBehavior: Clip.antiAliasWithSaveLayer,
                   backgroundColor: Colors.white.withOpacity(0),
                   elevation:0,
-                  content: dialogcontainer(color, TASKS),
+                  content: Hero(
+                      tag:"yy",
+                      child: dialogcontainer(color, TASKS)),
                 ),
 
 

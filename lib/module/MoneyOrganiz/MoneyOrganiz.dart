@@ -1,10 +1,9 @@
+
 import 'package:bottom_sheet/bottom_sheet.dart';
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:hexcolor/hexcolor.dart';
-import 'package:intl/intl.dart';
 import 'package:my_task/Componads/Com.dart';
 import 'package:my_task/Componads/my%20textformfild.dart';
 import 'package:my_task/Componads/mybutton.dart';
@@ -12,8 +11,6 @@ import 'package:my_task/module/homelayout/layoutCuibt/cuibt.dart';
 import 'package:my_task/module/homelayout/layoutCuibt/loginstates.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:percent_indicator/percent_indicator.dart';
-import 'package:timeline_tile/timeline_tile.dart';
-
 class MoneyOraganize extends StatelessWidget {
   @override
   var SalaryContoralr = TextEditingController();
@@ -22,7 +19,7 @@ class MoneyOraganize extends StatelessWidget {
     return BlocConsumer<layoutCuibt, mytasks>(
         listener: (context, state) {},
         builder: (context, state) {
-          var cuibt=layoutCuibt.get(context);
+          var cuibt = layoutCuibt.get(context);
           var size = MediaQuery.of(context).size;
           return ConditionalBuilder(
             condition: cuibt.sallary != 0,
@@ -31,8 +28,8 @@ class MoneyOraganize extends StatelessWidget {
                 controller: cuibt.controlar,
                 scrollDirection: Axis.horizontal,
                 children: [
-                  EndWidget(size, cuibt.sallaryAfter,context),
-                  Stack0salary(size, cuibt.sallary)
+                  EndWidget(size, cuibt.sallaryAfter, context),
+                  Stack0salary(size, cuibt.sallary,context)
                 ],
               ),
             ),
@@ -40,7 +37,7 @@ class MoneyOraganize extends StatelessWidget {
               alignment: AlignmentDirectional.topCenter,
               children: [
                 Wallpaperstack(size),
-                Textupmoney(),
+                Textupmoney("Enter your salary..."),
                 Positioned(
                   top: 200,
                   right: 20,
@@ -50,17 +47,17 @@ class MoneyOraganize extends StatelessWidget {
                         color: Colors.grey[300],
                         borderRadius: BorderRadiusDirectional.circular(25.0)),
                     child: TextFormField(
-                      controller: SalaryContoralr,
-                      keyboardType: TextInputType.number,
-                      decoration: const InputDecoration(
-                          border: InputBorder.none,
-                          hintText: "Write your salary",
-                          prefixIcon: Icon(
-                            Icons.attach_money,
-                            color: Colors.green,
-                          )),
-                      onFieldSubmitted: (String)=>cuibt.changesallary(String)
-                    ),
+                        controller: SalaryContoralr,
+                        keyboardType: TextInputType.number,
+                        decoration: const InputDecoration(
+                            border: InputBorder.none,
+                            hintText: "Write your salary",
+                            prefixIcon: Icon(
+                              Icons.attach_money,
+                              color: Colors.green,
+                            )),
+                        onFieldSubmitted: (String) =>
+                            cuibt.changesallary(String)),
                   ),
                 )
               ],
@@ -69,8 +66,8 @@ class MoneyOraganize extends StatelessWidget {
         });
   }
 
-  Widget EndWidget(size, sallaryAfter,context) {
-    var cuibt=layoutCuibt.get(context);
+  Widget EndWidget(size, sallaryAfter, context) {
+    var cuibt = layoutCuibt.get(context);
     double precent = (cuibt.sallaryAfter / cuibt.sallary);
     return Stack(
       children: [
@@ -85,64 +82,163 @@ class MoneyOraganize extends StatelessWidget {
           left: 0,
           right: 0,
           child: SizedBox(
-              width:200,
-              height:500,
-              child: CirculeCatogery(sallaryAfter,context)),
+              width: 200,
+              height: 500,
+              child: CirculeCatogery(sallaryAfter, context)),
         )
       ],
     );
   }
 
-  Widget Stack0salary(Size size, sallary) {
+  Widget Stack0salary(Size size, sallary,context) {
     return Stack(
-            alignment: AlignmentDirectional.center,
-            children: [
-              Wallpaperstack(size),
-              TimelineTile(
-                alignment: TimelineAlign.center,
-                startChild: Text("kjdfnshjkln"),
-                lineXY: .9,
-                axis: TimelineAxis.vertical,
-                hasIndicator: false,
-                isFirst: true,
+      alignment: AlignmentDirectional.topStart,
+      children: [
+        Wallpaperstack(size),
+        Padding(
+          padding: const EdgeInsets.only(left: 20,top: 30),
+          child: Textupmoney("hello again , ......!"),
+        ),
+        Positioned (
+          top: 100,
+          bottom: 0,
+          child: SizedBox(
+            height:size.height*.75,
+            width: size.width,
+            child: Expanded(
+              child: ConditionalBuilder(
+                condition:layoutCuibt.get(context).Budget.isNotEmpty ,
+                builder: (context)=>ListView.separated(
+                    physics: const BouncingScrollPhysics(),
+                    itemBuilder: (context, index)=>BudgetCont(size,layoutCuibt.get(context).Budget[index]),
+                    separatorBuilder: (context,index)=>const SizedBox(height: 1,),
+                    itemCount: layoutCuibt.get(context).Budget.length),
+               fallback: (context)=>Padding(
+                 padding: const EdgeInsets.only(left: 50),
+                 child: Text("you dont spent money yet ,good boy🥰",style: TextStyle(
+                   fontSize: 30.0,
+                   color: Colors.white,
+                   fontWeight: FontWeight.w900,
+                   fontStyle: FontStyle.italic
+                 )),
+               ),
               ),
-              //Transactions()
-            ],
-          );
-
-
-  }
-
-  Container Transactions() {
-    return Container(
-      width: 135,
-      height: 135,
-      decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadiusDirectional.circular(25)),
-      child: Column(
-        children: [CatogryShow(Category[0])],
-      ),
+            )
+          ),
+        )
+      ],
     );
   }
 
-  Positioned Textupmoney() {
-    return const Positioned(
+  Padding BudgetCont(Size size,budget) {
+    return Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Row(
+          children: [
+             RotatedBox(
+                quarterTurns: 1,
+                child:  Text(
+                  "${budget["data"]}",
+                  style: TextStyle(
+                      fontSize: 20.0,
+                      fontWeight: FontWeight.w900,
+                      color: Colors.white),
+                )),
+            const SizedBox(
+              width: 5,
+            ),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 5),
+              height: 100,
+              width: size.width - 45,
+              decoration: BoxDecoration(
+                  color: TaskLowColors,
+                  borderRadius: BorderRadiusDirectional.circular(50.0),
+                  boxShadow: [
+                    BoxShadow(
+                      color: TaskMedColors,
+                      spreadRadius: .2,
+                      offset: const Offset(3, 4),
+                      blurRadius: 2,
+                    )
+                  ]),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  CatogryShow(budget),
+                  const SizedBox(
+                    width: 5,
+                  ),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                       SizedBox(
+                        width: 180,
+                        child: Text(
+                            "${budget["title"]}",
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(
+                                fontSize: 21.0, fontWeight: FontWeight.bold)),
+                      ),
+                      const SizedBox(
+                        height: 5,
+                      ),
+                      SizedBox(
+                        width: 180,
+                        child: Text(
+                          "${budget["desc"]}",
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style:  TextStyle(
+                            color: Colors.grey[800],
+                            fontSize: 17,
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
+                  const Spacer(),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                       Text("${budget["MONEY"]} LE",
+                          style: const TextStyle(
+                              fontSize: 21.0, fontWeight: FontWeight.bold)),
+                      const SizedBox(height: 10),
+                      Text("${budget["MONEYAfter"]} LE",
+                          style: TextStyle(
+                              fontSize: 18.0,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.grey[700])),
+                    ],
+                  ),
+                  const SizedBox(width: 10,)
+                ],
+              ),
+            ),
+          ],
+        ),
+      );
+  }
+
+  Positioned Textupmoney(value) {
+    return  Positioned(
         top: 80,
         child: Text(
-          "Please Enter your salary",
+          value,
           style: TextStyle(
               fontWeight: FontWeight.w900,
-              fontSize: 20.0,
+              fontSize: 30.0,
               fontStyle: FontStyle.italic,
               color: Colors.white),
         ));
   }
 
-  Widget CirculeCatogery(sallary,context) {
+  Widget CirculeCatogery(sallary, context) {
     return GridView.count(
-       addAutomaticKeepAlives:false ,
-      keyboardDismissBehavior:ScrollViewKeyboardDismissBehavior.onDrag,
+      addAutomaticKeepAlives: false,
+      keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
       scrollDirection: Axis.horizontal,
       physics: const BouncingScrollPhysics(),
       crossAxisCount: 2,
@@ -150,7 +246,7 @@ class MoneyOraganize extends StatelessWidget {
           Category.length,
           (index) => InkWell(
                 onTap: () {
-                  layoutCuibt.get(context).Catogerye(Category[index].title!);
+                  layoutCuibt.get(context).Catogerye(Category[index].Photo!);
                   showbottomshet(context);
                 },
                 child: Catogry_Avatar(Category[index]),
@@ -178,40 +274,26 @@ class MoneyOraganize extends StatelessWidget {
           ),
           Text(
             model.title!,
-            style: TextStyle(fontWeight: FontWeight.bold),
+            style: const TextStyle(fontWeight: FontWeight.bold),
           )
         ],
       ),
     );
   }
 
-  Column CatogryShow(CategoryModel model) {
-    return Column(
-      children: [
-        SizedBox(
-          height: 5,
+  CircleAvatar CatogryShow(model) {
+    return CircleAvatar(
+      radius: 40,
+      backgroundColor: Colors.pinkAccent,
+      foregroundColor: Colors.white,
+      child: CircleAvatar(
+        foregroundColor: Colors.white,
+        backgroundImage: AssetImage(
+          model["catogry"],
         ),
-        CircleAvatar(
-          radius: 51,
-          backgroundColor: Colors.pinkAccent,
-          foregroundColor: Colors.white,
-          child: CircleAvatar(
-            foregroundColor: Colors.white,
-            backgroundImage: AssetImage(
-              model.Photo!,
-            ),
-            radius: 50.0,
-            backgroundColor: Colors.white,
-          ),
-        ),
-        SizedBox(
-          height: 5,
-        ),
-        Text(
-          "200 lE",
-          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17),
-        )
-      ],
+        radius: 35,
+        backgroundColor: Colors.white,
+      ),
     );
   }
 
@@ -255,7 +337,7 @@ class MoneyOraganize extends StatelessWidget {
     return showFlexibleBottomSheet(
       isExpand: true,
       isDismissible: true,
-isCollapsible: true,
+      isCollapsible: true,
       isModal: true,
       minHeight: 0,
       initHeight: 0.5,
@@ -270,16 +352,35 @@ isCollapsible: true,
     BuildContext context,
     ScrollController scrollController,
     double bottomSheetOffset,
-
   ) {
     var cuibt = layoutCuibt.get(context);
+    var cat = "cat";
+    if (cuibt.catagoryContoralr.text == "lib/Image/House illustration 1.png") {
+      cat = "home";
+    }
+    if (cuibt.catagoryContoralr.text == "lib/Image/Clothing-Logo-Vector.png") {
+      cat = "Clothing";
+    }
+    if (cuibt.catagoryContoralr.text == "lib/Image/helthcare.jpg") {
+      cat = "Health Care";
+    }
+    if (cuibt.catagoryContoralr.text ==
+        "lib/Image/group-young-friends-having-fun-together-vector-26803087.jpg") {
+      cat = "fun";
+    }
+    if (cuibt.catagoryContoralr.text ==
+        "lib/Image/travel-logo-vector-illustration-black-airplane-isolated-white-115729130.jpg") {
+      cat = "travel";
+    }
+    if (cuibt.catagoryContoralr.text == "lib/Image/logo-template-44-.jpg") {
+      cat = "Money Saving";
+    }
     return SafeArea(
-
       child: Material(
         color: Colors.teal.shade200,
-        animationDuration: Duration(milliseconds: 600),
+        animationDuration: const Duration(milliseconds: 600),
         clipBehavior: Clip.antiAliasWithSaveLayer,
-        borderRadius: BorderRadiusDirectional.only(
+        borderRadius: const BorderRadiusDirectional.only(
             topEnd: Radius.circular(
               40.0,
             ),
@@ -287,9 +388,9 @@ isCollapsible: true,
               40.0,
             )),
         child: Container(
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
               borderRadius: BorderRadiusDirectional.only(
-                  topEnd: Radius.circular(
+                  topEnd: const Radius.circular(
                     25.0,
                   ),
                   topStart: Radius.circular(
@@ -298,9 +399,9 @@ isCollapsible: true,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
+              const Text(
                 "صرفت اي يسطا النهارده",
-                style: TextStyle(
+                style: const TextStyle(
                     fontWeight: FontWeight.w900,
                     fontSize: 20.0,
                     fontStyle: FontStyle.italic,
@@ -309,7 +410,8 @@ isCollapsible: true,
               Mytextfield(
                   Controlr: cuibt.titleContoralr, hint: "صرفت فلوسك في اي ؟؟"),
               Mytextfield(
-                  Controlr: cuibt.desContoralr, hint: "ولي صرفت افلوس دي يسطا  ؟؟"),
+                  Controlr: cuibt.desContoralr,
+                  hint: "ولي صرفت افلوس دي يسطا  ؟؟"),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -322,36 +424,34 @@ isCollapsible: true,
                       initialDate: DateTime.now(),
                       firstDate: DateTime.now(),
                       lastDate: DateTime.parse('2022-11-07'),
-                    ).then((value)=>cuibt.budgetdate(value)),
+                    ).then((value) => cuibt.budgetdate(value)),
                   )),
-                  SizedBox(
+                  const SizedBox(
                     width: 5,
                   ),
                   Expanded(
                       child: Mytextfield(
                     Enabled: false,
-                    Controlr: cuibt.catagoryContoralr,
-                    hint: "صرفت فلوسك ف اي ب التفصيل يسطا ؟؟",
+                    hint: "  $cat",
                   )),
                 ],
               ),
               Mytextfield(
-                  Controlr: cuibt.moneyContoralr, hint: "وعلي كدا صرفت كام بقي ؟؟"),
+                  Controlr: cuibt.moneyContoralr,
+                  hint: "وعلي كدا صرفت كام بقي ؟؟"),
               mybutton(
-                  Widget: Text("  قشطا"),
+                  Widget: const Text("  قشطا"),
                   function: () {
-                    cuibt.insertbudget(
-                        title: cuibt.titleContoralr.text,
-                        desc: cuibt.desContoralr.text,
-                        MONEY: double.parse(cuibt.moneyContoralr.text),
-                        data: cuibt.dataContoralr.text,
-                        catogry: cuibt.catagoryContoralr.text).then((value)
-                    {
-
+                    cuibt
+                        .insertbudget(
+                            title: cuibt.titleContoralr.text,
+                            desc: cuibt.desContoralr.text,
+                            MONEY: double.parse(cuibt.moneyContoralr.text),
+                            data: cuibt.dataContoralr.text,
+                            catogry: cuibt.catagoryContoralr.text)
+                        .then((value) {
                       Navigator.pop(context);
-
                     });
-
                   }),
             ],
           ),
