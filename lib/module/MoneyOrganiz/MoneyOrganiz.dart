@@ -8,9 +8,6 @@ import 'package:intl/intl.dart';
 import 'package:my_task/Componads/Com.dart';
 import 'package:my_task/Componads/my%20textformfild.dart';
 import 'package:my_task/Componads/mybutton.dart';
-import 'package:my_task/lib/sherdeprefrence/sherdhelp.dart';
-import 'package:my_task/module/SpalshScreen/Spalsh.dart';
-import 'package:my_task/module/arrgu/arrgu.dart';
 import 'package:my_task/module/homelayout/layoutCuibt/cuibt.dart';
 import 'package:my_task/module/homelayout/layoutCuibt/loginstates.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
@@ -143,24 +140,21 @@ class MoneyOraganize extends StatelessWidget {
   }
 
   Widget CirculeCatogery(sallary,context) {
-    return ClipRect(
-      clipBehavior: Clip.antiAliasWithSaveLayer,
-      child: GridView.count(
-         addAutomaticKeepAlives:false ,
-        keyboardDismissBehavior:ScrollViewKeyboardDismissBehavior.onDrag,
-        scrollDirection: Axis.horizontal,
-        physics: const BouncingScrollPhysics(),
-        crossAxisCount: 2,
-        children: List.generate(
-            Category.length,
-            (index) => InkWell(
-                  onTap: () {
-                    layoutCuibt.get(context).Catogerye(Category[index].title!);
-                    showbottomshet(context);
-                  },
-                  child: Catogry_Avatar(Category[index]),
-                )),
-      ),
+    return GridView.count(
+       addAutomaticKeepAlives:false ,
+      keyboardDismissBehavior:ScrollViewKeyboardDismissBehavior.onDrag,
+      scrollDirection: Axis.horizontal,
+      physics: const BouncingScrollPhysics(),
+      crossAxisCount: 2,
+      children: List.generate(
+          Category.length,
+          (index) => InkWell(
+                onTap: () {
+                  layoutCuibt.get(context).Catogerye(Category[index].title!);
+                  showbottomshet(context);
+                },
+                child: Catogry_Avatar(Category[index]),
+              )),
     );
   }
 
