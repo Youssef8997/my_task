@@ -48,7 +48,7 @@ class layoutCuibt extends Cubit<mytasks> {
       toolbarHeight: 40,
     ),
     AppBar(
-      title: const Text("business"),
+      title: const Text("Today Task"),
       toolbarHeight: 40,
     ),
     AppBar(
@@ -177,8 +177,29 @@ emit(getsallaryafter());
   //insert new budget in Datebase
   Future insertbudget({required title, required desc, required MONEY, required data, required catogry}) async {
     await datab.transaction((txn) {
-      txn.rawInsert(
-              'INSERT INTO BUDGET(title,desc,MONEY,MONEYAfter,data,catogry)VALUES("$title","$desc","$MONEY","${sallaryAfter-MONEY}","$data","$catogry")')
+      if(catogry=="lib/Image/gain money.webp") {
+        txn.rawInsert(
+            'INSERT INTO BUDGET(title,desc,MONEY,MONEYAfter,data,catogry)VALUES("$title","$desc","$MONEY","${sallaryAfter +
+                MONEY}","$data","$catogry")').then((value) {
+          print("$value inserted successes");
+          getdatebudget(datab).then((value) {
+            Budget=[];
+            Budget=value;
+            print(Budget);
+            changeprecent(sallaryAfter+MONEY);
+            emit(getsallaryafter());
+          });
+          titleContoralr.clear();
+          desContoralr.clear();
+          moneyContoralr.clear();
+          dataContoralr.clear();
+          catagoryContoralr.clear();
+        }).catchError((error) {
+          print(" the error is ${error.toString()}");
+          emit(InsertDataBaseError());
+        });
+      }else
+      txn.rawInsert('INSERT INTO BUDGET(title,desc,MONEY,MONEYAfter,data,catogry)VALUES("$title","$desc","$MONEY","${sallaryAfter-MONEY}","$data","$catogry")')
           .then((value) {
         print("$value inserted successes");
         getdatebudget(datab).then((value) {
