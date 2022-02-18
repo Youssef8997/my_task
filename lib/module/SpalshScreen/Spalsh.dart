@@ -1,12 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:hexcolor/hexcolor.dart';
 import 'package:my_task/Componads/Com.dart';
 import 'package:my_task/module/Login/Login.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:google_fonts/google_fonts.dart';
-
+import 'package:my_task/lib/sherdeprefrence/sherdhelp.dart';
 class Spalsh extends StatefulWidget {
   @override
   State<Spalsh> createState() => _SpalshState();
@@ -14,7 +13,7 @@ class Spalsh extends StatefulWidget {
 
 class _SpalshState extends State<Spalsh> {
   @override
-  bool isfalse = false;
+  bool islast = false;
   var controlar = PageController();
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
@@ -42,11 +41,11 @@ class _SpalshState extends State<Spalsh> {
                   count: module.length,
                 ),
                 const Spacer(),
-                if(isfalse)
+                if(islast)
               FloatingActionButton(
                   backgroundColor: Colors.white,
                   onPressed: () {
-                    if(isfalse){
+                    if(islast){
                     NEV(bool: false
                         ,page: Login(),context: context);
                     }else
@@ -78,11 +77,12 @@ class _SpalshState extends State<Spalsh> {
         onPageChanged: (index) {
           if (index == module.length - 1) {
             setState(() {
-              isfalse = true;
+              islast = true;
+              sherdprefrence.setdate(key: "spalsh", value: true);
             });
           } else {
             setState(() {
-              isfalse = false;
+              islast = false;
             });
           }
         },

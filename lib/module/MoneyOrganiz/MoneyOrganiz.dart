@@ -20,63 +20,60 @@ class MoneyOraganize extends StatefulWidget {
 class _MoneyOraganizeState extends State<MoneyOraganize> {
   @override
   var SalaryContoralr = TextEditingController();
-    var scrollControlar=ScrollController();
+  var scrollControlar = ScrollController();
+  var gaining = false;
+
   Widget build(BuildContext context) {
     return BlocConsumer<layoutCuibt, mytasks>(
         listener: (context, state) {},
         builder: (context, state) {
           var cuibt = layoutCuibt.get(context);
-          var size = MediaQuery
-              .of(context)
-              .size;
+          var size = MediaQuery.of(context).size;
           return ConditionalBuilder(
             condition: cuibt.sallary != 0,
-            builder: (context) =>
-                SafeArea(
-                  child: PageView(
-                    allowImplicitScrolling: true,
-                    scrollBehavior: ScrollBehavior(androidOverscrollIndicator:AndroidOverscrollIndicator.stretch ),
-                    controller: cuibt.controlar,
-                    scrollDirection: Axis.horizontal,
-                    children: [
-                      EndWidget(size, cuibt.sallaryAfter, context),
-                      Stack0salary(size, cuibt.sallary, context)
-                    ],
+            builder: (context) => SafeArea(
+              child: PageView(
+                allowImplicitScrolling: true,
+                scrollBehavior: ScrollBehavior(
+                    androidOverscrollIndicator:
+                        AndroidOverscrollIndicator.stretch),
+                controller: cuibt.controlar,
+                scrollDirection: Axis.horizontal,
+                children: [
+                  EndWidget(size, cuibt.sallaryAfter, context),
+                  Stack0salary(size, cuibt.sallary, context)
+                ],
+              ),
+            ),
+            fallback: (context) => Stack(
+              alignment: AlignmentDirectional.topCenter,
+              children: [
+                Wallpaperstack(size),
+                Textupmoney("Enter your salary!           "),
+                Positioned(
+                  top: 200,
+                  right: 20,
+                  left: 20,
+                  child: Container(
+                    decoration: BoxDecoration(
+                        color: Colors.grey[300],
+                        borderRadius: BorderRadiusDirectional.circular(25.0)),
+                    child: TextFormField(
+                        controller: SalaryContoralr,
+                        keyboardType: TextInputType.number,
+                        decoration: const InputDecoration(
+                            border: InputBorder.none,
+                            hintText: "Write your salary",
+                            prefixIcon: Icon(
+                              Icons.attach_money,
+                              color: Colors.green,
+                            )),
+                        onFieldSubmitted: (String) =>
+                            cuibt.changesallary(String)),
                   ),
-                ),
-            fallback: (context) =>
-                Stack(
-                  alignment: AlignmentDirectional.topCenter,
-                  children: [
-                    Wallpaperstack(size),
-                    Textupmoney("Enter your salary!           "),
-                    Positioned(
-                      top: 200,
-                      right: 20,
-                      left: 20,
-                      child: Container(
-                        decoration: BoxDecoration(
-                            color: Colors.grey[300],
-                            borderRadius: BorderRadiusDirectional.circular(
-                                25.0)),
-                        child: Expanded(
-                          child: TextFormField(
-                              controller: SalaryContoralr,
-                              keyboardType: TextInputType.number,
-                              decoration: const InputDecoration(
-                                  border: InputBorder.none,
-                                  hintText: "Write your salary",
-                                  prefixIcon: Icon(
-                                    Icons.attach_money,
-                                    color: Colors.green,
-                                  )),
-                              onFieldSubmitted: (String) =>
-                                  cuibt.changesallary(String)),
-                        ),
-                      ),
-                    )
-                  ],
-                ),
+                )
+              ],
+            ),
           );
         });
   }
@@ -88,16 +85,22 @@ class _MoneyOraganizeState extends State<MoneyOraganize> {
       children: [
         Wallpaperstack(size),
         Positioned(
-            right:0,
+            right: 0,
             top: 230,
-             width: 100,
-            child:mybutton(Widget: Icon(CupertinoIcons.arrow_turn_down_right,size: 30.0),function: (){
-              setState(() {
-              cuibt.controlar.nextPage(
-                  duration: Duration(milliseconds: 900), curve: Curves.easeOutCubic);});})
-            
-            ),
-        precentge_circular(size, precent,),
+            width: 100,
+            child: mybutton(
+                Widget: Icon(CupertinoIcons.arrow_turn_down_right, size: 30.0),
+                function: () {
+                  setState(() {
+                    cuibt.controlar.nextPage(
+                        duration: Duration(milliseconds: 900),
+                        curve: Curves.easeOutCubic);
+                  });
+                })),
+        precentge_circular(
+          size,
+          precent,
+        ),
         Positioned(
           bottom: 0,
           top: 300,
@@ -118,14 +121,19 @@ class _MoneyOraganizeState extends State<MoneyOraganize> {
       children: [
         Wallpaperstack(size),
         Positioned(
-            left:5,
-            top: 40,
+          left: 5,
+          top: 40,
           width: 100,
-            child:mybutton(Widget: Icon(CupertinoIcons.arrow_turn_down_left,size: 30.0),function: (){
-              setState(() {
-                layoutCuibt.get(context).controlar.previousPage( duration: Duration(milliseconds: 900), curve: Curves.easeOutCubic);});}
+          child: mybutton(
+              Widget: Icon(CupertinoIcons.arrow_turn_down_left, size: 30.0),
+              function: () {
+                setState(() {
+                  layoutCuibt.get(context).controlar.previousPage(
+                      duration: Duration(milliseconds: 900),
+                      curve: Curves.easeOutCubic);
+                });
+              }),
         ),
-    ),
         Textupmoney("Hello again!"),
         Positioned(
           top: 100,
@@ -134,37 +142,40 @@ class _MoneyOraganizeState extends State<MoneyOraganize> {
               height: size.height * .75,
               width: size.width,
               child: ConditionalBuilder(
-                condition: layoutCuibt
-                    .get(context)
-                    .Budget
-                    .isNotEmpty,
-                builder: (context) =>
-                    ListView.separated(
-                        physics: const BouncingScrollPhysics(),
-                        reverse: true,
-                        itemBuilder: (context, index) =>
-                            BudgetCont(
-                                size, layoutCuibt
-                                .get(context)
-                                .Budget[index]),
-                        separatorBuilder: (context, index) =>
-                        const SizedBox(
+                condition: layoutCuibt.get(context).Budget.isNotEmpty,
+                builder: (context) => ListView.separated(
+                    physics: const BouncingScrollPhysics(),
+                    reverse: true,
+                    itemBuilder: (context, index) => Dismissible(
+                      key: Key(layoutCuibt.get(context).Budget[index]["title"].toString()),
+                      onDismissed: (direction) {
+                        layoutCuibt.get(context).deletebudget(id: layoutCuibt.get(context).Budget[index]["id"]);
+                        final snackBar = SnackBar(
+                          content: Text(
+                            "you deleted task number ${layoutCuibt.get(context).Budget[index]["id"]}",
+                          ),
+                          backgroundColor: Colors.pink,
+                          duration: const Duration(milliseconds: 800),
+                          elevation: 10.0,
+                        );
+                        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                      },
+                      child: BudgetCont(
+                          size, layoutCuibt.get(context).Budget[index]),
+                    ),
+                    separatorBuilder: (context, index) => const SizedBox(
                           height: 1,
                         ),
-                        itemCount: layoutCuibt
-                            .get(context)
-                            .Budget
-                            .length),
-                fallback: (context) =>
-                    Padding(
-                      padding: const EdgeInsets.only(left: 50,top: 200),
-                      child: Text("you dont spent money yet ,good boy🥰",
-                          style: TextStyle(
-                              fontSize: 30.0,
-                              color: Colors.white,
-                              fontWeight: FontWeight.w900,
-                              fontStyle: FontStyle.italic)),
-                    ),
+                    itemCount: layoutCuibt.get(context).Budget.length),
+                fallback: (context) => Padding(
+                  padding: const EdgeInsets.only(left: 50, top: 200),
+                  child: Text("you dont spent money yet ,good boy🥰",
+                      style: TextStyle(
+                          fontSize: 30.0,
+                          color: Colors.white,
+                          fontWeight: FontWeight.w900,
+                          fontStyle: FontStyle.italic)),
+                ),
               )),
         )
       ],
@@ -192,7 +203,7 @@ class _MoneyOraganizeState extends State<MoneyOraganize> {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 5),
             height: 100,
-            width: size.width-45,
+            width: size.width - 45,
             decoration: BoxDecoration(
                 color: TaskLowColors,
                 borderRadius: BorderRadiusDirectional.circular(50.0),
@@ -215,58 +226,52 @@ class _MoneyOraganizeState extends State<MoneyOraganize> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        SizedBox(
-                          width: 170,
-                          child: Text("${budget["title"]}",
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              style: const TextStyle(
-                                  fontSize: 21.0, fontWeight: FontWeight.bold)),
-                        ),
-                        Container(
-                          height: 20,
-                          width: 80,
-                          child: Text("${budget["MONEY"]} LE",
-                              overflow: TextOverflow.ellipsis,
-                              style: const TextStyle(
-                                  fontSize: 21.0, fontWeight: FontWeight.bold)),
-                        ),
-
-                       ]),
-                   SizedBox(height: 10),
-                        Row(
-                          children: [
-                            SizedBox(
-                            width: 170,
-                            child: Text(
-                              "${budget["desc"]}",
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              style: TextStyle(
-                                color: Colors.grey[800],
-                                fontSize: 17,
-                              ),
-                            ),
+                    Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                      SizedBox(
+                        width: 170,
+                        child: Text("${budget["title"]}",
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(
+                                fontSize: 21.0, fontWeight: FontWeight.bold)),
+                      ),
+                      Container(
+                        height: 20,
+                        width: 80,
+                        child: Text("${budget["MONEY"]} LE",
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(
+                                fontSize: 21.0, fontWeight: FontWeight.bold)),
+                      ),
+                    ]),
+                    SizedBox(height: 10),
+                    Row(children: [
+                      SizedBox(
+                        width: 170,
+                        child: Text(
+                          "${budget["desc"]}",
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            color: Colors.grey[800],
+                            fontSize: 17,
                           ),
-                            Text("${budget["MONEYAfter"]} LE",
-                                style: TextStyle(
-                                    fontSize: 18.0,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.grey[700])),
-                          ]
                         ),
+                      ),
+                      Text("${budget["MONEYAfter"]} LE",
+                          style: TextStyle(
+                              fontSize: 18.0,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.grey[700])),
+                    ]),
                   ],
                 ),
               ],
             ),
           )
-              ],
-            ),
+        ],
+      ),
     );
-
   }
 
   Positioned Textupmoney(value) {
@@ -285,16 +290,14 @@ class _MoneyOraganizeState extends State<MoneyOraganize> {
 
   Widget CirculeCatogery(sallary, context) {
     return GridView.count(
-      controller:scrollControlar,
+      controller: scrollControlar,
       addAutomaticKeepAlives: false,
       keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
       scrollDirection: Axis.horizontal,
       physics: const BouncingScrollPhysics(),
       crossAxisCount: 2,
       children: List.generate(
-
-          Category.length,
-              (index) => Catogry_Avatar(Category[index], context)),
+          Category.length, (index) => Catogry_Avatar(Category[index], context)),
     );
   }
 
@@ -306,15 +309,25 @@ class _MoneyOraganizeState extends State<MoneyOraganize> {
           width: 130,
           height: 130,
           decoration: BoxDecoration(
-            color: Colors.white.withOpacity(.9),
-borderRadius: BorderRadiusDirectional.circular(30.0)
-          ),
+              color: Colors.white.withOpacity(.9),
+              borderRadius: BorderRadiusDirectional.circular(30.0)),
           child: Column(
             children: [
-              SizedBox(height: 3,),
+              SizedBox(
+                height: 3,
+              ),
               InkWell(
                 onTap: () {
                   layoutCuibt.get(context).Catogerye(model.Photo);
+                  if (layoutCuibt.get(context).catagoryContoralr.text ==
+                      "lib/Image/gain money.webp") {
+                    setState(() {
+                      gaining = true;
+                    });
+                  } else
+                    setState(() {
+                      gaining = false;
+                    });
                   showbottomshet(context);
                 },
                 child: CircleAvatar(
@@ -336,10 +349,8 @@ borderRadius: BorderRadiusDirectional.circular(30.0)
                 style: const TextStyle(fontWeight: FontWeight.bold),
               )
             ],
-
           ),
         )
-
       ],
     );
   }
@@ -360,21 +371,26 @@ borderRadius: BorderRadiusDirectional.circular(30.0)
     );
   }
 
-  Widget precentge_circular(Size size,
-      double precent,) {
+  Widget precentge_circular(
+    Size size,
+    double precent,
+  ) {
     return SizedBox(
       height: size.height * .3,
       width: double.infinity,
       child: CircularPercentIndicator(
         radius: 200,
         lineWidth: 10,
-        percent: precent,
+        linearGradient: LinearGradient(colors: [
+          Colors.tealAccent,
+          Colors.blue,
+        ]),
+        percent: precent > 1 ? 1 : precent,
         center: Text("${(precent * 100).ceil()}%",
             style: const TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.bold,
                 fontSize: 20)),
-        progressColor: Colors.blueGrey,
         arcBackgroundColor: Colors.white54,
         animation: true,
         addAutomaticKeepAlive: true,
@@ -409,9 +425,11 @@ borderRadius: BorderRadiusDirectional.circular(30.0)
     );
   }
 
-  Widget buildBottomSheet(BuildContext context,
-      ScrollController scrollController,
-      double bottomSheetOffset,) {
+  Widget buildBottomSheet(
+    BuildContext context,
+    ScrollController scrollController,
+    double bottomSheetOffset,
+  ) {
     var cuibt = layoutCuibt.get(context);
     var cat = "Gained money";
     if (cuibt.catagoryContoralr.text == "lib/Image/House illustration 1.png") {
@@ -456,67 +474,177 @@ borderRadius: BorderRadiusDirectional.circular(30.0)
                   topStart: Radius.circular(
                     25.0,
                   ))),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const Text(
-                "صرفت اي يسطا النهارده",
-                style: const TextStyle(
-                    fontWeight: FontWeight.w900,
-                    fontSize: 20.0,
-                    fontStyle: FontStyle.italic,
-                    color: Colors.black),
-              ),
-              Mytextfield(
-                  Controlr: cuibt.titleContoralr, hint: "صرفت فلوسك في اي ؟؟"),
-              Mytextfield(
-                  Controlr: cuibt.desContoralr,
-                  hint: "ولي صرفت افلوس دي يسطا  ؟؟"),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Expanded(
-                      child: Mytextfield(
-                        Controlr: cuibt.dataContoralr,
-                        hint: "امتااااا ؟؟",
-                        func: () =>
-                            showDatePicker(
-                              context: context,
-                              initialDate: DateTime.now(),
-                              firstDate: DateTime.now(),
-                              lastDate: DateTime.parse('2022-11-07'),
-                            ).then((value) => cuibt.budgetdate(value)),
-                      )),
-                  const SizedBox(
-                    width: 5,
-                  ),
-                  Expanded(
-                      child: Mytextfield(
-                        Enabled: false,
-                        hint: "  $cat",
-                      )),
-                ],
-              ),
-              Mytextfield(
-                  Controlr: cuibt.moneyContoralr,
-                  hint: "وعلي كدا صرفت كام بقي ؟؟"),
-              mybutton(
-                  Widget: const Text("  قشطا"),
-                  function: () {
-
-                    cuibt
-                        .insertbudget(
-                        title: cuibt.titleContoralr.text,
-                        desc: cuibt.desContoralr.text,
-                        MONEY: double.parse(cuibt.moneyContoralr.text),
-                        data: cuibt.dataContoralr.text,
-                        catogry: cuibt.catagoryContoralr.text)
-                        .then((value) {
-                      Navigator.pop(context);
-                    });
-                  }),
-            ],
-          ),
+          child: gaining
+              ? Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text(
+                      " استلفت اي يسطا",
+                      style: const TextStyle(
+                          fontWeight: FontWeight.w900,
+                          fontSize: 20.0,
+                          fontStyle: FontStyle.italic,
+                          color: Colors.black),
+                    ),
+                    Mytextfield(
+                        Controlr: cuibt.titleContoralr,
+                        hint: "اخدتهم منين يسطا ؟؟"),
+                    Mytextfield(
+                        Controlr: cuibt.desContoralr,
+                        hint: "وهتصرفهم في اي دي يسطا  ؟؟"),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Expanded(
+                            child: Mytextfield(
+                          Controlr: cuibt.dataContoralr,
+                          hint: "امتااااا ؟؟",
+                          func: () => showDatePicker(
+                            context: context,
+                            initialDate: DateTime.now(),
+                            firstDate: DateTime.now(),
+                            lastDate: DateTime.parse('2022-11-07'),
+                          ).then((value) => cuibt.budgetdate(value)),
+                        )),
+                        const SizedBox(
+                          width: 5,
+                        ),
+                        Expanded(
+                            child: Mytextfield(
+                          Enabled: false,
+                          hint: "  $cat",
+                        )),
+                      ],
+                    ),
+                    Mytextfield(
+                        Controlr: cuibt.moneyContoralr,
+                        hint: "وعلي كدا اخدت كام بقي ؟؟"),
+                    mybutton(
+                        Widget: const Text("  قشطا"),
+                        function: () {
+                          cuibt
+                              .insertbudget(
+                                  title: cuibt.titleContoralr.text,
+                                  desc: cuibt.desContoralr.text,
+                                  MONEY:
+                                      double.parse(cuibt.moneyContoralr.text),
+                                  data: cuibt.dataContoralr.text,
+                                  catogry: cuibt.catagoryContoralr.text)
+                              .then((value) {
+                            Navigator.pop(context);
+                            setState(() {
+                              gaining = false;
+                            });
+                          });
+                        }),
+                  ],
+                )
+              : Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text(
+                      "صرفت اي يسطا النهارده",
+                      style: const TextStyle(
+                          fontWeight: FontWeight.w900,
+                          fontSize: 20.0,
+                          fontStyle: FontStyle.italic,
+                          color: Colors.black),
+                    ),
+                    Mytextfield(
+                        Controlr: cuibt.titleContoralr,
+                        hint: "صرفت فلوسك في اي ؟؟"),
+                    Mytextfield(
+                        Controlr: cuibt.desContoralr,
+                        hint: "ولي صرفت افلوس دي يسطا  ؟؟"),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Expanded(
+                            child: Mytextfield(
+                          Controlr: cuibt.dataContoralr,
+                          hint: "امتااااا ؟؟",
+                          func: () => showDatePicker(
+                            context: context,
+                            initialDate: DateTime.now(),
+                            firstDate: DateTime.now(),
+                            lastDate: DateTime.parse('2022-11-07'),
+                          ).then((value) => cuibt.budgetdate(value)),
+                        )),
+                        const SizedBox(
+                          width: 5,
+                        ),
+                        Expanded(
+                            child: Mytextfield(
+                          Enabled: false,
+                          hint: "  $cat",
+                        )),
+                      ],
+                    ),
+                    Mytextfield(
+                        Controlr: cuibt.moneyContoralr,
+                        hint: "وعلي كدا صرفت كام بقي ؟؟"),
+                    mybutton(
+                        Widget: const Text("  قشطا"),
+                        function: () {
+                          if (double.parse(cuibt.moneyContoralr.text) >
+                              cuibt.sallaryAfter) {
+                            Navigator.pop(context);
+                            showDialog(
+                                useSafeArea: true,
+                                context: context,
+                                builder: (context) => AlertDialog(
+                                      title: const Text("Alert"),
+                                      backgroundColor: Colors.white,
+                                      content: const Text(
+                                          "you cant do that bc you dont have enough money ",style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold)),
+                                      actions: [
+                                        Container(
+                                          width: double.maxFinite,
+                                          decoration: BoxDecoration(
+                                            color: TaskMedColors,
+                                            borderRadius:
+                                                BorderRadiusDirectional
+                                                    .circular(25.0),
+                                          ),
+                                          child: TextButton(
+                                            onPressed: () {
+                                              setState(() {
+                                                cuibt.titleContoralr.clear();
+                                                cuibt.desContoralr.clear();
+                                                cuibt.moneyContoralr.clear();
+                                                cuibt.dataContoralr.clear();
+                                                cuibt.catagoryContoralr.clear();
+                                              });
+                                              Navigator.pop(context);
+                                            },
+                                            child: Text("okay!",
+                                                style: TextStyle(
+                                                    color: Colors.black,
+                                                fontSize: 20,)),
+                                            style: ButtonStyle(
+                                              animationDuration:
+                                                  Duration(milliseconds: 900),
+                                            ),
+                                          ),
+                                        )
+                                      ],
+                                    ));
+                          } else {
+                            cuibt
+                                .insertbudget(
+                                    title: cuibt.titleContoralr.text,
+                                    desc: cuibt.desContoralr.text,
+                                    MONEY:
+                                        double.parse(cuibt.moneyContoralr.text),
+                                    data: cuibt.dataContoralr.text,
+                                    catogry: cuibt.catagoryContoralr.text)
+                                .then((value) {
+                              Navigator.pop(context);
+                            });
+                          }
+                        }),
+                  ],
+                ),
         ),
       ),
     );
@@ -545,12 +673,12 @@ List<CategoryModel> Category = [
   ),
   CategoryModel(
     Photo:
-    "lib/Image/group-young-friends-having-fun-together-vector-26803087.jpg",
+        "lib/Image/group-young-friends-having-fun-together-vector-26803087.jpg",
     title: "Fun",
   ),
   CategoryModel(
     Photo:
-    "lib/Image/travel-logo-vector-illustration-black-airplane-isolated-white-115729130.jpg",
+        "lib/Image/travel-logo-vector-illustration-black-airplane-isolated-white-115729130.jpg",
     title: "Travel",
   ),
   CategoryModel(
@@ -562,4 +690,3 @@ List<CategoryModel> Category = [
     title: "Gained money",
   ),
 ];
-

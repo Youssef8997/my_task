@@ -1,20 +1,33 @@
+import 'dart:isolate';
+
+import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:my_task/Componads/Com.dart';
-import 'package:my_task/module/MyTasks/MyTasks.dart';
 import 'package:my_task/module/SpalshScreen/Spalsh.dart';
 import 'package:my_task/module/homelayout/layout.dart';
 import 'package:my_task/module/homelayout/layoutCuibt/cuibt.dart';
 import 'lib/sherdeprefrence/sherdhelp.dart';
+
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await sherdprefrence.init();
-  runApp( MyApp());
+  await AndroidAlarmManager.initialize();
+  var isSpalsh=sherdprefrence.getdate(key: "spalsh");
+  Widget widget;
+  if(isSpalsh==null)
+    widget=Spalsh();
+    else widget=homelayout();
+  runApp(MyApp(widget));
+
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+  final widget;
+  MyApp(this.widget);
+
 
   // This widget is the root of your application.
   @override
@@ -47,7 +60,7 @@ class MyApp extends StatelessWidget {
                     fontStyle: FontStyle.italic
 
                   ))),
-          home: homelayout(),
+          home: widget,
         ));
   }
 }

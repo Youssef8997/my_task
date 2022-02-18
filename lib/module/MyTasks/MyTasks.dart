@@ -12,6 +12,7 @@ import 'package:my_task/module/homelayout/layoutCuibt/cuibt.dart';
 import 'package:my_task/module/homelayout/layoutCuibt/loginstates.dart';
 import 'package:date_picker_timeline/date_picker_timeline.dart';
 import '../AddTasks/AddTasks.dart';
+import '../AddTasks/edit task.dart';
 
 int indexl = 0;
 
@@ -66,7 +67,7 @@ class _HomeTasksState extends State<HomeTasks> {
           physics: const BouncingScrollPhysics(),
           itemBuilder: (context, index) {
             if (tasj[index]["data"] == ondate || tasj[index]["data"] == "")
-              return Hero(tag: "yy", child: TaskCard(tasj[index], context));
+              return TaskCard(tasj[index], context);
             else
               return SizedBox(
                 height: 0,
@@ -179,7 +180,7 @@ class _HomeTasksState extends State<HomeTasks> {
               ),
               const Spacer(),
               const Icon(Icons.event),
-              Container(
+              SizedBox(
                 width: 70,
                 child: Text(
                   "${TASKS["data"]}",
@@ -196,68 +197,86 @@ class _HomeTasksState extends State<HomeTasks> {
     );
   }
 
-  Container dialogcontainer(color, TASKS) {
+  Container dialogcontainer(color, TASKS,context) {
+    var size=MediaQuery.of(context).size;
     return Container(
       padding: const EdgeInsetsDirectional.only(start: 15, top: 5, end: 10),
-      height: 200,
-      width: double.infinity - 40,
+      height: 250,
+      width: double.infinity,
       clipBehavior: Clip.antiAlias,
       decoration:
-          BoxDecoration(borderRadius: BorderRadius.circular(25), color: color),
+          BoxDecoration(borderRadius: BorderRadius.circular(30), color: color),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Text(
-                "${TASKS["title"]}",
-                style:
-                    const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-              ),
-              const Spacer(),
-              const Icon(Icons.access_time_outlined),
-              Text(
-                "${TASKS["time"]}",
-                style:
-                    const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-              ),
-            ],
+          SizedBox(
+            width: size.width/2,
+            height: 35,
+            child: Text(
+              "${TASKS["title"]}",
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+              style:
+                  const TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+            ),
           ),
-          const SizedBox(
-            height: 20,
+          SizedBox(
+            width: size.width/2,
+            height: 52,
+            child: Text(
+              "${TASKS["desc"]}",
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+              style:  TextStyle(
+                  fontSize: 20,
+                  color: Colors.grey[900],
+                  fontWeight: FontWeight.bold),
+            ),
           ),
+
           Row(
             children: [
-              Text(
-                "${TASKS["desc"]}",
-                style: TextStyle(
-                    fontSize: 15,
-                    color: Colors.grey[300],
-                    fontWeight: FontWeight.bold),
-              ),
-              const Spacer(),
-              const Icon(Icons.event),
-              Container(
-                width: 70,
+              const Icon(Icons.event,size: 20),
+              SizedBox(
+                width: 120,
                 child: Text(
                   "${TASKS["data"]}",
                   style: const TextStyle(
-                      fontSize: 18,
+                      fontSize: 20,
                       fontWeight: FontWeight.bold,
                       overflow: TextOverflow.ellipsis),
                 ),
               ),
             ],
           ),
-          const SizedBox(
-            height: 55,
-          ),
+          const SizedBox(height: 10,),
           Row(
             children: [
+              const Icon(Icons.access_time_outlined),
+              Text(
+                "${TASKS["time"]}",
+                style:
+                const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              ),
+            ],
+          ),
+          const SizedBox(
+            height: 30,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
               mybutton(
-                  Widget: IconButton(icon: Icon(Icons.edit), onPressed: () {}),
-                  function: () {}),
+                  Widget: Icon(Icons.edit),
+                  function: () {
+                    setState(() {
+                      layoutCuibt.get(context).currentStep=4;
+                    });
+
+                    NEV(context: context,bool: true,page: EditTask(id:TASKS["id"]));
+
+                  }),
             ],
           )
         ],
@@ -319,7 +338,7 @@ class _HomeTasksState extends State<HomeTasks> {
     return Positioned(
       top: 40,
       left: 10,
-      child: Container(
+      child: SizedBox(
         height: 80,
         width: 500,
         child: DatePicker(DateTime.now(),
@@ -338,31 +357,22 @@ class _HomeTasksState extends State<HomeTasks> {
   }
 
   settingDialog(context, TASKS, color) {
+    var size=MediaQuery.of(context).size;
     return showDialog(
         context: context,
         builder: (context) {
           return BlurryContainer(
             height: double.maxFinite,
             width: double.maxFinite,
-            blur: 3,
+            blur: 6,
             child: Stack(
               children: [
-                Positioned(
-                    left: 50,
-                    top: 285,
-                    right: 100,
-                    child: emptydialogcontainer(taskHighColors, TASKS)),
-                Positioned(
-                    left: 55,
-                    top: 280,
-                    right: 100,
-                    child: emptydialogcontainer(TaskMedColors, TASKS)),
                 AlertDialog(
                   clipBehavior: Clip.antiAliasWithSaveLayer,
                   backgroundColor: Colors.white.withOpacity(0),
                   elevation: 0,
                   content:
-                      Hero(tag: "yy", child: dialogcontainer(color, TASKS)),
+                      dialogcontainer(color, TASKS,context),
                 ),
               ],
             ),

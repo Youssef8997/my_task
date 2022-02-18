@@ -1,4 +1,4 @@
-import 'package:flutter/cupertino.dart';
+
 import 'package:flutter/material.dart';
 
 class JokarPoint extends StatelessWidget {
@@ -42,10 +42,10 @@ class JokarPoint extends StatelessWidget {
             ),
             child: TextFormField(
               controller:rightpalyer,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                border: InputBorder.none
               ),
-          keyboardType: TextInputType.numberWithOptions(),
+          keyboardType:const  TextInputType.numberWithOptions(),
 
             ),
 

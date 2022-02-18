@@ -1,4 +1,5 @@
 import 'package:bottom_navy_bar/bottom_navy_bar.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hexcolor/hexcolor.dart';
@@ -17,7 +18,29 @@ class homelayout extends StatelessWidget {
           return Scaffold(
             key: cuibt.kayscafold,
             appBar:cuibt.MyIndex!=1?cuibt.appbar[cuibt.MyIndex]:AppBar(
-              toolbarHeight: 0.0,
+              toolbarHeight: 30.0,
+              elevation: 2,
+              leadingWidth: 200,
+              leading: Row(children: [Icon(CupertinoIcons.money_dollar,color: Colors.green,size:30),
+                Text("${cuibt.sallaryAfter} LE",style: TextStyle(
+
+                    fontSize: 22,
+                    color: Colors.black,
+                    fontWeight: FontWeight.w900,
+                    fontStyle: FontStyle.italic
+
+                ),)]),
+              actions: [
+                Row(children: [Icon(CupertinoIcons.money_dollar,color: Colors.green,size:30),
+                  Text("${cuibt.sallary} LE",style: TextStyle(
+
+                      fontSize: 22,
+                      color: Colors.black,
+                      fontWeight: FontWeight.w900,
+                      fontStyle: FontStyle.italic
+
+                  ),)])
+              ],
             ),
              body:cuibt.body[cuibt.MyIndex],
               bottomNavigationBar: BottomNavyBar(
