@@ -9,10 +9,8 @@ import 'package:my_task/module/MyTasks/MyTasks.dart';
 import 'package:my_task/module/homelayout/layoutCuibt/cuibt.dart';
 import 'package:my_task/module/homelayout/layoutCuibt/loginstates.dart';
 
-var title = TextEditingController();
-var desc = TextEditingController();
-var date = TextEditingController();
-var time = TextEditingController();
+var datel = TextEditingController();
+var timed = TextEditingController();
 var now=DateTime.now();
 class EditTask extends StatefulWidget {
   final id;
@@ -23,7 +21,7 @@ class EditTask extends StatefulWidget {
 }
 @override
 Future<void> initState() async {
-  time.text =TimeOfDay.now().toString();
+  timed.text =TimeOfDay.now().toString();
 }
 class _EditTaskState extends State<EditTask> {
   final id;
@@ -40,7 +38,8 @@ class _EditTaskState extends State<EditTask> {
             appBar: appbar(),
             body: SingleChildScrollView(
               child: Stack(
-                children: [Wallpaperstack(size), buildStepper(cuibt,id)],
+                children: [Wallpaperstack(size),
+                  buildStepper(cuibt,id)],
               ),
             ),
           );
@@ -63,13 +62,13 @@ class _EditTaskState extends State<EditTask> {
         Step(
           title: Text("title", style: TextStyle(color: Colors.white)),
           content: Mytextfield(
-              hint: "Write title of your task......", Controlr: title,Enabled: false),
+              hint: "Write title of your task......",Enabled: false),
           state: cuibt.currentStep > 0 ? StepState.complete : StepState.indexed,
         ),
         Step(
           title: Text("description"),
           content: Mytextfield(
-              hint: "Write description of your task......", Controlr: desc,Enabled: false),
+              hint: "Write description of your task......",Enabled: false),
           state: cuibt.currentStep > 1 ? StepState.complete : StepState.indexed,
         ),
         Step(
@@ -82,7 +81,9 @@ class _EditTaskState extends State<EditTask> {
                   initialEntryMode: TimePickerEntryMode.input
               )
                   .then((value) {
-                time.text = value!.format(context).toString();
+                    setState(() {
+                      timed.text = value!.format(context).toString();
+                    });
               });
             },
             child: Row(
@@ -107,7 +108,10 @@ class _EditTaskState extends State<EditTask> {
                 firstDate: DateTime.now(),
                 lastDate: DateTime.parse('2022-11-07'),
               ).then((value) {
-                date.text =DateFormat.yMMMd().format(value!);
+                setState(() {
+                  datel.text =DateFormat.yMMMd().format(value!);
+                });
+
 
               });
             },
@@ -186,7 +190,7 @@ class _EditTaskState extends State<EditTask> {
           state: cuibt.currentStep > 5 ? StepState.complete : StepState.indexed,
         ),
       ],
-      onStepContinue: () => cuibt.OnPressedContStepperEdit(context,1,cuibt.firstvalue,cuibt.Scondvalue),
+      onStepContinue: () => cuibt.OnPressedContStepperEdit(context: context,id:1,),
       onStepCancel: () => cuibt.OnPressedcacselStepper(context),
     );
   }

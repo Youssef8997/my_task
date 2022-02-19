@@ -18,29 +18,7 @@ class homelayout extends StatelessWidget {
           return Scaffold(
             key: cuibt.kayscafold,
             appBar:cuibt.MyIndex!=1?cuibt.appbar[cuibt.MyIndex]:AppBar(
-              toolbarHeight: 30.0,
-              elevation: 2,
-              leadingWidth: 200,
-              leading: Row(children: [Icon(CupertinoIcons.money_dollar,color: Colors.green,size:30),
-                Text("${cuibt.sallaryAfter} LE",style: TextStyle(
-
-                    fontSize: 22,
-                    color: Colors.black,
-                    fontWeight: FontWeight.w900,
-                    fontStyle: FontStyle.italic
-
-                ),)]),
-              actions: [
-                Row(children: [Icon(CupertinoIcons.money_dollar,color: Colors.green,size:30),
-                  Text("${cuibt.sallary} LE",style: TextStyle(
-
-                      fontSize: 22,
-                      color: Colors.black,
-                      fontWeight: FontWeight.w900,
-                      fontStyle: FontStyle.italic
-
-                  ),)])
-              ],
+              toolbarHeight: 0.0,
             ),
              body:cuibt.body[cuibt.MyIndex],
               bottomNavigationBar: BottomNavyBar(

@@ -51,6 +51,7 @@ dependencies:
   timeline_tile: ^2.0.0
   bottom_sheet: ^1.0.5
   android_alarm_manager_plus: ^2.0.4
+  ease: ^0.0.10
 dev_dependencies:
   flutter_test:
     sdk: flutter

@@ -67,7 +67,9 @@ class _HomeTasksState extends State<HomeTasks> {
           physics: const BouncingScrollPhysics(),
           itemBuilder: (context, index) {
             if (tasj[index]["data"] == ondate || tasj[index]["data"] == "")
-              return TaskCard(tasj[index], context);
+              return Hero(
+                tag:1,
+                  child: TaskCard(tasj[index], context,index));
             else
               return SizedBox(
                 height: 0,
@@ -105,7 +107,7 @@ class _HomeTasksState extends State<HomeTasks> {
         ));
   }
 
-  Padding TaskCard(TASKS, context) {
+  Padding TaskCard(TASKS, context,index) {
     var color;
     if (TASKS["priority"] == "low") color = TaskLowColors;
     if (TASKS["priority"] == "medium") color = TaskMedColors;
@@ -114,7 +116,7 @@ class _HomeTasksState extends State<HomeTasks> {
       padding: const EdgeInsets.all(10.0),
       child: GestureDetector(
         onLongPress: () {
-          settingDialog(context, TASKS, color);
+          settingDialog(context, TASKS, color,index);
         },
         child: Dismissible(
           key: Key("${TASKS["id"].toString()}"),
@@ -271,11 +273,9 @@ class _HomeTasksState extends State<HomeTasks> {
                   Widget: Icon(Icons.edit),
                   function: () {
                     setState(() {
-                      layoutCuibt.get(context).currentStep=4;
+                      layoutCuibt.get(context).currentStep=2;
                     });
-
                     NEV(context: context,bool: true,page: EditTask(id:TASKS["id"]));
-
                   }),
             ],
           )
@@ -356,7 +356,7 @@ class _HomeTasksState extends State<HomeTasks> {
     );
   }
 
-  settingDialog(context, TASKS, color) {
+  settingDialog(context, TASKS, color,index) {
     var size=MediaQuery.of(context).size;
     return showDialog(
         context: context,
@@ -365,16 +365,12 @@ class _HomeTasksState extends State<HomeTasks> {
             height: double.maxFinite,
             width: double.maxFinite,
             blur: 6,
-            child: Stack(
-              children: [
-                AlertDialog(
-                  clipBehavior: Clip.antiAliasWithSaveLayer,
-                  backgroundColor: Colors.white.withOpacity(0),
-                  elevation: 0,
-                  content:
-                      dialogcontainer(color, TASKS,context),
-                ),
-              ],
+            child: AlertDialog(
+              clipBehavior: Clip.antiAliasWithSaveLayer,
+              backgroundColor: Colors.white.withOpacity(0),
+              elevation: 0,
+              content:
+                  dialogcontainer(color, TASKS,context),
             ),
           );
         });

@@ -12,6 +12,7 @@ import 'package:my_task/module/MoneyOrganiz/MoneyOrganiz.dart';
 import 'package:my_task/module/MyTasks/MyTasks.dart';
 import 'package:my_task/module/homelayout/layoutCuibt/loginstates.dart';
 import 'package:sqflite/sqflite.dart';
+import '../../AddTasks/edit task.dart';
 import '../../Gamespointer/Analytics.dart';
 
 class layoutCuibt extends Cubit<mytasks> {
@@ -26,7 +27,7 @@ class layoutCuibt extends Cubit<mytasks> {
   double sallary = sherdprefrence.getdate(key: "salary") != null
       ? sherdprefrence.getdate(key: "salary")
       : 0;
-  late double sallaryAfter = Budget.isNotEmpty ? double.parse(
+  late double sallaryAfter = Budget.isNotEmpty? double.parse(
       Budget[Budget.length - 1]["MONEYAfter"].toString()) : sherdprefrence
       .getdate(key: "salary");
   var currentStep = 0;
@@ -246,33 +247,53 @@ class layoutCuibt extends Cubit<mytasks> {
   Future<String> getname() async => ("youssef ahmed ");
 
   //update data in database
-  void update({ String? remind, String? repeat, required int id }) async {
-    if (remind != null) {
+  void update({ String? priority, String? repeat, int id=1,time,date }) async {
+    print("$priority ,$repeat,$time,$date");
+   /* if (priority != null && repeat != null && date != "" && time != "") {
       datab.rawUpdate(
-          'UPDATE TASKS SET remind=? WHERE id=? ', [remind, id]).then((value) {
-        getdate(datab);
-        emit(UpdateDataBaseError());
-      });
-    } else if (repeat != null) {
+          'UPDATE TASKS SET time=? WHERE id=? ', [time, id]);
       datab.rawUpdate(
-          'UPDATE TASKS SET repeat=? WHERE id=? ', [repeat, id]).then((value) {
-        getdate(datab);
-        emit(UpdateDataBaseError());
-      });
-    } else if (remind != null && repeat != null) {
+          'UPDATE TASKS SET data=? WHERE id=? ', [date, id]);
       datab.rawUpdate(
-          'UPDATE TASKS SET remind=? WHERE id=? ', [remind, id]).then((value) {
-        getdate(datab);
-        emit(UpdateDataBaseError());
-      });
+          'UPDATE TASKS SET priority=? WHERE id=? ', [priority, id]);
+      datab.rawUpdate(
+          'UPDATE TASKS SET repeat=? WHERE id=? ', [repeat, id]);
+      print("All things change");
+      getdataafterchange();
+      emit(UpdateDataBaseError());
+    }*/
+    if (repeat != null) {
       datab.rawUpdate(
           'UPDATE TASKS SET repeat=? WHERE id=? ', [repeat, id]).then((value) {
-        getdate(datab);
+            print("repeat");
+            getdataafterchange();
+        emit(UpdateDataBaseError());
+      });
+    }  if (priority != null) {
+      datab.rawUpdate(
+          'UPDATE TASKS SET priority=? WHERE id=? ', [priority, id]).then((
+          value) {
+        print("priority");
+        getdataafterchange();
+        emit(UpdateDataBaseError());
+      });
+    }  if (time != "") {
+      datab.rawUpdate(
+          'UPDATE TASKS SET time=? WHERE id=? ', [time, id]).then((value) {
+        print("time");
+        getdataafterchange();
+        emit(UpdateDataBaseError());
+      });
+    } if (date != "") {
+      datab.rawUpdate(
+          'UPDATE TASKS SET data=? WHERE id=? ', [date, id]).then((value) {
+        print("data");
+        getdataafterchange();
         emit(UpdateDataBaseError());
       });
     }
-  }
 
+  }
   //delete task from datebase
   void delete({required int id }) async {
     await datab.rawDelete('DELETE FROM TASKS WHERE id=? ', [id]);
@@ -325,21 +346,24 @@ class layoutCuibt extends Cubit<mytasks> {
         currentStep = 0;
         title.clear();
         desc.clear();
+        time.clear();
+        date.clear();
         Navigator.pop(context);
         emit(OnPressedonStepper());
       
     }
   }
-  void OnPressedContStepperEdit(context,id,remined,repeat) async {
+  void OnPressedContStepperEdit(
+      {context, id, priority, repeat}) async {
     if (currentStep < 5) {
       currentStep += 1;
       emit(OnPressedonStepper());
     } else {
-        update(id:id,remind:remined,repeat: repeat );
-        await AndroidAlarmManager.periodic(const Duration(minutes: 1), id, printHello);
+        update(id:id,priority:Scondvalue,repeat:firstvalue,date:datel.text,time: timed.text );
         currentStep = 0;
-        title.clear();
-        desc.clear();
+
+        time.clear();
+        date.clear();
         Navigator.pop(context);
         emit(OnPressedonStepper());
 
