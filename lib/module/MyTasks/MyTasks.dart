@@ -1,4 +1,5 @@
 import 'package:blurrycontainer/blurrycontainer.dart';
+import 'package:ease/animations/hero_page_route.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -116,7 +117,7 @@ class _HomeTasksState extends State<HomeTasks> {
       padding: const EdgeInsets.all(10.0),
       child: GestureDetector(
         onLongPress: () {
-          settingDialog(context, TASKS, color,index);
+          HeroDialogRoute(builder:(context)=>dialogcontainer(color, TASKS,context));
         },
         child: Dismissible(
           key: Key("${TASKS["id"].toString()}"),
@@ -199,87 +200,90 @@ class _HomeTasksState extends State<HomeTasks> {
     );
   }
 
-  Container dialogcontainer(color, TASKS,context) {
+  Hero dialogcontainer(color, TASKS,context) {
     var size=MediaQuery.of(context).size;
-    return Container(
-      padding: const EdgeInsetsDirectional.only(start: 15, top: 5, end: 10),
-      height: 250,
-      width: double.infinity,
-      clipBehavior: Clip.antiAlias,
-      decoration:
-          BoxDecoration(borderRadius: BorderRadius.circular(30), color: color),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          SizedBox(
-            width: size.width/2,
-            height: 35,
-            child: Text(
-              "${TASKS["title"]}",
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-              style:
-                  const TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
-            ),
-          ),
-          SizedBox(
-            width: size.width/2,
-            height: 52,
-            child: Text(
-              "${TASKS["desc"]}",
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-              style:  TextStyle(
-                  fontSize: 20,
-                  color: Colors.grey[900],
-                  fontWeight: FontWeight.bold),
-            ),
-          ),
-
-          Row(
-            children: [
-              const Icon(Icons.event,size: 20),
-              SizedBox(
-                width: 120,
-                child: Text(
-                  "${TASKS["data"]}",
-                  style: const TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      overflow: TextOverflow.ellipsis),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 10,),
-          Row(
-            children: [
-              const Icon(Icons.access_time_outlined),
-              Text(
-                "${TASKS["time"]}",
+    return Hero(
+      tag: 1,
+      child: Container(
+        padding: const EdgeInsetsDirectional.only(start: 15, top: 5, end: 10),
+        height: 250,
+        width: double.infinity,
+        clipBehavior: Clip.antiAlias,
+        decoration:
+            BoxDecoration(borderRadius: BorderRadius.circular(30), color: color),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            SizedBox(
+              width: size.width/2,
+              height: 35,
+              child: Text(
+                "${TASKS["title"]}",
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
                 style:
-                const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                    const TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
               ),
-            ],
-          ),
-          const SizedBox(
-            height: 30,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              mybutton(
-                  Widget: Icon(Icons.edit),
-                  function: () {
-                    setState(() {
-                      layoutCuibt.get(context).currentStep=2;
-                    });
-                    NEV(context: context,bool: true,page: EditTask(id:TASKS["id"]));
-                  }),
-            ],
-          )
-        ],
+            ),
+            SizedBox(
+              width: size.width/2,
+              height: 52,
+              child: Text(
+                "${TASKS["desc"]}",
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style:  TextStyle(
+                    fontSize: 20,
+                    color: Colors.grey[900],
+                    fontWeight: FontWeight.bold),
+              ),
+            ),
+
+            Row(
+              children: [
+                const Icon(Icons.event,size: 20),
+                SizedBox(
+                  width: 120,
+                  child: Text(
+                    "${TASKS["data"]}",
+                    style: const TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        overflow: TextOverflow.ellipsis),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 10,),
+            Row(
+              children: [
+                const Icon(Icons.access_time_outlined),
+                Text(
+                  "${TASKS["time"]}",
+                  style:
+                  const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                ),
+              ],
+            ),
+            const SizedBox(
+              height: 30,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                mybutton(
+                    Widget: Icon(Icons.edit),
+                    function: () {
+                      setState(() {
+                        layoutCuibt.get(context).currentStep=2;
+                      });
+                      NEV(context: context,bool: true,page: EditTask(id:TASKS["id"]));
+                    }),
+              ],
+            )
+          ],
+        ),
       ),
     );
   }
