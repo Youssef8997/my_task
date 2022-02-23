@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:hexcolor/hexcolor.dart';
 import 'package:my_task/Componads/Com.dart';
 import 'package:my_task/Componads/my%20textformfild.dart';
 import 'package:my_task/Componads/mybutton.dart';
@@ -27,6 +26,8 @@ class _SignupState extends State<Signup> {
   var phone = TextEditingController();
 
   bool isobsring = false;
+  bool vis = true;
+  Color? ontap=Colors.white.withOpacity(.9);
 
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
@@ -54,7 +55,9 @@ class _SignupState extends State<Signup> {
               Wallpaperstack(size),
               Textupcontenar("Hi,Signup now....."),
               Positioned(
-bottom: 0,
+                left: 5,
+                right: 5,
+                top: 550,
                 child: SizedBox(
                   height: 200,
                   width: double.maxFinite,
@@ -62,13 +65,26 @@ bottom: 0,
             physics: NeverScrollableScrollPhysics(),
                       shrinkWrap:false ,
                       scrollDirection: Axis.horizontal,
-                      itemBuilder: (context, index) => Catogry_Avatar(Status[index],context),
+                      itemBuilder: (context, index) => InkWell(
+                          onTap: (){
+                            setState(() {
+                                ontap = Colors.teal;
+
+                                Status.forEach((element) {
+                                  if(element!=Status[index])
+                                  element.ontap=false;
+                                });
+
+
+                           });
+                          },
+                          child: Catogry_Avatar(Status[index],context,)),
                       separatorBuilder:(context,index)=> SizedBox(width: 5,),
                       itemCount: Status.length),
                 ),
               ),
               Positioned(
-                  bottom: 210,
+                  bottom: 220,
                   left: 30,
                   child:
               SignupContenar())
@@ -202,7 +218,7 @@ bottom: 0,
 
   Positioned Textupcontenar(text) {
     return Positioned(
-      top: 60,
+      top: 20,
       left: 10,
       child: Row(
         children: [
@@ -236,41 +252,48 @@ bottom: 0,
     );
   }
 
-  Column Catogry_Avatar(StatusModel model, context) {
+  Column Catogry_Avatar(StatusModel model, context,) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        Container(
-          width: 130,
-          height: 130,
-          decoration: BoxDecoration(
-              color: Colors.white.withOpacity(.9),
-              borderRadius: BorderRadiusDirectional.circular(30.0)),
-          child: Column(
-            children: [
-              SizedBox(
-                height: 3,
-              ),
-              InkWell(
-                child: CircleAvatar(
-                  radius: 53,
+        AnimatedOpacity(
+          duration: Duration(seconds: 1),
+          curve: Curves.fastOutSlowIn,
+          opacity:model.ontap?1:0,
+          child: AnimatedContainer(
+            width: 130,
+            height: 141,
+            decoration: BoxDecoration(
+                color:ontap,
+                borderRadius: BorderRadiusDirectional.circular(30.0)),
+            duration: Duration(seconds: 1),
+            curve: Curves.fastOutSlowIn,
+            child: Column(
+              children: [
+                SizedBox(
+                  height: 3,
+                ),
+                CircleAvatar(
+                  radius: 57,
                   backgroundColor: Colors.redAccent.shade700,
                   foregroundColor: Colors.white,
                   child: CircleAvatar(
+
                     foregroundColor: Colors.white,
                     backgroundImage: AssetImage(
                       model.Photo!,
                     ),
-                    radius: 50.0,
+                    radius: 53.0,
                     backgroundColor: Colors.white,
+
                   ),
                 ),
-              ),
-              Text(
-                model.title!,
-                style: const TextStyle(fontWeight: FontWeight.bold),
-              )
-            ],
+                Text(
+                  model.title!,
+                  style: const TextStyle(fontWeight: FontWeight.w900,),
+                )
+              ],
+            ),
           ),
         )
       ],
@@ -281,39 +304,27 @@ bottom: 0,
 class StatusModel {
   final String? Photo;
   final String? title;
+   bool ontap=true;
 
-  StatusModel({required this.Photo, required this.title});
+  StatusModel({required this.Photo, required this.title,ontap});
 }
 
 List<StatusModel> Status = [
   StatusModel(
-    Photo: "lib/Image/House illustration 1.png",
-    title: "Home",
+    Photo: "lib/Image/single.jpg",
+    title: "Single",
+     ontap: true,
   ),
   StatusModel(
-    Photo: "lib/Image/Clothing-Logo-Vector.png",
-    title: "Clothes",
+    Photo: "lib/Image/married man.jpg",
+    title: "Married",
+    ontap: true,
+
   ),
   StatusModel(
-    Photo: "lib/Image/helthcare.jpg",
-    title: "Health care",
+    Photo: "lib/Image/bussines logo.jpg",
+    title: "Business",
+    ontap: true,
   ),
-  StatusModel(
-    Photo:
-        "lib/Image/group-young-friends-having-fun-together-vector-26803087.jpg",
-    title: "Fun",
-  ),
-  StatusModel(
-    Photo:
-        "lib/Image/travel-logo-vector-illustration-black-airplane-isolated-white-115729130.jpg",
-    title: "Travel",
-  ),
-  StatusModel(
-    Photo: "lib/Image/logo-template-44-.jpg",
-    title: "Money saving",
-  ),
-  StatusModel(
-    Photo: "lib/Image/gain money.webp",
-    title: "Gained money",
-  ),
+
 ];
