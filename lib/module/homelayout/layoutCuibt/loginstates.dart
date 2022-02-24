@@ -21,6 +21,7 @@ class  OnPressedcacselStepper  extends mytasks{}
 class  OnPressedonStepper  extends mytasks{}
 class  getsallary  extends mytasks{}
 class  getsallaryafter  extends mytasks{}
+class  getUsersData  extends mytasks{}
 class  changeCatogery extends mytasks{}
 class  changedate extends mytasks{}
 

@@ -353,7 +353,7 @@ class _HomeTasksState extends State<HomeTasks> {
             ondate = DateFormat.yMMMd().format(value);
             print(ondate.toString());
             layoutCuibt.get(context).Ondate = ondate;
-            layoutCuibt.get(context).getdataafterchange();
+            layoutCuibt.get(context).getDataTasksAfterChange();
           });
         }),
       ),

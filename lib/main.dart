@@ -61,7 +61,7 @@ class MyApp extends StatelessWidget {
                     fontStyle: FontStyle.italic
 
                   ))),
-          home: Signup(),
+          home: widget(),
         ));
   }
 }

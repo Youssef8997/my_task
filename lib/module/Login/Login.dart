@@ -1,14 +1,16 @@
 import 'dart:ui';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
-
 import 'package:my_task/Componads/Com.dart';
 import 'package:my_task/Componads/my%20textformfild.dart';
 import 'package:my_task/Componads/mybutton.dart';
 import 'package:my_task/module/Login/signup/Signup.dart';
+import 'package:my_task/lib/sherdeprefrence/sherdhelp.dart';
 import 'package:my_task/module/homelayout/layout.dart';
+import 'package:my_task/module/homelayout/layoutCuibt/cuibt.dart';
+import 'package:my_task/module/homelayout/layoutCuibt/loginstates.dart';
 
 
 class Login extends StatefulWidget {
@@ -21,18 +23,26 @@ class _LoginState extends State<Login> {
   var emailcontrolar = TextEditingController();
 
   var passwordcontrolar = TextEditingController();
-  bool isobsring = false;
+  bool isobsring = true;
   var form = GlobalKey<FormState>();
+  @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
+    return BlocConsumer<layoutCuibt,mytasks>
+      (
 
-    return Scaffold(
-      appBar: appbar(),
-      body: BodyLogin(size),
-    );
+        listener: (context,state){},
+         builder: (context,state)
+         {
+           var users=layoutCuibt.get(context).Users;
+            return  Scaffold(
+                appBar: appbar(),
+                body: BodyLogin(size,users),
+              );
+            });
   }
 
-  SingleChildScrollView BodyLogin(Size size) {
+  SingleChildScrollView BodyLogin(Size size,users) {
     return SingleChildScrollView(
       child: Column(
         mainAxisSize: MainAxisSize.max,
@@ -42,7 +52,7 @@ class _LoginState extends State<Login> {
             children: [
               Wallpaperstack(size),
               Textupcontenar(),
-              loginContenar()
+              loginContenar(users)
             ],
           ),
         ],
@@ -50,19 +60,18 @@ class _LoginState extends State<Login> {
     );
   }
 
-  Container loginContenar() {
+  Container loginContenar(users) {
     return Container(
       padding: const EdgeInsetsDirectional.all(15),
       width: 350,
-      height: 400,
+      height: 350,
       decoration: BoxDecoration(
           color: maincolor,
-          borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(35), bottomRight: Radius.circular(35))),
+          borderRadius: BorderRadius.circular(35.0)),
       child: Form(
         key:form,
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             Mytextfield(
                 Controlr: emailcontrolar,
@@ -108,7 +117,15 @@ class _LoginState extends State<Login> {
               fontSize: 18.0,)), function: () => {
               if (form.currentState!.validate())
                 {
-                  NEV(context: context, bool: false, page: homelayout())
+                  if(emailcontrolar.text==users[0]["Email"])
+                    {
+                      if(passwordcontrolar.text==users[0]["pass"]
+                      ){
+                        NEV(context: context, bool: false, page: homelayout()),
+                    sherdprefrence.setdate(key:"login", value: true)
+                    }
+                   else print("wronge password")
+                    }else print("wrong email")
                 }, }),
             mybutton(Widget: Text("Signup",style:TextStyle(
               color: Colors.white,

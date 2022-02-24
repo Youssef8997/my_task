@@ -24,6 +24,7 @@ class layoutCuibt extends Cubit<mytasks> {
   List<Map> tasks = [];
   List<Map> task = [];
   List<Map> Budget = [];
+  List<Map> Users = [];
   double sallary = sherdprefrence.getdate(key: "salary") != null
       ? sherdprefrence.getdate(key: "salary")
       : 0;
@@ -115,6 +116,8 @@ class layoutCuibt extends Cubit<mytasks> {
       datab.execute(
           'CREATE TABLE TASKS (id INTEGER PRIMARY KEY,title TEXT,desc TEXT,data TEXT ,time STRING,repeat INTEGER,priority TEXT)');
       datab.execute(
+          'CREATE TABLE Users (id INTEGER PRIMARY KEY, Name TEXT,Email TEXT,pass TEXT ,Phone TEXT,status STRING)');
+      datab.execute(
           'CREATE TABLE BUDGET (id INTEGER PRIMARY KEY,title TEXT,desc TEXT,MONEY num, MONEYAfter num,data STRING,catogry TEXT)')
           .then((value) {
         emit(CreateDataBaseSucssesful());
@@ -124,7 +127,7 @@ class layoutCuibt extends Cubit<mytasks> {
       });
     }, onOpen: (datab) {
       print("open data base");
-      getdate(datab).then((value) {
+      getDataTasks(datab).then((value) {
         task = value;
         task.forEach((element) {
           if (element["data"] == Ondate)
@@ -136,25 +139,34 @@ class layoutCuibt extends Cubit<mytasks> {
         print("the error is ${Error.toString()}");
         emit(GetDataBaseError());
       });
-      getdatebudget(datab).then((value) {
+      getDataBudget(datab).then((value) {
         Budget = [];
         Budget = value;
         emit(GetDatabudgetSucssesful());
+      });
+      getDateUsers(datab).then((value) {
+        Users = [];
+        Users = value;
+        print(Users);
+        emit(getUsersData());
       });
     });
   }
 
   //get data from Datebase
-  Future<List<Map>> getdate(datab) async {
+  Future<List<Map>> getDataTasks(datab) async {
     return await datab.rawQuery('SELECT*FROM TASKS');
   }
 
-  Future<List<Map>> getdatebudget(datab) async {
+  Future<List<Map>> getDataBudget(datab) async {
     return await datab.rawQuery('SELECT*FROM BUDGET');
   }
+  Future<List<Map>> getDateUsers(datab) async {
+    return await datab.rawQuery('SELECT*FROM Users');
+  }
 
-  void getdataafterchange() {
-    getdate(datab).then((value) {
+  void getDataTasksAfterChange() {
+    getDataTasks(datab).then((value) {
       task = [];
       tasks = [];
       task = value;
@@ -166,25 +178,47 @@ class layoutCuibt extends Cubit<mytasks> {
     });
   }
 
-  void getBUDGETafterchange() {
-    getdatebudget(datab).then((value) {
+  void getBudgetAfterChange() {
+    getDataBudget(datab).then((value) {
       Budget = [];
       Budget = value;
       print(Budget);
       emit(getsallaryafter());
     });
   }
+  void getUsersAfterChange() {
+    getDateUsers(datab).then((value) {
+      Users = [];
+      Users = value;
+      print(Users);
+      emit(getUsersData());
+    });
+  }
 
   //insert new task in Datebase
-  Future insert(
-      {required title, required desc, required time, required date, required repeat, required priority}) async {
+  Future insert({required title, required desc, required time, required date, required repeat, required priority}) async {
     await datab.transaction((txn) {
       txn.rawInsert(
           'INSERT INTO TASKS(title,desc,time,data,repeat,priority)VALUES("$title","$desc","$time","$date","$repeat","$priority")')
 
           .then((value) {
         print("$value insertetd sucsseffly");
-        getdataafterchange();
+        getDataTasksAfterChange();
+      }).catchError((error) {
+        print(" the error is ${error.toString()}");
+        emit(InsertDataBaseError());
+      });
+      return getname();
+    });
+  }
+  Future insertToUsers({required Name, required Email, required pass, required phone, required status}) async {
+    await datab.transaction((txn) {
+      txn.rawInsert(
+          'INSERT INTO Users(Name,Email,pass,Phone,status)VALUES("$Name","$Email","$pass","$phone","$status")')
+      //'INSERT INTO TASKS(title,desc,time,data,repeat,priority)VALUES("$title","$desc","$time","$date","$repeat","$priority")')
+          .then((value) {
+        print("$value insertetd sucsseffly");
+        getUsersAfterChange();
       }).catchError((error) {
         print(" the error is ${error.toString()}");
         emit(InsertDataBaseError());
@@ -202,7 +236,7 @@ class layoutCuibt extends Cubit<mytasks> {
             'INSERT INTO BUDGET(title,desc,MONEY,MONEYAfter,data,catogry)VALUES("$title","$desc","$MONEY","${sallaryAfter +
                 MONEY}","$data","$catogry")').then((value) {
           print("$value inserted successes");
-          getdatebudget(datab).then((value) {
+          getDataBudget(datab).then((value) {
             Budget = [];
             Budget = value;
             print(Budget);
@@ -224,7 +258,7 @@ class layoutCuibt extends Cubit<mytasks> {
                 MONEY}","$data","$catogry")')
             .then((value) {
           print("$value inserted successes");
-          getdatebudget(datab).then((value) {
+          getDataBudget(datab).then((value) {
             Budget = [];
             Budget = value;
             print(Budget);
@@ -266,7 +300,7 @@ class layoutCuibt extends Cubit<mytasks> {
       datab.rawUpdate(
           'UPDATE TASKS SET repeat=? WHERE id=? ', [repeat, id]).then((value) {
             print("repeat");
-            getdataafterchange();
+            getDataTasksAfterChange();
         emit(UpdateDataBaseError());
       });
     }  if (priority != null) {
@@ -274,21 +308,21 @@ class layoutCuibt extends Cubit<mytasks> {
           'UPDATE TASKS SET priority=? WHERE id=? ', [priority, id]).then((
           value) {
         print("priority");
-        getdataafterchange();
+        getDataTasksAfterChange();
         emit(UpdateDataBaseError());
       });
     }  if (time != "") {
       datab.rawUpdate(
           'UPDATE TASKS SET time=? WHERE id=? ', [time, id]).then((value) {
         print("time");
-        getdataafterchange();
+        getDataTasksAfterChange();
         emit(UpdateDataBaseError());
       });
     } if (date != "") {
       datab.rawUpdate(
           'UPDATE TASKS SET data=? WHERE id=? ', [date, id]).then((value) {
         print("data");
-        getdataafterchange();
+        getDataTasksAfterChange();
         emit(UpdateDataBaseError());
       });
     }
@@ -297,7 +331,7 @@ class layoutCuibt extends Cubit<mytasks> {
   //delete task from datebase
   void delete({required int id }) async {
     await datab.rawDelete('DELETE FROM TASKS WHERE id=? ', [id]);
-    getdate(datab).then((value) {
+    getDataTasks(datab).then((value) {
       tasks = [];
       tasks = value;
       print(tasks);
@@ -307,7 +341,7 @@ class layoutCuibt extends Cubit<mytasks> {
 
   void deletebudget({required int id }) async {
     await datab.rawDelete('DELETE FROM BUDGET WHERE id=? ', [id]);
-    getdatebudget(datab).then((value) {
+    getDataBudget(datab).then((value) {
       Budget = [];
       Budget = value;
       print(Budget);

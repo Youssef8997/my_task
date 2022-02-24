@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:my_task/Componads/Com.dart';
 import 'package:my_task/Componads/my%20textformfild.dart';
@@ -7,6 +8,9 @@ import 'package:my_task/Componads/mybutton.dart';
 import 'dart:ui';
 
 import 'package:my_task/module/Login/Login.dart';
+import 'package:my_task/module/homelayout/layout.dart';
+import 'package:my_task/module/homelayout/layoutCuibt/cuibt.dart';
+import 'package:my_task/module/homelayout/layoutCuibt/loginstates.dart';
 
 class Signup extends StatefulWidget {
   @override
@@ -22,18 +26,24 @@ class _SignupState extends State<Signup> {
   var repass = TextEditingController();
 
   var name = TextEditingController();
-
+String? StatusUser;
   var phone = TextEditingController();
 
-  bool isobsring = false;
+  bool isobsring = true;
   bool vis = true;
-  Color? ontap=Colors.white.withOpacity(.9);
+  Color? ontap = Colors.white.withOpacity(.9);
 
   Widget build(BuildContext context) {
-    var size = MediaQuery.of(context).size;
-    return Scaffold(
-      appBar: appbar(),
-      body: BodyLogin(size)
+    var size = MediaQuery
+        .of(context)
+        .size;
+    return BlocConsumer<layoutCuibt,mytasks>
+      (
+        listener:(context, state) {},
+        builder:(context,state)=>Scaffold(
+        appBar: appbar(),
+        body: BodyLogin(size)
+    )
     );
   }
 
@@ -55,39 +65,41 @@ class _SignupState extends State<Signup> {
               Wallpaperstack(size),
               Textupcontenar("Hi,Signup now....."),
               Positioned(
-                left: 5,
-                right: 5,
+                left: 10,
+                right: 10,
                 top: 550,
                 child: SizedBox(
                   height: 200,
                   width: double.maxFinite,
                   child: ListView.separated(
-            physics: NeverScrollableScrollPhysics(),
-                      shrinkWrap:false ,
+                      physics: NeverScrollableScrollPhysics(),
+                      shrinkWrap: false,
                       scrollDirection: Axis.horizontal,
-                      itemBuilder: (context, index) => InkWell(
-                          onTap: (){
-                            setState(() {
-                                ontap = Colors.teal;
-
-                                Status.forEach((element) {
-                                  if(element!=Status[index])
-                                  element.ontap=false;
-                                });
-
-
-                           });
-                          },
-                          child: Catogry_Avatar(Status[index],context,)),
-                      separatorBuilder:(context,index)=> SizedBox(width: 5,),
+                      itemBuilder: (context, index) =>
+                          InkWell(
+                              onTap: () {
+                                StatusUser=Status[index].title;
+                                if (ontap == Colors.teal)
+                                  return null;
+                                else
+                                  setState(() {
+                                    ontap = Colors.teal;
+                                    Status.forEach((element) {
+                                      if (element != Status[index])
+                                        element.ontap = false;
+                                    });
+                                  });
+                              },
+                              child: Catogry_Avatar(Status[index], context,)),
+                      separatorBuilder: (context, index) => SizedBox(width: 5,),
                       itemCount: Status.length),
                 ),
               ),
               Positioned(
-                  bottom: 220,
+                  bottom: 210,
                   left: 30,
                   child:
-              SignupContenar())
+                  SignupContenar())
             ],
           ),
         ],
@@ -102,8 +114,7 @@ class _SignupState extends State<Signup> {
       height: 400,
       decoration: BoxDecoration(
           color: maincolor,
-          borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(35), bottomRight: Radius.circular(35))),
+          borderRadius: BorderRadius.circular(35.0)),
       child: Form(
         key: kayform,
         child: Column(
@@ -114,7 +125,7 @@ class _SignupState extends State<Signup> {
                 hint: "Enter you name,...",
                 keybordtype: TextInputType.name,
                 Prefix:
-                    Icon(Icons.drive_file_rename_outline, color: Colors.grey),
+                Icon(Icons.drive_file_rename_outline, color: Colors.grey),
                 validator: (value) {
                   if (value!.isEmpty) {
                     return "      Name must not be empty";
@@ -154,9 +165,9 @@ class _SignupState extends State<Signup> {
                   },
                   child: isobsring
                       ? Icon(
-                          Icons.visibility_off_outlined,
-                          color: Colors.grey,
-                        )
+                    Icons.visibility_off_outlined,
+                    color: Colors.grey,
+                  )
                       : Icon(Icons.remove_red_eye, color: Colors.grey),
                 )),
             Mytextfield(
@@ -184,9 +195,9 @@ class _SignupState extends State<Signup> {
                   },
                   child: isobsring
                       ? Icon(
-                          Icons.visibility_off_outlined,
-                          color: Colors.grey,
-                        )
+                    Icons.visibility_off_outlined,
+                    color: Colors.grey,
+                  )
                       : Icon(Icons.remove_red_eye, color: Colors.grey),
                 )),
             Mytextfield(
@@ -206,13 +217,19 @@ class _SignupState extends State<Signup> {
                       color: Colors.white,
                       fontSize: 18.0,
                     )),
-                function: () => {
-                      if (kayform.currentState!.validate())
-                        {NEV(context: context, bool: true, page: Login())},
-                    })
-          ],
-        ),
-      ),
+                function: () =>
+                {
+                  if (kayform.currentState!.validate())
+                    {
+                      NEV(context: context, bool: true, page:homelayout()),
+                      layoutCuibt.get(context).insertToUsers(Name: name.text, Email: email.text, pass: pass.text, phone: phone.text, status:StatusUser )
+
+                    },
+
+                })
+    ],
+    ),
+    ),
     );
   }
 
@@ -257,14 +274,14 @@ class _SignupState extends State<Signup> {
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         AnimatedOpacity(
-          duration: Duration(seconds: 1),
+          duration: Duration(seconds: 2),
           curve: Curves.fastOutSlowIn,
-          opacity:model.ontap?1:0,
+          opacity: model.ontap ? 1 : 0,
           child: AnimatedContainer(
             width: 130,
             height: 141,
             decoration: BoxDecoration(
-                color:ontap,
+                color: ontap,
                 borderRadius: BorderRadiusDirectional.circular(30.0)),
             duration: Duration(seconds: 1),
             curve: Curves.fastOutSlowIn,
@@ -304,16 +321,16 @@ class _SignupState extends State<Signup> {
 class StatusModel {
   final String? Photo;
   final String? title;
-   bool ontap=true;
+  bool ontap = true;
 
-  StatusModel({required this.Photo, required this.title,ontap});
+  StatusModel({required this.Photo, required this.title, ontap});
 }
 
 List<StatusModel> Status = [
   StatusModel(
     Photo: "lib/Image/single.jpg",
     title: "Single",
-     ontap: true,
+    ontap: true,
   ),
   StatusModel(
     Photo: "lib/Image/married man.jpg",
