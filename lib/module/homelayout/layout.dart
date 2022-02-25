@@ -17,9 +17,7 @@ class homelayout extends StatelessWidget {
         builder: (context,state){
           return Scaffold(
             key: cuibt.kayscafold,
-            appBar:cuibt.MyIndex!=1?cuibt.appbar[cuibt.MyIndex]:AppBar(
-              toolbarHeight: 0.0,
-            ),
+
              body:cuibt.body[cuibt.MyIndex],
               bottomNavigationBar: BottomNavyBar(
                 containerHeight: 60,

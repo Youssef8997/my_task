@@ -97,10 +97,7 @@ class _MoneyOraganizeState extends State<MoneyOraganize> {
                         curve: Curves.easeOutCubic);
                   });
                 })),
-        precentge_circular(
-          size,
-          precent,
-        ),
+        precentge_circular(size, precent,),
         Positioned(
           bottom: 0,
           top: 300,
@@ -134,7 +131,7 @@ class _MoneyOraganizeState extends State<MoneyOraganize> {
                 });
               }),
         ),
-        Textupmoney("Hello again!"),
+        Textupmoney("${layoutCuibt.get(context).sallaryAfter} LE"),
         Positioned(
           top: 100,
           bottom: 0,
@@ -297,7 +294,7 @@ class _MoneyOraganizeState extends State<MoneyOraganize> {
       physics: const BouncingScrollPhysics(),
       crossAxisCount: 2,
       children: List.generate(
-          Category.length, (index) => Catogry_Avatar(Category[index], context)),
+          layoutCuibt.get(context).Users[0]["status"]=="Single"?SingleCategory.length:MarriedCategory.length, (index) => Catogry_Avatar(layoutCuibt.get(context).Users[0]["status"]=="Single"?SingleCategory[index]:MarriedCategory[index], context)),
     );
   }
 
@@ -658,7 +655,7 @@ class CategoryModel {
   CategoryModel({required this.Photo, required this.title});
 }
 
-List<CategoryModel> Category = [
+List<CategoryModel> SingleCategory = [
   CategoryModel(
     Photo: "lib/Image/House illustration 1.png",
     title: "Home",
@@ -689,4 +686,46 @@ List<CategoryModel> Category = [
     Photo: "lib/Image/gain money.webp",
     title: "Gained money",
   ),
+];
+List<CategoryModel> MarriedCategory =[
+  CategoryModel(
+    Photo: "lib/Image/House illustration 1.png",
+    title: "Home",
+  ),
+  CategoryModel(
+    Photo: "lib/Image/Teaching.png",
+    title: "teaching",
+  ),
+  CategoryModel(
+    Photo: "lib/Image/food.png",
+    title: "Food",
+  ),
+  CategoryModel(
+    Photo: "lib/Image/Clothing-Logo-Vector.png",
+    title: "Clothes",
+  ),
+  CategoryModel(
+    Photo: "lib/Image/helthcare.jpg",
+    title: "Health care",
+  ),
+  CategoryModel(
+    Photo:
+    "lib/Image/group-young-friends-having-fun-together-vector-26803087.jpg",
+    title: "Fun",
+  ),
+  CategoryModel(
+    Photo:
+    "lib/Image/travel-logo-vector-illustration-black-airplane-isolated-white-115729130.jpg",
+    title: "Travel",
+  ),
+  CategoryModel(
+    Photo: "lib/Image/logo-template-44-.jpg",
+    title: "Money saving",
+  ),
+  CategoryModel(
+    Photo: "lib/Image/gain money.webp",
+    title: "Gained money",
+  ),
+
+
 ];

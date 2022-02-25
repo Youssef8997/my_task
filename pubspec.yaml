@@ -52,6 +52,8 @@ dependencies:
   bottom_sheet: ^1.0.5
   android_alarm_manager_plus: ^2.0.4
   ease: ^0.0.10
+  motion_toast: ^2.1.1
+  velocity_x: ^3.4.0
 dev_dependencies:
   flutter_test:
     sdk: flutter

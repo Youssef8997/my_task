@@ -1,11 +1,10 @@
-import 'dart:isolate';
 
 import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:my_task/Componads/Com.dart';
-import 'package:my_task/module/Login/signup/Signup.dart';
+import 'package:my_task/module/Login/Login.dart';
 import 'package:my_task/module/SpalshScreen/Spalsh.dart';
 import 'package:my_task/module/homelayout/layout.dart';
 import 'package:my_task/module/homelayout/layoutCuibt/cuibt.dart';
@@ -17,9 +16,15 @@ Future<void> main() async {
   await sherdprefrence.init();
   await AndroidAlarmManager.initialize();
   var isSpalsh=sherdprefrence.getdate(key: "spalsh");
+  var isLogin=sherdprefrence.getdate(key: "login");
+  print(isLogin);
   Widget widget;
-  if(isSpalsh==null)
-    widget=Spalsh();
+  if(isSpalsh==null) {
+    widget = Spalsh();
+  }
+
+  else if (isLogin==null)
+    widget=Login();
     else widget=homelayout();
   runApp(MyApp(widget));
 
@@ -61,7 +66,7 @@ class MyApp extends StatelessWidget {
                     fontStyle: FontStyle.italic
 
                   ))),
-          home: widget(),
+          home: widget,
         ));
   }
 }

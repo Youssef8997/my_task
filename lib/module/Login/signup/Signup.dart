@@ -6,8 +6,7 @@ import 'package:my_task/Componads/Com.dart';
 import 'package:my_task/Componads/my%20textformfild.dart';
 import 'package:my_task/Componads/mybutton.dart';
 import 'dart:ui';
-
-import 'package:my_task/module/Login/Login.dart';
+import 'package:my_task/lib/sherdeprefrence/sherdhelp.dart';
 import 'package:my_task/module/homelayout/layout.dart';
 import 'package:my_task/module/homelayout/layoutCuibt/cuibt.dart';
 import 'package:my_task/module/homelayout/layoutCuibt/loginstates.dart';
@@ -222,6 +221,8 @@ String? StatusUser;
                   if (kayform.currentState!.validate())
                     {
                       NEV(context: context, bool: true, page:homelayout()),
+                      sherdprefrence.setdate(
+                          key: "login", value: true),
                       layoutCuibt.get(context).insertToUsers(Name: name.text, Email: email.text, pass: pass.text, phone: phone.text, status:StatusUser )
 
                     },

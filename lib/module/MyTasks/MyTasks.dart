@@ -31,28 +31,30 @@ class _HomeTasksState extends State<HomeTasks> {
       listener: (context, state) {},
       builder: (context, state) {
         var tasj = layoutCuibt.get(context).tasks;
-        return Column(
-          children: [
-            Stack(
-              alignment: AlignmentDirectional.bottomEnd,
-              children: [
-                Wallpaperstack(size),
-                Textupcontenar(context),
-                data(context),
-                if (tasj.isEmpty)
-                  Positioned(
-                      top: 250,
-                      left:50,
-                      right: 50,
-                      child: Text(
-                        "you dont have any task today🥰,I wish nice day to you ❤️",
-                        style: TextStyle(fontSize: 25.0,fontWeight: FontWeight.w900),
-                      ))
-                else
-                  buldcard(tasj)
-              ],
-            )
-          ],
+        return SafeArea(
+          child: Column(
+            children: [
+              Stack(
+                alignment: AlignmentDirectional.bottomEnd,
+                children: [
+                  Wallpaperstack(size),
+                  Textupcontenar(context),
+                  data(context),
+                  if (tasj.isEmpty)
+                    Positioned(
+                        top: 250,
+                        left:50,
+                        right: 50,
+                        child: Text(
+                          "you dont have any task today🥰,I wish nice day to you ❤️",
+                          style: TextStyle(fontSize: 25.0,fontWeight: FontWeight.w900),
+                        ))
+                  else
+                    buldcard(tasj)
+                ],
+              )
+            ],
+          ),
         );
       },
     );
@@ -301,9 +303,9 @@ class _HomeTasksState extends State<HomeTasks> {
 
   SizedBox Wallpaperstack(Size size) {
     return SizedBox(
-      height: size.height - 150,
+      height: size.height-110,
       width: size.width,
-      child: Image.asset("lib/Image/wallpaper.jpg", fit: BoxFit.fill),
+      child: Image.asset("lib/Image/wallpaper.jpg", fit: BoxFit.cover),
     );
   }
 

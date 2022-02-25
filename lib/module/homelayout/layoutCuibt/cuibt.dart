@@ -12,6 +12,7 @@ import 'package:my_task/module/MoneyOrganiz/MoneyOrganiz.dart';
 import 'package:my_task/module/MyTasks/MyTasks.dart';
 import 'package:my_task/module/homelayout/layoutCuibt/loginstates.dart';
 import 'package:sqflite/sqflite.dart';
+import 'package:velocity_x/velocity_x.dart';
 import '../../AddTasks/edit task.dart';
 import '../../Gamespointer/Analytics.dart';
 
@@ -54,11 +55,12 @@ class layoutCuibt extends Cubit<mytasks> {
 
   List<PreferredSizeWidget> appbar = [
     AppBar(
-      title: const Text("Today Task"),
+
+      title: "TASKS".text.make().shimmer(duration: Duration(seconds: 2),),
       toolbarHeight: 40,
     ),
     AppBar(
-      title: const Text("Today Task"),
+      title: "Today Tasks".text.make().shimmer(duration: Duration(seconds: 2),),
       toolbarHeight: 40,
     ),
     AppBar(

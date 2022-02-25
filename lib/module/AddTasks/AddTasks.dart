@@ -5,7 +5,7 @@ import 'package:intl/intl.dart';
 import 'package:my_task/Componads/Com.dart';
 import 'package:cupertino_stepper/cupertino_stepper.dart';
 import 'package:my_task/Componads/my%20textformfild.dart';
-import 'package:my_task/module/MyTasks/MyTasks.dart';
+import 'package:velocity_x/velocity_x.dart';
 import 'package:my_task/module/homelayout/layoutCuibt/cuibt.dart';
 import 'package:my_task/module/homelayout/layoutCuibt/loginstates.dart';
 
@@ -187,8 +187,8 @@ class _AddTasksState extends State<AddTasks> {
 
   AppBar appbar() {
     return AppBar(
-      backgroundColor: maincolor,
-      title: Text("login".toUpperCase()),
+      backgroundColor:maincolor,
+      title: "Add Task".text.make().shimmer(duration: Duration(seconds: 2),),
       centerTitle: true,
       actions: [
         Padding(
