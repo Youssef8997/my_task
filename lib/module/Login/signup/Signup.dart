@@ -48,7 +48,7 @@ String? StatusUser;
 
   SizedBox Wallpaperstack(Size size) {
     return SizedBox(
-      height: size.height - 106,
+      height: size.height,
       width: size.width,
       child: Image.asset("lib/Image/wallpaper.jpg", fit: BoxFit.fill),
     );
@@ -66,10 +66,10 @@ String? StatusUser;
               Positioned(
                 left: 10,
                 right: 10,
-                top: 550,
+                bottom: 20,
                 child: SizedBox(
                   height: 200,
-                  width: double.maxFinite,
+                  width:size.width,
                   child: ListView.separated(
                       physics: NeverScrollableScrollPhysics(),
                       shrinkWrap: false,
@@ -94,9 +94,14 @@ String? StatusUser;
                       itemCount: Status.length),
                 ),
               ),
-              Positioned(
-                  bottom: 210,
+            /*  Positioned(
+
+                  bottom: 230,
                   left: 30,
+                  child:
+                  SignupContenar())*/
+              Center(
+heightFactor: 1.38,
                   child:
                   SignupContenar())
             ],
@@ -109,8 +114,8 @@ String? StatusUser;
   Container SignupContenar() {
     return Container(
       padding: const EdgeInsetsDirectional.all(15),
-      width: 350,
-      height: 400,
+      width: MediaQuery.of(context).size.width-80,
+      height: MediaQuery.of(context).size.width*.9,
       decoration: BoxDecoration(
           color: maincolor,
           borderRadius: BorderRadius.circular(35.0)),

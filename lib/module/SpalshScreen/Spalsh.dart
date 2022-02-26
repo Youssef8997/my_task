@@ -147,7 +147,7 @@ Widget buildptage(pagemodel module, context) {
       ),
       Container(
         height: (size.height*.5)-100,
-        width: 520,
+        width: size.width,
         decoration: BoxDecoration(
             color: maincolor,
             borderRadius: const BorderRadius.only(

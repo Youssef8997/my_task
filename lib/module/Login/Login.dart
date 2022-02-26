@@ -202,7 +202,7 @@ class _LoginState extends State<Login> {
   }
   SizedBox Wallpaperstack(Size size) {
     return SizedBox(
-      height: size.height - 106,
+      height: size.height,
       width: size.width,
       child: Image.asset(
           "lib/Image/wallpaper.jpg",

@@ -50,16 +50,18 @@ class MyApp extends StatelessWidget {
                   systemOverlayStyle: SystemUiOverlayStyle(
                     systemNavigationBarContrastEnforced: true,
                     systemStatusBarContrastEnforced: true,
-                    statusBarColor: maincolor,
+                    statusBarColor:  Colors.transparent,
+
                     systemNavigationBarColor:Colors.teal,
                     statusBarIconBrightness: Brightness.dark,
                     statusBarBrightness: Brightness.dark,
                     systemNavigationBarDividerColor: Colors.transparent
 
                   ),
-                  backgroundColor: maincolor,
+                  backgroundColor:Colors.transparent,
+                  elevation:  0,
                   centerTitle: true,
-                  titleTextStyle: TextStyle(
+                  titleTextStyle: const TextStyle(
                     color: Colors.white,
                     fontSize: 18.0,
                     fontWeight: FontWeight.bold,

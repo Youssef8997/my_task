@@ -101,12 +101,12 @@ class _MoneyOraganizeState extends State<MoneyOraganize> {
         Positioned(
           bottom: 0,
           top: 300,
-          left: 0,
+          left: 5,
           right: 0,
           child: SizedBox(
               width: 200,
               height: 500,
-              child: CirculeCatogery(sallaryAfter, context)),
+              child: ShowCatogeryByGridView(sallaryAfter, context)),
         )
       ],
     );
@@ -285,7 +285,7 @@ class _MoneyOraganizeState extends State<MoneyOraganize> {
         ));
   }
 
-  Widget CirculeCatogery(sallary, context) {
+  Widget ShowCatogeryByGridView(sallary, context) {
     return GridView.count(
       controller: scrollControlar,
       addAutomaticKeepAlives: false,

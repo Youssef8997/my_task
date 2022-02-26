@@ -26,35 +26,35 @@ class _HomeTasksState extends State<HomeTasks> {
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
-
     return BlocConsumer<layoutCuibt, mytasks>(
       listener: (context, state) {},
       builder: (context, state) {
         var tasj = layoutCuibt.get(context).tasks;
-        return SafeArea(
-          child: Column(
-            children: [
-              Stack(
-                alignment: AlignmentDirectional.bottomEnd,
-                children: [
-                  Wallpaperstack(size),
-                  Textupcontenar(context),
-                  data(context),
-                  if (tasj.isEmpty)
-                    Positioned(
-                        top: 250,
-                        left:50,
-                        right: 50,
-                        child: Text(
-                          "you dont have any task today🥰,I wish nice day to you ❤️",
-                          style: TextStyle(fontSize: 25.0,fontWeight: FontWeight.w900),
-                        ))
-                  else
-                    buldcard(tasj)
-                ],
-              )
-            ],
-          ),
+        return Column(
+          mainAxisSize: MainAxisSize.max,
+
+          children: [
+            Stack(
+
+              alignment: AlignmentDirectional.bottomEnd,
+              children: [
+                Wallpaperstack(size,),
+                Textupcontenar(context,size),
+                data(context,size),
+                if (tasj.isEmpty)
+                  Positioned(
+                      top: 250,
+                      left:50,
+                      right: 50,
+                      child: Text(
+                        "you dont have any task today🥰,I wish nice day to you ❤️",
+                        style: TextStyle(fontSize: 25.0,fontWeight: FontWeight.w900),
+                      ))
+                else
+                  buldcard(tasj)
+              ],
+            )
+          ],
         );
       },
     );
@@ -302,17 +302,20 @@ class _HomeTasksState extends State<HomeTasks> {
   }
 
   SizedBox Wallpaperstack(Size size) {
+    var size=MediaQuery.of(context).size;
     return SizedBox(
-      height: size.height-110,
+
+      height:size.height-60,
       width: size.width,
-      child: Image.asset("lib/Image/wallpaper.jpg", fit: BoxFit.cover),
+      child: Image.asset("lib/Image/wallpaper.jpg", fit: BoxFit.fill),
     );
   }
 
-  Positioned Textupcontenar(context) {
+  Positioned Textupcontenar(context,Size size) {
     return Positioned(
       top: 125,
       left: 10,
+      width: size.width,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -324,15 +327,17 @@ class _HomeTasksState extends State<HomeTasks> {
                 fontStyle: FontStyle.italic,
                 fontWeight: FontWeight.w900),
           ),
-          const SizedBox(
-            width: 30,
-          ),
-          mybutton(
-              Widget: const Text("Add task...",
-                  style: const TextStyle(color: Colors.white)),
-              function: () {
-                NEV(bool: true, context: context, page: AddTasks());
-              })
+          Spacer(),
+          Padding(
+            padding: const EdgeInsets.only(top: 10,right: 20),
+            child: mybutton(
+
+                Widget: const Text("Add task...",
+                    style: const TextStyle(color: Colors.white)),
+                function: () {
+                  NEV(bool: true, context: context, page: AddTasks());
+                }),
+          )
         ],
       ),
     );
@@ -340,13 +345,13 @@ class _HomeTasksState extends State<HomeTasks> {
 
   var ondate = DateFormat.yMMMd().format(DateTime.now());
 
-  Positioned data(context) {
+  Positioned data(context,Size size) {
     return Positioned(
       top: 40,
       left: 10,
       child: SizedBox(
         height: 80,
-        width: 500,
+        width: size.width,
         child: DatePicker(DateTime.now(),
             initialSelectedDate: DateTime.now(),
             selectionColor: Colors.black,

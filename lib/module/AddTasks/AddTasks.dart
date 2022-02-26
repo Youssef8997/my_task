@@ -43,7 +43,7 @@ class _AddTasksState extends State<AddTasks> {
 
   SizedBox Wallpaperstack(Size size) {
     return SizedBox(
-      height: size.height - 106,
+      height: size.height ,
       width: size.width,
       child: Image.asset("lib/Image/AddtaskBack.jpg", fit: BoxFit.fill),
     );

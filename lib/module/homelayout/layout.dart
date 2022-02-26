@@ -17,19 +17,29 @@ class homelayout extends StatelessWidget {
         builder: (context,state){
           return Scaffold(
             key: cuibt.kayscafold,
-
              body:cuibt.body[cuibt.MyIndex],
               bottomNavigationBar: BottomNavyBar(
                 containerHeight: 60,
-            animationDuration: Duration(milliseconds: 300),
+             itemCornerRadius: 25.0,
+            curve: Curves.fastOutSlowIn,
+            animationDuration: Duration(milliseconds: 900),
             selectedIndex:cuibt.MyIndex,
-            showElevation: true, // use this to remove appBar's elevation
+            showElevation: false, // use this to remove appBar's elevation
             onItemSelected: (index){cuibt.ChangeIndex(index);},
             items: cuibt.ItemNav
               ),
 
           );
         }
+    );
+
+  }
+  SizedBox Wallpaperstack(Size size,context) {
+    return SizedBox(
+
+      height:(MediaQuery.of(context).size.height-60),
+      width: size.width,
+      child: Image.asset("lib/Image/wallpaper.jpg", fit: BoxFit.fill),
     );
   }
 }

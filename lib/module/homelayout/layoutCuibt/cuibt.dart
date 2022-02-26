@@ -55,7 +55,8 @@ class layoutCuibt extends Cubit<mytasks> {
 
   List<PreferredSizeWidget> appbar = [
     AppBar(
-
+      elevation: 0,
+      backgroundColor: Colors.transparent,
       title: "TASKS".text.make().shimmer(duration: Duration(seconds: 2),),
       toolbarHeight: 40,
     ),
