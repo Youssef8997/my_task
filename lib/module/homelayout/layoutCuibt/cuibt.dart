@@ -286,19 +286,7 @@ class layoutCuibt extends Cubit<mytasks> {
   //update data in database
   void update({ String? priority, String? repeat, int id=1,time,date }) async {
     print("$priority ,$repeat,$time,$date");
-   /* if (priority != null && repeat != null && date != "" && time != "") {
-      datab.rawUpdate(
-          'UPDATE TASKS SET time=? WHERE id=? ', [time, id]);
-      datab.rawUpdate(
-          'UPDATE TASKS SET data=? WHERE id=? ', [date, id]);
-      datab.rawUpdate(
-          'UPDATE TASKS SET priority=? WHERE id=? ', [priority, id]);
-      datab.rawUpdate(
-          'UPDATE TASKS SET repeat=? WHERE id=? ', [repeat, id]);
-      print("All things change");
-      getdataafterchange();
-      emit(UpdateDataBaseError());
-    }*/
+
     if (repeat != null) {
       datab.rawUpdate(
           'UPDATE TASKS SET repeat=? WHERE id=? ', [repeat, id]).then((value) {
@@ -342,14 +330,14 @@ class layoutCuibt extends Cubit<mytasks> {
     });
   }
 
-  void deletebudget({required int id }) async {
+  void deletebudget({required int id,required index }) async {
     await datab.rawDelete('DELETE FROM BUDGET WHERE id=? ', [id]);
     getDataBudget(datab).then((value) {
       Budget = [];
       Budget = value;
       print(Budget);
       changeprecent(
-          Budget == [] ? sallary : Budget[Budget.length - 1]["MONEYAfter"]);
+          Budget.isEmpty? sallary : Budget[index- 1]["MONEYAfter"]);
       emit(getsallaryafter());
     });
   }

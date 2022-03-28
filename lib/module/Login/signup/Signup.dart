@@ -1,3 +1,4 @@
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -66,21 +67,20 @@ String? StatusUser;
               Positioned(
                 left: 10,
                 right: 10,
-                bottom: 20,
+                bottom: 40,
                 child: SizedBox(
                   height: 200,
                   width:size.width,
                   child: ListView.separated(
-                      physics: NeverScrollableScrollPhysics(),
                       shrinkWrap: false,
                       scrollDirection: Axis.horizontal,
                       itemBuilder: (context, index) =>
                           InkWell(
                               onTap: () {
                                 StatusUser=Status[index].title;
-                                if (ontap == Colors.teal)
+                                if (ontap == Colors.teal) {
                                   return null;
-                                else
+                                } else {
                                   setState(() {
                                     ontap = Colors.teal;
                                     Status.forEach((element) {
@@ -88,6 +88,7 @@ String? StatusUser;
                                         element.ontap = false;
                                     });
                                   });
+                                }
                               },
                               child: Catogry_Avatar(Status[index], context,)),
                       separatorBuilder: (context, index) => SizedBox(width: 5,),
@@ -114,11 +115,11 @@ heightFactor: 1.38,
   Container SignupContenar() {
     return Container(
       padding: const EdgeInsetsDirectional.all(15),
-      width: MediaQuery.of(context).size.width-80,
-      height: MediaQuery.of(context).size.width*.9,
+      width: MediaQuery.of(context).size.width-30,
+      height: MediaQuery.of(context).size.height*.6,
       decoration: BoxDecoration(
           color: maincolor,
-          borderRadius: BorderRadius.circular(35.0)),
+          borderRadius: BorderRadius.circular(40.0)),
       child: Form(
         key: kayform,
         child: Column(
@@ -208,15 +209,15 @@ heightFactor: 1.38,
                 Controlr: phone,
                 hint: "Enter you phone,...",
                 keybordtype: TextInputType.visiblePassword,
-                Prefix: Icon(Icons.phone, color: Colors.grey),
+                Prefix: const Icon(Icons.phone, color: Colors.grey),
                 validator: (value) {
                   if (value!.isEmpty) {
                     return "      phone must ne not empty ";
                   }
                   return null;
                 }),
-            mybutton(
-                Widget: Text("Done",
+             mybutton(
+                Widget: const Text("Done",
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 18.0,
@@ -225,6 +226,7 @@ heightFactor: 1.38,
                 {
                   if (kayform.currentState!.validate())
                     {
+                      Navigator.pop(context),
                       NEV(context: context, bool: true, page:homelayout()),
                       sherdprefrence.setdate(
                           key: "login", value: true),
@@ -284,8 +286,8 @@ heightFactor: 1.38,
           curve: Curves.fastOutSlowIn,
           opacity: model.ontap ? 1 : 0,
           child: AnimatedContainer(
-            width: 130,
-            height: 141,
+            width: 120,
+            height: 135,
             decoration: BoxDecoration(
                 color: ontap,
                 borderRadius: BorderRadiusDirectional.circular(30.0)),
@@ -297,7 +299,7 @@ heightFactor: 1.38,
                   height: 3,
                 ),
                 CircleAvatar(
-                  radius: 57,
+                  radius: 54,
                   backgroundColor: Colors.redAccent.shade700,
                   foregroundColor: Colors.white,
                   child: CircleAvatar(
@@ -306,7 +308,7 @@ heightFactor: 1.38,
                     backgroundImage: AssetImage(
                       model.Photo!,
                     ),
-                    radius: 53.0,
+                    radius: 50.0,
                     backgroundColor: Colors.white,
 
                   ),

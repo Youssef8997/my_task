@@ -31,6 +31,7 @@ class _AddTasksState extends State<AddTasks> {
         builder: (context, state) {
           var cuibt = layoutCuibt.get(context);
           return Scaffold(
+            extendBodyBehindAppBar: true,
             appBar: appbar(),
             body: SingleChildScrollView(
               child: Stack(
@@ -187,13 +188,13 @@ class _AddTasksState extends State<AddTasks> {
 
   AppBar appbar() {
     return AppBar(
-      backgroundColor:maincolor,
-      title: "Add Task".text.make().shimmer(duration: Duration(seconds: 2),),
+      backgroundColor:Colors.transparent,
+      title: "Add Task".text.make().shimmer(duration:const  Duration(seconds: 2),),
       centerTitle: true,
-      actions: [
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: const CircleAvatar(
+      actions:const [
+         Padding(
+          padding:  EdgeInsets.all(8.0),
+          child:  CircleAvatar(
             radius: 20,
             backgroundImage: AssetImage("lib/Image/man avatar.jpg"),
           ),

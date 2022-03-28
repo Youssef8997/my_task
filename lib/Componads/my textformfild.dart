@@ -14,6 +14,7 @@ Widget Mytextfield(
     func,
     bool? Enabled}) {
   return Container(
+    padding: EdgeInsetsDirectional.only(start:12),
     height: 50,
     clipBehavior: Clip.antiAliasWithSaveLayer,
     decoration: BoxDecoration(
@@ -22,12 +23,13 @@ Widget Mytextfield(
       borderRadius: BorderRadius.circular(25.0),
     ),
     child: TextFormField(
+
       enabled: Enabled,
       onTap: func,
       controller: Controlr,
       keyboardType: keybordtype,
       decoration: InputDecoration(
-          hintText: "    $hint",
+          hintText: "$hint",
           hintStyle: TextStyle(
               color: Colors.black,
               fontWeight: FontWeight.w600,

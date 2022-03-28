@@ -43,7 +43,6 @@ class _LoginState extends State<Login> {
               );
             });
   }
-
   SingleChildScrollView BodyLogin(Size size,users) {
     return SingleChildScrollView(
       child: Column(
@@ -61,7 +60,6 @@ class _LoginState extends State<Login> {
       ),
     );
   }
-
   Container loginContenar(List users) {
     return Container(
       padding: const EdgeInsetsDirectional.all(15),
@@ -135,6 +133,8 @@ class _LoginState extends State<Login> {
                                     }
                                   else
                                     MotionToast.error(
+
+                                      position:MOTION_TOAST_POSITION.bottom ,
                                       animationDuration: const Duration(seconds: 2),
                                       borderRadius: 25.0,
                                       dismissable: true,
@@ -142,7 +142,8 @@ class _LoginState extends State<Login> {
                                       toastDuration:const Duration(seconds: 5),
                                       title:const Text("Wrong password"),
                                       layoutOrientation: ORIENTATION.rtl,
-                                      animationType: ANIMATION.fromRight,width:  350,
+                                      animationType: ANIMATION.fromBottom,
+                                      width:  350,
                                       description:const Text("Please write your password correct"),
                                     ).show(context)
                                 }
@@ -155,7 +156,8 @@ class _LoginState extends State<Login> {
                           toastDuration:const Duration(seconds: 5),
                           title:const Text("Wrong Email"),
                           layoutOrientation: ORIENTATION.rtl,
-                          animationType: ANIMATION.fromRight,width:  400,
+                          animationType: ANIMATION.fromRight,
+                          width:  350,
                           description:const Text("Please write your Email correct"),
                         ).show(context)
                             }
@@ -168,7 +170,7 @@ class _LoginState extends State<Login> {
       toastDuration:const Duration(seconds: 5),
       title:const Text("You don't have Email "),
       layoutOrientation: ORIENTATION.rtl,
-      animationType: ANIMATION.fromRight,width:  400, description:const Text("Please signup to be can use the app "),
+      animationType: ANIMATION.fromRight,width:  350, description:const Text("Please signup to be can use the app "),
       ).show(context)
                   }
                         }, }),
@@ -181,7 +183,6 @@ class _LoginState extends State<Login> {
       ),
     );
   }
-
   Positioned Textupcontenar() {
     return Positioned(
       top: 60,

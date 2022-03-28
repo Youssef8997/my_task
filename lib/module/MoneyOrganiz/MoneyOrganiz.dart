@@ -41,7 +41,7 @@ class _MoneyOraganizeState extends State<MoneyOraganize> {
                 scrollDirection: Axis.horizontal,
                 children: [
                   EndWidget(size, cuibt.sallaryAfter, context),
-                  Stack0salary(size, cuibt.sallary, context)
+
                 ],
               ),
             ),
@@ -84,19 +84,6 @@ class _MoneyOraganizeState extends State<MoneyOraganize> {
     return Stack(
       children: [
         Wallpaperstack(size),
-        Positioned(
-            right: 0,
-            top: 230,
-            width: 100,
-            child: mybutton(
-                Widget: Icon(CupertinoIcons.arrow_turn_down_right, size: 30.0),
-                function: () {
-                  setState(() {
-                    cuibt.controlar.nextPage(
-                        duration: Duration(milliseconds: 900),
-                        curve: Curves.easeOutCubic);
-                  });
-                })),
         precentge_circular(size, precent,),
         Positioned(
           bottom: 0,
@@ -112,72 +99,6 @@ class _MoneyOraganizeState extends State<MoneyOraganize> {
     );
   }
 
-  Widget Stack0salary(Size size, sallary, context) {
-    return Stack(
-      alignment: AlignmentDirectional.topStart,
-      children: [
-        Wallpaperstack(size),
-        Positioned(
-          left: 5,
-          top: 40,
-          width: 100,
-          child: mybutton(
-              Widget: Icon(CupertinoIcons.arrow_turn_down_left, size: 30.0),
-              function: () {
-                setState(() {
-                  layoutCuibt.get(context).controlar.previousPage(
-                      duration: Duration(milliseconds: 900),
-                      curve: Curves.easeOutCubic);
-                });
-              }),
-        ),
-        Textupmoney("${layoutCuibt.get(context).sallaryAfter} LE"),
-        Positioned(
-          top: 100,
-          bottom: 0,
-          child: SizedBox(
-              height: size.height * .75,
-              width: size.width,
-              child: ConditionalBuilder(
-                condition: layoutCuibt.get(context).Budget.isNotEmpty,
-                builder: (context) => ListView.separated(
-                    physics: const BouncingScrollPhysics(),
-                    reverse: true,
-                    itemBuilder: (context, index) => Dismissible(
-                      key: Key(layoutCuibt.get(context).Budget[index]["title"].toString()),
-                      onDismissed: (direction) {
-                        layoutCuibt.get(context).deletebudget(id: layoutCuibt.get(context).Budget[index]["id"]);
-                        final snackBar = SnackBar(
-                          content: Text(
-                            "you deleted task number ${layoutCuibt.get(context).Budget[index]["id"]}",
-                          ),
-                          backgroundColor: Colors.pink,
-                          duration: const Duration(milliseconds: 800),
-                          elevation: 10.0,
-                        );
-                        ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                      },
-                      child: BudgetCont(
-                          size, layoutCuibt.get(context).Budget[index]),
-                    ),
-                    separatorBuilder: (context, index) => const SizedBox(
-                          height: 1,
-                        ),
-                    itemCount: layoutCuibt.get(context).Budget.length),
-                fallback: (context) => Padding(
-                  padding: const EdgeInsets.only(left: 50, top: 200),
-                  child: Text("you dont spent money yet ,good boy🥰",
-                      style: TextStyle(
-                          fontSize: 30.0,
-                          color: Colors.white,
-                          fontWeight: FontWeight.w900,
-                          fontStyle: FontStyle.italic)),
-                ),
-              )),
-        )
-      ],
-    );
-  }
 
   Padding BudgetCont(Size size, budget) {
     return Padding(
@@ -292,7 +213,7 @@ class _MoneyOraganizeState extends State<MoneyOraganize> {
       keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
       scrollDirection: Axis.horizontal,
       physics: const BouncingScrollPhysics(),
-      crossAxisCount: 2,
+      crossAxisCount: 3,
       children: List.generate(
           layoutCuibt.get(context).Users[0]["status"]=="Single"?SingleCategory.length:MarriedCategory.length, (index) => Catogry_Avatar(layoutCuibt.get(context).Users[0]["status"]=="Single"?SingleCategory[index]:MarriedCategory[index], context)),
     );
@@ -450,6 +371,7 @@ class _MoneyOraganizeState extends State<MoneyOraganize> {
       cat = "Money Saving";
     }
     return SafeArea(
+      top: true,
       child: Material(
         type: MaterialType.button,
         color: Colors.blueGrey.shade400,
@@ -477,7 +399,7 @@ class _MoneyOraganizeState extends State<MoneyOraganize> {
                   children: [
                     const Text(
                       " استلفت اي يسطا",
-                      style: const TextStyle(
+                      style:  TextStyle(
                           fontWeight: FontWeight.w900,
                           fontSize: 20.0,
                           fontStyle: FontStyle.italic,
@@ -514,6 +436,8 @@ class _MoneyOraganizeState extends State<MoneyOraganize> {
                       ],
                     ),
                     Mytextfield(
+                      keybordtype: const
+                      TextInputType.numberWithOptions(),
                         Controlr: cuibt.moneyContoralr,
                         hint: "وعلي كدا اخدت كام بقي ؟؟"),
                     mybutton(
@@ -578,6 +502,7 @@ class _MoneyOraganizeState extends State<MoneyOraganize> {
                       ],
                     ),
                     Mytextfield(
+                        keybordtype: const TextInputType.numberWithOptions(),
                         Controlr: cuibt.moneyContoralr,
                         hint: "وعلي كدا صرفت كام بقي ؟؟"),
                     mybutton(

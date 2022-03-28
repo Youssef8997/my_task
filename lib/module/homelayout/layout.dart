@@ -16,6 +16,7 @@ class homelayout extends StatelessWidget {
         listener: (context,state){},
         builder: (context,state){
           return Scaffold(
+extendBodyBehindAppBar:true,
             key: cuibt.kayscafold,
              body:cuibt.body[cuibt.MyIndex],
               bottomNavigationBar: BottomNavyBar(
@@ -40,6 +41,7 @@ class homelayout extends StatelessWidget {
       height:(MediaQuery.of(context).size.height-60),
       width: size.width,
       child: Image.asset("lib/Image/wallpaper.jpg", fit: BoxFit.fill),
+
     );
   }
 }
