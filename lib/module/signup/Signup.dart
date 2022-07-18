@@ -1,4 +1,3 @@
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -11,6 +10,8 @@ import 'package:my_task/lib/sherdeprefrence/sherdhelp.dart';
 import 'package:my_task/module/homelayout/layout.dart';
 import 'package:my_task/module/homelayout/layoutCuibt/cuibt.dart';
 import 'package:my_task/module/homelayout/layoutCuibt/loginstates.dart';
+
+import '../../../resorces/Resorces.dart';
 
 class Signup extends StatefulWidget {
   @override
@@ -26,25 +27,96 @@ class _SignupState extends State<Signup> {
   var repass = TextEditingController();
 
   var name = TextEditingController();
-String? StatusUser;
+  String? StatusUser;
   var phone = TextEditingController();
 
   bool isobsring = true;
   bool vis = true;
   Color? ontap = Colors.white.withOpacity(.9);
-
+  var _ScrrollController = ScrollController();
   Widget build(BuildContext context) {
-    var size = MediaQuery
-        .of(context)
-        .size;
-    return BlocConsumer<layoutCuibt,mytasks>
-      (
-        listener:(context, state) {},
-        builder:(context,state)=>Scaffold(
-        appBar: appbar(),
-        body: BodyLogin(size)
-    )
-    );
+    var size = MediaQuery.of(context).size;
+    return BlocConsumer<layoutCuibt, mytasks>(
+        listener: (context, state) {},
+        builder: (context, state) =>
+            Scaffold(
+              extendBodyBehindAppBar:true,
+                appBar: AppBar(
+              backgroundColor: Colors.transparent,
+              title: Text(
+                "Sign Up".toUpperCase(),
+                style: const TextStyle(
+                  color: Colors.black,
+                  fontSize: 22,
+                  fontWeight: FontWeight.w900,
+                  fontStyle: FontStyle.italic,
+                ),
+              ),
+              centerTitle: true,
+              bottom:AppBar(
+                leading: SizedBox(width: 0),
+                centerTitle: false,
+                backgroundColor: Colors.transparent,title:Text(
+                "Hi,Sign up now ,...",
+                style: GoogleFonts.ptSerif(
+                  color: Colors.black,
+                  fontSize: 35.0,
+                  fontStyle: FontStyle.italic,
+                  fontWeight: FontWeight.w800,
+                ),
+                textAlign: TextAlign.left,
+              ), ) ,
+            ),
+                body: Container(
+                  height:size.height,
+                  width:size.width,
+                  decoration: const BoxDecoration(
+                    image: DecorationImage(
+                      image:AssetImage("lib/Image/wallpaper.jpg"),
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                  child:SingleChildScrollView(
+                    keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.manual,
+                    controller: _ScrrollController,
+                    child: Column(
+                      children: [
+                        SignupContenar(size: size),
+                        const SizedBox(height: 10,),
+                        SizedBox(
+                          height: 200,
+                          width: size.width,
+                          child: ListView.separated(
+                              shrinkWrap: false,
+                              scrollDirection: Axis.horizontal,
+                              itemBuilder: (context, index) => InkWell(
+                                  onTap: () {
+                                    StatusUser = Status[index].title;
+                                    if (ontap == Colors.teal) {
+                                      return null;
+                                    } else {
+                                      setState(() {
+                                        ontap = Colors.teal;
+                                        Status.forEach((element) {
+                                          if (element != Status[index])
+                                            element.ontap = false;
+                                        });
+                                      });
+                                    }
+                                  },
+                                  child: Catogry_Avatar(
+                                    Status[index],
+                                    context,
+                                  )),
+                              separatorBuilder: (context, index) => SizedBox(
+                                width: size.width*.05,
+                              ),
+                              itemCount: Status.length),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),));
   }
 
   SizedBox Wallpaperstack(Size size) {
@@ -55,70 +127,16 @@ String? StatusUser;
     );
   }
 
-  SingleChildScrollView BodyLogin(Size size) {
-    return SingleChildScrollView(
-      child: Column(
-        mainAxisSize: MainAxisSize.max,
-        children: [
-          Stack(
-            children: [
-              Wallpaperstack(size),
-              Textupcontenar("Hi,Signup now....."),
-              Positioned(
-                left: 10,
-                right: 10,
-                bottom: 40,
-                child: SizedBox(
-                  height: 200,
-                  width:size.width,
-                  child: ListView.separated(
-                      shrinkWrap: false,
-                      scrollDirection: Axis.horizontal,
-                      itemBuilder: (context, index) =>
-                          InkWell(
-                              onTap: () {
-                                StatusUser=Status[index].title;
-                                if (ontap == Colors.teal) {
-                                  return null;
-                                } else {
-                                  setState(() {
-                                    ontap = Colors.teal;
-                                    Status.forEach((element) {
-                                      if (element != Status[index])
-                                        element.ontap = false;
-                                    });
-                                  });
-                                }
-                              },
-                              child: Catogry_Avatar(Status[index], context,)),
-                      separatorBuilder: (context, index) => SizedBox(width: 5,),
-                      itemCount: Status.length),
-                ),
-              ),
-            /*  Positioned(
 
-                  bottom: 230,
-                  left: 30,
-                  child:
-                  SignupContenar())*/
-              Center(
-heightFactor: 1.38,
-                  child:
-                  SignupContenar())
-            ],
-          ),
-        ],
-      ),
-    );
-  }
 
-  Container SignupContenar() {
+  Container SignupContenar({size}) {
     return Container(
+      margin: EdgeInsetsDirectional.only(top: size.height*.2),
       padding: const EdgeInsetsDirectional.all(15),
-      width: MediaQuery.of(context).size.width-30,
-      height: MediaQuery.of(context).size.height*.6,
+      width: MediaQuery.of(context).size.width - 30,
+      height: MediaQuery.of(context).size.height * .6,
       decoration: BoxDecoration(
-          color: maincolor,
+          color: ColorManger.maincolor,
           borderRadius: BorderRadius.circular(40.0)),
       child: Form(
         key: kayform,
@@ -216,28 +234,30 @@ heightFactor: 1.38,
                   }
                   return null;
                 }),
-             mybutton(
+            mybutton(
                 Widget: const Text("Done",
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 18.0,
                     )),
-                function: () =>
-                {
+                function: () => {
                   if (kayform.currentState!.validate())
                     {
                       Navigator.pop(context),
-                      NEV(context: context, bool: true, page:homelayout()),
-                      sherdprefrence.setdate(
-                          key: "login", value: true),
-                      layoutCuibt.get(context).insertToUsers(Name: name.text, Email: email.text, pass: pass.text, phone: phone.text, status:StatusUser )
-
+                      Nevigator(
+                          context: context, bool: true, page: homelayout()),
+                      sherdprefrence.setdate(key: "login", value: true),
+                      layoutCuibt.get(context).insertToUsers(
+                          Name: name.text,
+                          Email: email.text,
+                          pass: pass.text,
+                          phone: phone.text,
+                          status: StatusUser)
                     },
-
                 })
-    ],
-    ),
-    ),
+          ],
+        ),
+      ),
     );
   }
 
@@ -260,24 +280,11 @@ heightFactor: 1.38,
     );
   }
 
-  AppBar appbar() {
-    return AppBar(
-      backgroundColor: maincolor,
-      title: Text("SignUp"),
-      centerTitle: true,
-      actions: [
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: const CircleAvatar(
-            radius: 20,
-            backgroundImage: AssetImage("lib/Image/man avatar.jpg"),
-          ),
-        ),
-      ],
-    );
-  }
 
-  Column Catogry_Avatar(StatusModel model, context,) {
+  Column Catogry_Avatar(
+    StatusModel model,
+    context,
+  ) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
@@ -303,19 +310,19 @@ heightFactor: 1.38,
                   backgroundColor: Colors.redAccent.shade700,
                   foregroundColor: Colors.white,
                   child: CircleAvatar(
-
                     foregroundColor: Colors.white,
                     backgroundImage: AssetImage(
                       model.Photo!,
                     ),
                     radius: 50.0,
                     backgroundColor: Colors.white,
-
                   ),
                 ),
                 Text(
                   model.title!,
-                  style: const TextStyle(fontWeight: FontWeight.w900,),
+                  style: const TextStyle(
+                    fontWeight: FontWeight.w900,
+                  ),
                 )
               ],
             ),
@@ -341,15 +348,13 @@ List<StatusModel> Status = [
     ontap: true,
   ),
   StatusModel(
-    Photo: "lib/Image/married man.jpg",
+    Photo: "lib/Image/married.jpg",
     title: "Married",
     ontap: true,
-
   ),
   StatusModel(
-    Photo: "lib/Image/bussines logo.jpg",
+    Photo: "lib/Image/bussinesStatus.jpg",
     title: "Business",
     ontap: true,
   ),
-
 ];

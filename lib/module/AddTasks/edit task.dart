@@ -2,12 +2,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
-import 'package:my_task/Componads/Com.dart';
 import 'package:cupertino_stepper/cupertino_stepper.dart';
 import 'package:my_task/Componads/my%20textformfild.dart';
-import 'package:my_task/module/MyTasks/MyTasks.dart';
 import 'package:my_task/module/homelayout/layoutCuibt/cuibt.dart';
 import 'package:my_task/module/homelayout/layoutCuibt/loginstates.dart';
+
+import '../../resorces/Resorces.dart';
 
 var datel = TextEditingController();
 var timed = TextEditingController();
@@ -197,7 +197,7 @@ class _EditTaskState extends State<EditTask> {
 
   AppBar appbar() {
     return AppBar(
-      backgroundColor: maincolor,
+      backgroundColor: ColorManger.maincolor,
       title: Text("Edit Task".toUpperCase()),
       centerTitle: true,
       actions: [

@@ -12,6 +12,7 @@ import 'package:my_task/Componads/mybutton.dart';
 import 'package:my_task/module/homelayout/layoutCuibt/cuibt.dart';
 import 'package:my_task/module/homelayout/layoutCuibt/loginstates.dart';
 import 'package:date_picker_timeline/date_picker_timeline.dart';
+import '../../resorces/Resorces.dart';
 import '../AddTasks/AddTasks.dart';
 import '../AddTasks/edit task.dart';
 
@@ -112,9 +113,9 @@ class _HomeTasksState extends State<HomeTasks> {
 
   Padding TaskCard(TASKS, context,index) {
     var color;
-    if (TASKS["priority"] == "low") color = TaskLowColors;
-    if (TASKS["priority"] == "medium") color = TaskMedColors;
-    if (TASKS["priority"] == "high") color = taskHighColors;
+    if (TASKS["priority"] == "low") color = ColorManger.TaskLowColors;
+    if (TASKS["priority"] == "medium") color = ColorManger.TaskMedColors;
+    if (TASKS["priority"] == "high") color = ColorManger.taskHighColors;
     return Padding(
       padding: const EdgeInsets.all(10.0),
       child: GestureDetector(
@@ -280,7 +281,7 @@ class _HomeTasksState extends State<HomeTasks> {
                       setState(() {
                         layoutCuibt.get(context).currentStep=2;
                       });
-                      NEV(context: context,bool: true,page: EditTask(id:TASKS["id"]));
+                      Nevigator(context: context,bool: true,page: EditTask(id:TASKS["id"]));
                     }),
               ],
             )
@@ -335,7 +336,7 @@ class _HomeTasksState extends State<HomeTasks> {
                 Widget: const Text("Add task...",
                     style: const TextStyle(color: Colors.white)),
                 function: () {
-                  NEV(bool: true, context: context, page: AddTasks());
+                  Nevigator(bool: true, context: context, page: AddTasks());
                 }),
           )
         ],
@@ -368,7 +369,6 @@ class _HomeTasksState extends State<HomeTasks> {
   }
 
   settingDialog(context, TASKS, color,index) {
-    var size=MediaQuery.of(context).size;
     return showDialog(
         context: context,
         builder: (context) {

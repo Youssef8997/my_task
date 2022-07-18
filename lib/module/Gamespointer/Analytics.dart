@@ -2,10 +2,8 @@ import 'package:conditional_builder_null_safety/conditional_builder_null_safety.
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:my_task/Componads/Com.dart';
 import 'package:my_task/module/homelayout/layoutCuibt/cuibt.dart';
-
-import '../../Componads/mybutton.dart';
+import '../../resorces/Resorces.dart';
 import '../homelayout/layoutCuibt/loginstates.dart';
 class analytics extends StatefulWidget {
   @override
@@ -122,11 +120,11 @@ class _analyticsState extends State<analytics> {
             height: 100,
             width: size.width - 45,
             decoration: BoxDecoration(
-                color: TaskLowColors,
+                color: ColorManger.TaskLowColors,
                 borderRadius: BorderRadiusDirectional.circular(50.0),
                 boxShadow: [
                   BoxShadow(
-                    color: TaskMedColors,
+                    color: ColorManger.TaskMedColors,
                     spreadRadius: .2,
                     offset: const Offset(3, 4),
                     blurRadius: 2,

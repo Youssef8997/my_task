@@ -1,16 +1,16 @@
 import 'package:bottom_sheet/bottom_sheet.dart';
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:my_task/Componads/Com.dart';
 import 'package:my_task/Componads/my%20textformfild.dart';
 import 'package:my_task/Componads/mybutton.dart';
 import 'package:my_task/module/homelayout/layoutCuibt/cuibt.dart';
 import 'package:my_task/module/homelayout/layoutCuibt/loginstates.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:percent_indicator/percent_indicator.dart';
+
+import '../../resorces/Resorces.dart';
 
 class MoneyOraganize extends StatefulWidget {
   @override
@@ -123,11 +123,11 @@ class _MoneyOraganizeState extends State<MoneyOraganize> {
             height: 100,
             width: size.width - 45,
             decoration: BoxDecoration(
-                color: TaskLowColors,
+                color: ColorManger.TaskLowColors,
                 borderRadius: BorderRadiusDirectional.circular(50.0),
                 boxShadow: [
                   BoxShadow(
-                    color: TaskMedColors,
+                    color: ColorManger.TaskMedColors,
                     spreadRadius: .2,
                     offset: const Offset(3, 4),
                     blurRadius: 2,
@@ -523,7 +523,7 @@ class _MoneyOraganizeState extends State<MoneyOraganize> {
                                         Container(
                                           width: double.maxFinite,
                                           decoration: BoxDecoration(
-                                            color: TaskMedColors,
+                                            color: ColorManger.TaskMedColors,
                                             borderRadius:
                                                 BorderRadiusDirectional
                                                     .circular(25.0),
