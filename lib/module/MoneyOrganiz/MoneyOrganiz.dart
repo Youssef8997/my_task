@@ -34,9 +34,6 @@ class _MoneyOraganizeState extends State<MoneyOraganize> {
             builder: (context) => SafeArea(
               child: PageView(
                 allowImplicitScrolling: true,
-                scrollBehavior: ScrollBehavior(
-                    androidOverscrollIndicator:
-                        AndroidOverscrollIndicator.stretch),
                 controller: cuibt.controlar,
                 scrollDirection: Axis.horizontal,
                 children: [
@@ -110,7 +107,7 @@ class _MoneyOraganizeState extends State<MoneyOraganize> {
               quarterTurns: 1,
               child: Text(
                 "${budget["data"]}",
-                style: TextStyle(
+                style: const TextStyle(
                     fontSize: 20.0,
                     fontWeight: FontWeight.w900,
                     color: Colors.white),
@@ -162,7 +159,7 @@ class _MoneyOraganizeState extends State<MoneyOraganize> {
                                 fontSize: 21.0, fontWeight: FontWeight.bold)),
                       ),
                     ]),
-                    SizedBox(height: 10),
+                    const SizedBox(height: 10),
                     Row(children: [
                       SizedBox(
                         width: 170,
@@ -198,7 +195,7 @@ class _MoneyOraganizeState extends State<MoneyOraganize> {
         right: 20,
         child: Text(
           value,
-          style: TextStyle(
+          style: const TextStyle(
               fontWeight: FontWeight.w900,
               fontSize: 30.0,
               fontStyle: FontStyle.italic,
@@ -231,21 +228,22 @@ class _MoneyOraganizeState extends State<MoneyOraganize> {
               borderRadius: BorderRadiusDirectional.circular(30.0)),
           child: Column(
             children: [
-              SizedBox(
+              const SizedBox(
                 height: 3,
               ),
               InkWell(
                 onTap: () {
                   layoutCuibt.get(context).Catogerye(model.Photo);
                   if (layoutCuibt.get(context).catagoryContoralr.text ==
-                      "lib/Image/gain money.webp") {
+                      "lib/Image/gainMoney.webp") {
                     setState(() {
                       gaining = true;
                     });
-                  } else
+                  } else {
                     setState(() {
                       gaining = false;
                     });
+                  }
                   showbottomshet(context);
                 },
                 child: CircleAvatar(
@@ -299,7 +297,7 @@ class _MoneyOraganizeState extends State<MoneyOraganize> {
       child: CircularPercentIndicator(
         radius: 200,
         lineWidth: 10,
-        linearGradient: LinearGradient(colors: [
+        linearGradient: const LinearGradient(colors: [
           Colors.tealAccent,
           Colors.blue,
         ]),
@@ -350,7 +348,7 @@ class _MoneyOraganizeState extends State<MoneyOraganize> {
   ) {
     var cuibt = layoutCuibt.get(context);
     var cat = "Gained money";
-    if (cuibt.catagoryContoralr.text == "lib/Image/House illustration 1.png") {
+    if (cuibt.catagoryContoralr.text == "lib/Image/House.png") {
       cat = "Home";
     }
     if (cuibt.catagoryContoralr.text == "lib/Image/Clothing-Logo-Vector.png") {
@@ -387,7 +385,7 @@ class _MoneyOraganizeState extends State<MoneyOraganize> {
         child: Container(
           decoration: const BoxDecoration(
               borderRadius: BorderRadiusDirectional.only(
-                  topEnd: const Radius.circular(
+                  topEnd:  Radius.circular(
                     25.0,
                   ),
                   topStart: Radius.circular(
@@ -465,7 +463,7 @@ class _MoneyOraganizeState extends State<MoneyOraganize> {
                   children: [
                     const Text(
                       "صرفت اي يسطا النهارده",
-                      style: const TextStyle(
+                      style:  TextStyle(
                           fontWeight: FontWeight.w900,
                           fontSize: 20.0,
                           fontStyle: FontStyle.italic,
@@ -539,11 +537,11 @@ class _MoneyOraganizeState extends State<MoneyOraganize> {
                                               });
                                               Navigator.pop(context);
                                             },
-                                            child: Text("okay!",
+                                            child: const Text("okay!",
                                                 style: TextStyle(
                                                     color: Colors.black,
                                                 fontSize: 20,)),
-                                            style: ButtonStyle(
+                                            style: const ButtonStyle(
                                               animationDuration:
                                                   Duration(milliseconds: 900),
                                             ),
@@ -582,7 +580,7 @@ class CategoryModel {
 
 List<CategoryModel> SingleCategory = [
   CategoryModel(
-    Photo: "lib/Image/House illustration 1.png",
+    Photo: "lib/Image/House.png",
     title: "Home",
   ),
   CategoryModel(
@@ -608,13 +606,13 @@ List<CategoryModel> SingleCategory = [
     title: "Money saving",
   ),
   CategoryModel(
-    Photo: "lib/Image/gain money.webp",
+    Photo: "lib/Image/gainMoney.webp",
     title: "Gained money",
   ),
 ];
 List<CategoryModel> MarriedCategory =[
   CategoryModel(
-    Photo: "lib/Image/House illustration 1.png",
+    Photo: "lib/Image/House.png",
     title: "Home",
   ),
   CategoryModel(
@@ -648,7 +646,7 @@ List<CategoryModel> MarriedCategory =[
     title: "Money saving",
   ),
   CategoryModel(
-    Photo: "lib/Image/gain money.webp",
+    Photo: "lib/Image/gainMoney.webp",
     title: "Gained money",
   ),
 

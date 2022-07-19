@@ -54,7 +54,7 @@ class _SignupState extends State<Signup> {
               ),
               centerTitle: true,
               bottom:AppBar(
-                leading: SizedBox(width: 0),
+                leading: const SizedBox(width: 0),
                 centerTitle: false,
                 backgroundColor: Colors.transparent,title:Text(
                 "Hi,Sign up now ,...",
@@ -148,7 +148,7 @@ class _SignupState extends State<Signup> {
                 hint: "Enter you name,...",
                 keybordtype: TextInputType.name,
                 Prefix:
-                Icon(Icons.drive_file_rename_outline, color: Colors.grey),
+                const Icon(Icons.drive_file_rename_outline, color: Colors.grey),
                 validator: (value) {
                   if (value!.isEmpty) {
                     return "      Name must not be empty";
@@ -159,7 +159,7 @@ class _SignupState extends State<Signup> {
                 Controlr: email,
                 hint: "Enter you email,...",
                 keybordtype: TextInputType.emailAddress,
-                Prefix: Icon(Icons.person_outline),
+                Prefix: const Icon(Icons.person_outline),
                 validator: (value) {
                   if (value!.isEmpty) {
                     return "      Email must not be empty";
@@ -177,8 +177,8 @@ class _SignupState extends State<Signup> {
                   return null;
                 },
                 Prefix: isobsring
-                    ? Icon(Icons.lock_open, color: Colors.grey)
-                    : Icon(Icons.lock_outline_rounded, color: Colors.grey),
+                    ? const Icon(Icons.lock_open, color: Colors.grey)
+                    : const Icon(Icons.lock_outline_rounded, color: Colors.grey),
                 isobsr: isobsring,
                 suffix: GestureDetector(
                   onTap: () {
@@ -187,11 +187,11 @@ class _SignupState extends State<Signup> {
                     });
                   },
                   child: isobsring
-                      ? Icon(
+                      ? const Icon(
                     Icons.visibility_off_outlined,
                     color: Colors.grey,
                   )
-                      : Icon(Icons.remove_red_eye, color: Colors.grey),
+                      : const Icon(Icons.remove_red_eye, color: Colors.grey),
                 )),
             Mytextfield(
                 Controlr: repass,
@@ -207,8 +207,8 @@ class _SignupState extends State<Signup> {
                   return null;
                 },
                 Prefix: isobsring
-                    ? Icon(Icons.lock_open, color: Colors.grey)
-                    : Icon(Icons.lock_outline_rounded, color: Colors.grey),
+                    ? const Icon(Icons.lock_open, color: Colors.grey)
+                    : const Icon(Icons.lock_outline_rounded, color: Colors.grey),
                 isobsr: isobsring,
                 suffix: GestureDetector(
                   onTap: () {
@@ -217,11 +217,11 @@ class _SignupState extends State<Signup> {
                     });
                   },
                   child: isobsring
-                      ? Icon(
+                      ? const Icon(
                     Icons.visibility_off_outlined,
                     color: Colors.grey,
                   )
-                      : Icon(Icons.remove_red_eye, color: Colors.grey),
+                      : const Icon(Icons.remove_red_eye, color: Colors.grey),
                 )),
             Mytextfield(
                 Controlr: phone,
@@ -289,7 +289,7 @@ class _SignupState extends State<Signup> {
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         AnimatedOpacity(
-          duration: Duration(seconds: 2),
+          duration: const Duration(seconds: 2),
           curve: Curves.fastOutSlowIn,
           opacity: model.ontap ? 1 : 0,
           child: AnimatedContainer(
@@ -298,11 +298,11 @@ class _SignupState extends State<Signup> {
             decoration: BoxDecoration(
                 color: ontap,
                 borderRadius: BorderRadiusDirectional.circular(30.0)),
-            duration: Duration(seconds: 1),
+            duration: const Duration(seconds: 1),
             curve: Curves.fastOutSlowIn,
             child: Column(
               children: [
-                SizedBox(
+                const SizedBox(
                   height: 3,
                 ),
                 CircleAvatar(

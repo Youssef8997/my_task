@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
-import 'package:my_task/Componads/Com.dart';
 import 'package:cupertino_stepper/cupertino_stepper.dart';
 import 'package:my_task/Componads/my%20textformfild.dart';
 import 'package:velocity_x/velocity_x.dart';
@@ -196,7 +195,7 @@ class _AddTasksState extends State<AddTasks> {
           padding:  EdgeInsets.all(8.0),
           child:  CircleAvatar(
             radius: 20,
-            backgroundImage: AssetImage("lib/Image/man avatar.jpg"),
+            backgroundImage: AssetImage("lib/Image/manavatar.jpg"),
           ),
         ),
       ],

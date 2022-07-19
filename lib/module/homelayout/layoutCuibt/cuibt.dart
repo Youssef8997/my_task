@@ -234,7 +234,7 @@ class layoutCuibt extends Cubit<mytasks> {
   Future insertbudget(
       {required title, required desc, required MONEY, required data, required catogry}) async {
     await datab.transaction((txn) {
-      if (catogry == "lib/Image/gain money.webp") {
+      if (catogry == "lib/Image/gainMoney.webp") {
         txn.rawInsert(
             'INSERT INTO BUDGET(title,desc,MONEY,MONEYAfter,data,catogry)VALUES("$title","$desc","$MONEY","${sallaryAfter +
                 MONEY}","$data","$catogry")').then((value) {

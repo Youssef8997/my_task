@@ -3,9 +3,7 @@ import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:my_task/module/Login/Login.dart';
 import 'package:my_task/module/SpalshScreen/Spalsh.dart';
-import 'package:my_task/module/homelayout/layout.dart';
 import 'package:my_task/module/homelayout/layoutCuibt/cuibt.dart';
 import 'lib/sherdeprefrence/sherdhelp.dart';
 
@@ -13,24 +11,17 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await sherdprefrence.init();
   await AndroidAlarmManager.initialize();
-  var isSpalsh=sherdprefrence.getdate(key: "spalsh");
-  var isLogin=sherdprefrence.getdate(key: "login");
-  print(isLogin);
-  Widget widget;
-  if(isSpalsh==null) {
-    widget = const SplashScreen();
-  }
+  bool?  IsfirstTime=sherdprefrence.getdate(key: "spalsh");
+  bool? IsLogin=sherdprefrence.getdate(key: "login");
 
-  else if (isLogin==null)
-    widget=Login();
-    else widget=homelayout();
-  runApp(MyApp(widget));
+  runApp(MyApp(IsfirstTime,IsLogin));
 
 }
 
 class MyApp extends StatelessWidget {
-  final widget;
-  MyApp(this.widget);
+  bool? firstTime;
+  bool?isLogin;
+  MyApp(this.firstTime,this.isLogin);
 
 
   // This widget is the root of your application.
@@ -43,8 +34,7 @@ class MyApp extends StatelessWidget {
         child: MaterialApp(
           debugShowCheckedModeBanner: false,
           theme: ThemeData(
-
-              appBarTheme: AppBarTheme(
+              appBarTheme: const AppBarTheme(
                   systemOverlayStyle: SystemUiOverlayStyle(
                     systemNavigationBarContrastEnforced: true,
                     systemStatusBarContrastEnforced: true,
@@ -66,7 +56,7 @@ class MyApp extends StatelessWidget {
                     fontStyle: FontStyle.italic
 
                   ))),
-          home: widget,
+          home:  SplashScreen(firstTime: firstTime??false,isLogin: isLogin??false),
         ));
   }
 }

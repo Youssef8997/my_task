@@ -205,7 +205,7 @@ class _EditTaskState extends State<EditTask> {
           padding: const EdgeInsets.all(8.0),
           child: const CircleAvatar(
             radius: 20,
-            backgroundImage: AssetImage("lib/Image/man avatar.jpg"),
+            backgroundImage: AssetImage("lib/Image/manavatar.jpg"),
           ),
         ),
       ],
