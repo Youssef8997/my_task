@@ -36,6 +36,7 @@ class layoutCuibt extends Cubit<mytasks> {
   bool bottomshown = false;
   var kayscafold = GlobalKey<ScaffoldState>();
   var kayform = GlobalKey<FormState>();
+  var addTask = GlobalKey<FormState>();
   var firstvalue = "5 Min";
   var Scondvalue = "low";
   var id = 1;
@@ -133,8 +134,9 @@ class layoutCuibt extends Cubit<mytasks> {
       getDataTasks(datab).then((value) {
         task = value;
         task.forEach((element) {
-          if (element["data"] == Ondate)
+          if (element["data"] == Ondate) {
             tasks.add(element);
+          }
         });
         print(tasks);
         emit(GetDatatasksSucssesful());
@@ -174,8 +176,9 @@ class layoutCuibt extends Cubit<mytasks> {
       tasks = [];
       task = value;
       task.forEach((element) {
-        if (element["data"] == Ondate)
+        if (element["data"] == Ondate) {
           tasks.add(element);
+        }
         emit(GetDatatasksSucssesful());
       });
     });
@@ -255,7 +258,7 @@ class layoutCuibt extends Cubit<mytasks> {
           print(" the error is ${error.toString()}");
           emit(InsertDataBaseError());
         });
-      } else
+      } else {
         txn.rawInsert(
             'INSERT INTO BUDGET(title,desc,MONEY,MONEYAfter,data,catogry)VALUES("$title","$desc","$MONEY","${sallaryAfter -
                 MONEY}","$data","$catogry")')
@@ -277,6 +280,7 @@ class layoutCuibt extends Cubit<mytasks> {
           print(" the error is ${error.toString()}");
           emit(InsertDataBaseError());
         });
+      }
       return getname();
     });
   }
@@ -360,14 +364,15 @@ class layoutCuibt extends Cubit<mytasks> {
       currentStep += 1;
       emit(OnPressedonStepper());
     } else {
-      
+      if(addTask.currentState!.validate()) {
         insert(title: title.text,
             desc: desc.text,
             time: time.text,
             date: date.text,
             repeat: firstvalue,
             priority: Scondvalue);
-        await AndroidAlarmManager.periodic(const Duration(minutes: 1), id, printHello);
+        await AndroidAlarmManager.periodic(
+            const Duration(minutes: 1), id, printHello);
         currentStep = 0;
         title.clear();
         desc.clear();
@@ -375,7 +380,11 @@ class layoutCuibt extends Cubit<mytasks> {
         date.clear();
         Navigator.pop(context);
         emit(OnPressedonStepper());
-      
+      }
+      else{
+        currentStep = 0;
+        emit(OnPressedOnStepperError());
+      }
     }
   }
   void OnPressedContStepperEdit(
@@ -406,8 +415,9 @@ class layoutCuibt extends Cubit<mytasks> {
     if (currentStep <= 5) {
       if (currentStep == 0) {
         Navigator.pop(context);
-      } else
+      } else {
         currentStep -= 1;
+      }
       emit(OnPressedonStepper());
     }
   }

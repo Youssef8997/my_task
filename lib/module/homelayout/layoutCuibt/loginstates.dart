@@ -19,6 +19,7 @@ class  DeleteDataBaseError  extends mytasks{}
 class  OnPressedContStepper extends mytasks{}
 class  OnPressedcacselStepper  extends mytasks{}
 class  OnPressedonStepper  extends mytasks{}
+class  OnPressedOnStepperError  extends mytasks{}
 class  getsallary  extends mytasks{}
 class  getsallaryafter  extends mytasks{}
 class  getUsersData  extends mytasks{}
