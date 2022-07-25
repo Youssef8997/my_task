@@ -162,7 +162,7 @@ Widget buildptage(pagemodel module, context) {
             )),
       ),
       Container(
-        height: (size.height * .5) - 200,
+        height: size.height * .25,
         width: size.width,
         decoration: BoxDecoration(
             color: ColorManger.maincolor,

@@ -1,6 +1,7 @@
 import 'package:bottom_navy_bar/bottom_navy_bar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:my_task/Componads/Com.dart';
@@ -16,6 +17,17 @@ class homelayout extends StatelessWidget {
         listener: (context,state){},
         builder: (context,state){
           return Scaffold(
+
+            appBar: AppBar(
+              systemOverlayStyle:const  SystemUiOverlayStyle(
+                statusBarColor: Colors.black,
+                statusBarBrightness: Brightness.light,
+                statusBarIconBrightness: Brightness.light,
+
+              ),
+              toolbarHeight: 0,
+
+            ),
 extendBodyBehindAppBar:true,
             key: cuibt.kayscafold,
              body:cuibt.body[cuibt.MyIndex],

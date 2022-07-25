@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:cupertino_stepper/cupertino_stepper.dart';
+import 'package:my_task/Componads/Com.dart';
 import 'package:my_task/Componads/my%20textformfild.dart';
 import 'package:velocity_x/velocity_x.dart';
 import 'package:my_task/module/homelayout/layoutCuibt/cuibt.dart';
@@ -14,50 +15,48 @@ var date = TextEditingController();
 var time = TextEditingController();
 var now = DateTime.now();
 
-class AddTasks extends StatefulWidget {
+class Tasks extends StatefulWidget {
+  final int ?id;
+  const Tasks({super.key,this.id});
+
   @override
-  State<AddTasks> createState() => _AddTasksState();
+  State<Tasks> createState() => _TasksState(id: id);
 }
 
-
-class _AddTasksState extends State<AddTasks> {
+class _TasksState extends State<Tasks> {
+  final int ?id;
+  _TasksState({this.id});
   @override
   void initState() {
     time.text = DateFormat('HH:mm').format(now);
-    date.text = DateFormat('yyyy-MM-dd').format(now);
+    date.text = DateFormat.yMMMd().format(now);
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
-    var size = MediaQuery.of(context).size;
     return BlocConsumer<layoutCuibt, mytasks>(
         listener: (context, state) {},
         builder: (context, state) {
+          var size = MediaQuery.of(context).size;
           var cuibt = layoutCuibt.get(context);
           return Scaffold(
             extendBodyBehindAppBar: true,
             appBar: appbar(),
-            body: SingleChildScrollView(
-              child: Stack(
-                children: [Wallpaperstack(size), buildStepper(cuibt)],
-              ),
+            body: wallPaperContainer(
+              Child: buildStepper(cuibt),
+              pathImage: "lib/Image/AddtaskBack.jpg",
+              size: size,
             ),
           );
         });
-  }
-
-  SizedBox Wallpaperstack(Size size) {
-    return SizedBox(
-      height: size.height,
-      width: size.width,
-      child: Image.asset("lib/Image/AddtaskBack.jpg", fit: BoxFit.fill),
-    );
   }
 
   Form buildStepper(layoutCuibt cuibt) {
     return Form(
       key: cuibt.addTask,
       child: Stepper(
+
         currentStep: cuibt.currentStep,
         type: StepperType.vertical,
         steps: [
@@ -87,8 +86,8 @@ class _AddTasksState extends State<AddTasks> {
                     fontSize: 18,
                     fontWeight: FontWeight.bold)),
             content: Mytextfield(
-                hint: "Write description of your task......",
-                Controlr: desc,
+              hint: "Write description of your task......",
+              Controlr: desc,
               validator: (value) {
                 if (value.isEmpty) {
                   return "Please write description";
@@ -236,14 +235,20 @@ class _AddTasksState extends State<AddTasks> {
                 cuibt.currentStep > 5 ? StepState.complete : StepState.indexed,
           ),
         ],
-        onStepContinue: () => cuibt.OnPressedContStepper(context),
-        onStepCancel: () => cuibt.OnPressedcacselStepper(context),
+        onStepContinue: () =>id==null? cuibt.onPressedContinue(context):cuibt.pressedContinueEdit(context: context,id:id,),
+        onStepCancel: () => cuibt.onPressedCancel(context),
       ),
     );
   }
 
   AppBar appbar() {
     return AppBar(
+      leading: IconButton(
+        icon: const Icon(Icons.arrow_back,color: Colors.black),
+        onPressed: () {
+          Navigator.pop(context);
+        },
+      ),
       backgroundColor: Colors.transparent,
       title: "Add Task".text.make().shimmer(
             duration: const Duration(seconds: 2),

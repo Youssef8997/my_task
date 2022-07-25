@@ -1,16 +1,42 @@
 
+import 'dart:typed_data';
+
 import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:my_task/module/SpalshScreen/Spalsh.dart';
 import 'package:my_task/module/homelayout/layoutCuibt/cuibt.dart';
+import 'Componads/Com.dart';
 import 'lib/sherdeprefrence/sherdhelp.dart';
+
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await sherdprefrence.init();
   await AndroidAlarmManager.initialize();
+ AwesomeNotifications().initialize(
+   null,
+   [
+     NotificationChannel(
+       channelKey: 'tasks1',
+       channelName: 'Task',
+       channelDescription: 'task',
+       importance:NotificationImportance.Max,
+       enableLights: true,
+       enableVibration: true,
+       playSound: true,
+       ledColor: Colors.white,
+       defaultRingtoneType: DefaultRingtoneType.Alarm,
+       groupSort:GroupSort.Asc,
+       vibrationPattern:Int64List(1000),
+       groupAlertBehavior: GroupAlertBehavior.All,
+soundSource: "resource://raw/alart_sound",
+     ),
+
+   ],
+ );
+  await sherdprefrence.init();
   bool?  IsfirstTime=sherdprefrence.getdate(key: "spalsh");
   bool? IsLogin=sherdprefrence.getdate(key: "login");
 
@@ -49,7 +75,7 @@ class MyApp extends StatelessWidget {
                   backgroundColor:Colors.transparent,
                   elevation:  0,
                   centerTitle: true,
-                  titleTextStyle: const TextStyle(
+                  titleTextStyle:  TextStyle(
                     color: Colors.white,
                     fontSize: 18.0,
                     fontWeight: FontWeight.bold,

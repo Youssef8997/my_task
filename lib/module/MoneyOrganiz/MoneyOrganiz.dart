@@ -66,7 +66,7 @@ class _MoneyOraganizeState extends State<MoneyOraganize> {
                               color: Colors.green,
                             )),
                         onFieldSubmitted: (String) =>
-                            cuibt.changesallary(String)),
+                            cuibt.changeSallary(String)),
                   ),
                 )
               ],
@@ -421,7 +421,7 @@ class _MoneyOraganizeState extends State<MoneyOraganize> {
                             initialDate: DateTime.now(),
                             firstDate: DateTime.now(),
                             lastDate: DateTime.parse('2022-11-07'),
-                          ).then((value) => cuibt.budgetdate(value)),
+                          ).then((value) => cuibt.budgetDate(value)),
                         )),
                         const SizedBox(
                           width: 5,
@@ -487,7 +487,7 @@ class _MoneyOraganizeState extends State<MoneyOraganize> {
                             initialDate: DateTime.now(),
                             firstDate: DateTime.now(),
                             lastDate: DateTime.parse('2022-11-07'),
-                          ).then((value) => cuibt.budgetdate(value)),
+                          ).then((value) => cuibt.budgetDate(value)),
                         )),
                         const SizedBox(
                           width: 5,
