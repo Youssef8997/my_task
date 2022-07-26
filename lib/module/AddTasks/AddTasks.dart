@@ -169,7 +169,7 @@ class _TasksState extends State<Tasks> {
           Step(
             title: const Text("repeat"),
             content: DropdownButton(
-                hint: Text("${cuibt.firstvalue} repeat",
+                hint: Text("${cuibt.firstValue} repeat",
                     style: const TextStyle(color: Colors.black)),
                 items: const [
                   DropdownMenuItem(
@@ -198,7 +198,7 @@ class _TasksState extends State<Tasks> {
                     enabled: true,
                   ),
                 ],
-                value: cuibt.firstvalue,
+                value: cuibt.firstValue,
                 onChanged: (Object? value) => cuibt.changevaluerepeat(value)),
             state:
                 cuibt.currentStep > 4 ? StepState.complete : StepState.indexed,
@@ -210,7 +210,7 @@ class _TasksState extends State<Tasks> {
                     fontSize: 18,
                     fontWeight: FontWeight.bold)),
             content: DropdownButton(
-                hint: Text("${cuibt.Scondvalue} priority",
+                hint: Text("${cuibt.scondValue} priority",
                     style: const TextStyle(color: Colors.black)),
                 items: const [
                   DropdownMenuItem(
@@ -229,7 +229,7 @@ class _TasksState extends State<Tasks> {
                     enabled: true,
                   ),
                 ],
-                value: cuibt.Scondvalue,
+                value: cuibt.scondValue,
                 onChanged: (Object? value) => cuibt.changevaluepri(value)),
             state:
                 cuibt.currentStep > 5 ? StepState.complete : StepState.indexed,

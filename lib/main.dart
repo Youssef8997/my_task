@@ -23,6 +23,7 @@ Future<void> main() async {
        channelName: 'Task',
        channelDescription: 'task',
        importance:NotificationImportance.Max,
+       channelShowBadge: true,
        enableLights: true,
        enableVibration: true,
        playSound: true,

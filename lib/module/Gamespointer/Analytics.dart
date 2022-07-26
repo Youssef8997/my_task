@@ -28,7 +28,7 @@ class _analyticsState extends State<analytics> {
       alignment: AlignmentDirectional.topStart,
       children: [
         Wallpaperstack(size),
-        Textupmoney("${layoutCuibt.get(context).sallaryAfter} LE"),
+        Textupmoney("${layoutCuibt.get(context).salaryAfter} LE"),
         Positioned(
           top: 100,
           bottom: 0,
@@ -36,17 +36,17 @@ class _analyticsState extends State<analytics> {
               height: size.height * .75,
               width: size.width,
               child: ConditionalBuilder(
-                condition: layoutCuibt.get(context).Budget.isNotEmpty,
+                condition: layoutCuibt.get(context).budget.isNotEmpty,
                 builder: (context) => ListView.separated(
                     physics: const BouncingScrollPhysics(),
                     reverse: true,
                     itemBuilder: (context, index) => Dismissible(
-                      key: Key(layoutCuibt.get(context).Budget[index]["title"].toString()),
+                      key: Key(layoutCuibt.get(context).budget[index]["title"].toString()),
                       onDismissed: (direction) {
-                        layoutCuibt.get(context).deletebudget(id: layoutCuibt.get(context).Budget[index]["id"],index: index);
+                        layoutCuibt.get(context).deletebudget(id: layoutCuibt.get(context).budget[index]["id"],index: index);
                         final snackBar = SnackBar(
                           content: Text(
-                            "you deleted task number ${layoutCuibt.get(context).Budget[index]["id"]}",
+                            "you deleted task number ${layoutCuibt.get(context).budget[index]["id"]}",
                           ),
                           backgroundColor: Colors.pink,
                           duration: const Duration(milliseconds: 800),
@@ -55,12 +55,12 @@ class _analyticsState extends State<analytics> {
                         ScaffoldMessenger.of(context).showSnackBar(snackBar);
                       },
                       child: BudgetCont(
-                          size, layoutCuibt.get(context).Budget[index]),
+                          size, layoutCuibt.get(context).budget[index]),
                     ),
                     separatorBuilder: (context, index) => const SizedBox(
                       height: 1,
                     ),
-                    itemCount: layoutCuibt.get(context).Budget.length),
+                    itemCount: layoutCuibt.get(context).budget.length),
                 fallback: (context) => Padding(
                   padding: const EdgeInsets.only(left: 50, top: 200),
                   child: Text("you dont spent money yet ,good boy🥰",

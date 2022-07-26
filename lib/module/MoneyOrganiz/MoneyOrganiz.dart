@@ -30,14 +30,14 @@ class _MoneyOraganizeState extends State<MoneyOraganize> {
           var cuibt = layoutCuibt.get(context);
           var size = MediaQuery.of(context).size;
           return ConditionalBuilder(
-            condition: cuibt.sallary != 0,
+            condition: cuibt.salary != 0,
             builder: (context) => SafeArea(
               child: PageView(
                 allowImplicitScrolling: true,
-                controller: cuibt.controlar,
+                controller: cuibt.controller,
                 scrollDirection: Axis.horizontal,
                 children: [
-                  EndWidget(size, cuibt.sallaryAfter, context),
+                  EndWidget(size, cuibt.salaryAfter, context),
 
                 ],
               ),
@@ -77,7 +77,7 @@ class _MoneyOraganizeState extends State<MoneyOraganize> {
 
   Widget EndWidget(size, sallaryAfter, context) {
     var cuibt = layoutCuibt.get(context);
-    double precent = (cuibt.sallaryAfter / cuibt.sallary);
+    double precent = (cuibt.salaryAfter / cuibt.salary);
     return Stack(
       children: [
         Wallpaperstack(size),
@@ -212,7 +212,7 @@ class _MoneyOraganizeState extends State<MoneyOraganize> {
       physics: const BouncingScrollPhysics(),
       crossAxisCount: 3,
       children: List.generate(
-          layoutCuibt.get(context).Users[0]["status"]=="Single"?SingleCategory.length:MarriedCategory.length, (index) => Catogry_Avatar(layoutCuibt.get(context).Users[0]["status"]=="Single"?SingleCategory[index]:MarriedCategory[index], context)),
+          layoutCuibt.get(context).users[0]["status"]=="Single"?SingleCategory.length:MarriedCategory.length, (index) => Catogry_Avatar(layoutCuibt.get(context).users[0]["status"]=="Single"?SingleCategory[index]:MarriedCategory[index], context)),
     );
   }
 
@@ -234,7 +234,7 @@ class _MoneyOraganizeState extends State<MoneyOraganize> {
               InkWell(
                 onTap: () {
                   layoutCuibt.get(context).Catogerye(model.Photo);
-                  if (layoutCuibt.get(context).catagoryContoralr.text ==
+                  if (layoutCuibt.get(context).catagoryController.text ==
                       "lib/Image/gainMoney.webp") {
                     setState(() {
                       gaining = true;
@@ -348,24 +348,24 @@ class _MoneyOraganizeState extends State<MoneyOraganize> {
   ) {
     var cuibt = layoutCuibt.get(context);
     var cat = "Gained money";
-    if (cuibt.catagoryContoralr.text == "lib/Image/House.png") {
+    if (cuibt.catagoryController.text == "lib/Image/House.png") {
       cat = "Home";
     }
-    if (cuibt.catagoryContoralr.text == "lib/Image/Clothing-Logo-Vector.png") {
+    if (cuibt.catagoryController.text == "lib/Image/Clothing-Logo-Vector.png") {
       cat = "Clothing";
     }
-    if (cuibt.catagoryContoralr.text == "lib/Image/helthcare.jpg") {
+    if (cuibt.catagoryController.text == "lib/Image/helthcare.jpg") {
       cat = "Health Care";
     }
-    if (cuibt.catagoryContoralr.text ==
+    if (cuibt.catagoryController.text ==
         "lib/Image/group-young-friends-having-fun-together-vector-26803087.jpg") {
       cat = "Fun";
     }
-    if (cuibt.catagoryContoralr.text ==
+    if (cuibt.catagoryController.text ==
         "lib/Image/travel-logo-vector-illustration-black-airplane-isolated-white-115729130.jpg") {
       cat = "Travel";
     }
-    if (cuibt.catagoryContoralr.text == "lib/Image/logo-template-44-.jpg") {
+    if (cuibt.catagoryController.text == "lib/Image/logo-template-44-.jpg") {
       cat = "Money Saving";
     }
     return SafeArea(
@@ -404,17 +404,17 @@ class _MoneyOraganizeState extends State<MoneyOraganize> {
                           color: Colors.black),
                     ),
                     Mytextfield(
-                        Controlr: cuibt.titleContoralr,
+                        Controlr: cuibt.titleController,
                         hint: "اخدتهم منين يسطا ؟؟"),
                     Mytextfield(
-                        Controlr: cuibt.desContoralr,
+                        Controlr: cuibt.descController,
                         hint: "وهتصرفهم في اي دي يسطا  ؟؟"),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Expanded(
                             child: Mytextfield(
-                          Controlr: cuibt.dataContoralr,
+                          Controlr: cuibt.dataController,
                           hint: "امتااااا ؟؟",
                           func: () => showDatePicker(
                             context: context,
@@ -436,19 +436,19 @@ class _MoneyOraganizeState extends State<MoneyOraganize> {
                     Mytextfield(
                       keybordtype: const
                       TextInputType.numberWithOptions(),
-                        Controlr: cuibt.moneyContoralr,
+                        Controlr: cuibt.moneyController,
                         hint: "وعلي كدا اخدت كام بقي ؟؟"),
                     mybutton(
                         Widget: const Text("  قشطا"),
                         function: () {
                           cuibt
                               .insertbudget(
-                                  title: cuibt.titleContoralr.text,
-                                  desc: cuibt.desContoralr.text,
+                                  title: cuibt.titleController.text,
+                                  desc: cuibt.descController.text,
                                   MONEY:
-                                      double.parse(cuibt.moneyContoralr.text),
-                                  data: cuibt.dataContoralr.text,
-                                  catogry: cuibt.catagoryContoralr.text)
+                                      double.parse(cuibt.moneyController.text),
+                                  data: cuibt.dataController.text,
+                                  catogry: cuibt.catagoryController.text)
                               .then((value) {
                             Navigator.pop(context);
                             setState(() {
@@ -470,17 +470,17 @@ class _MoneyOraganizeState extends State<MoneyOraganize> {
                           color: Colors.black),
                     ),
                     Mytextfield(
-                        Controlr: cuibt.titleContoralr,
+                        Controlr: cuibt.titleController,
                         hint: "صرفت فلوسك في اي ؟؟"),
                     Mytextfield(
-                        Controlr: cuibt.desContoralr,
+                        Controlr: cuibt.descController,
                         hint: "ولي صرفت افلوس دي يسطا  ؟؟"),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Expanded(
                             child: Mytextfield(
-                          Controlr: cuibt.dataContoralr,
+                          Controlr: cuibt.dataController,
                           hint: "امتااااا ؟؟",
                           func: () => showDatePicker(
                             context: context,
@@ -501,13 +501,13 @@ class _MoneyOraganizeState extends State<MoneyOraganize> {
                     ),
                     Mytextfield(
                         keybordtype: const TextInputType.numberWithOptions(),
-                        Controlr: cuibt.moneyContoralr,
+                        Controlr: cuibt.moneyController,
                         hint: "وعلي كدا صرفت كام بقي ؟؟"),
                     mybutton(
                         Widget: const Text("  قشطا"),
                         function: () {
-                          if (double.parse(cuibt.moneyContoralr.text) >
-                              cuibt.sallaryAfter) {
+                          if (double.parse(cuibt.moneyController.text) >
+                              cuibt.salaryAfter) {
                             Navigator.pop(context);
                             showDialog(
                                 useSafeArea: true,
@@ -529,11 +529,11 @@ class _MoneyOraganizeState extends State<MoneyOraganize> {
                                           child: TextButton(
                                             onPressed: () {
                                               setState(() {
-                                                cuibt.titleContoralr.clear();
-                                                cuibt.desContoralr.clear();
-                                                cuibt.moneyContoralr.clear();
-                                                cuibt.dataContoralr.clear();
-                                                cuibt.catagoryContoralr.clear();
+                                                cuibt.titleController.clear();
+                                                cuibt.descController.clear();
+                                                cuibt.moneyController.clear();
+                                                cuibt.dataController.clear();
+                                                cuibt.catagoryController.clear();
                                               });
                                               Navigator.pop(context);
                                             },
@@ -552,12 +552,12 @@ class _MoneyOraganizeState extends State<MoneyOraganize> {
                           } else {
                             cuibt
                                 .insertbudget(
-                                    title: cuibt.titleContoralr.text,
-                                    desc: cuibt.desContoralr.text,
+                                    title: cuibt.titleController.text,
+                                    desc: cuibt.descController.text,
                                     MONEY:
-                                        double.parse(cuibt.moneyContoralr.text),
-                                    data: cuibt.dataContoralr.text,
-                                    catogry: cuibt.catagoryContoralr.text)
+                                        double.parse(cuibt.moneyController.text),
+                                    data: cuibt.dataController.text,
+                                    catogry: cuibt.catagoryController.text)
                                 .then((value) {
                               Navigator.pop(context);
                             });

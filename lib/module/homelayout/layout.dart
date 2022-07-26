@@ -1,14 +1,73 @@
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:bottom_navy_bar/bottom_navy_bar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:hexcolor/hexcolor.dart';
-import 'package:my_task/Componads/Com.dart';
 import 'package:my_task/module/homelayout/layoutCuibt/cuibt.dart';
 import 'package:my_task/module/homelayout/layoutCuibt/loginstates.dart';
-import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
-class homelayout extends StatelessWidget {
+
+import '../../Componads/Com.dart';
+class homelayout extends StatefulWidget {
+  @override
+  State<homelayout> createState() => _homelayoutState();
+}
+
+class _homelayoutState extends State<homelayout> {
+  @override
+  void initState() {
+    super.initState();
+    AwesomeNotifications().isNotificationAllowed().then(
+          (isAllowed) {
+        if (!isAllowed) {
+          showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+              title: const Text('Allow Notifications'),
+              content: const Text('Our app would like to send you notifications'),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: const Text(
+                    'Don\'t Allow',
+                    style: TextStyle(color: Colors.grey, fontSize: 18),
+                  ),
+                ),
+                TextButton(
+                  onPressed: () => AwesomeNotifications()
+                      .requestPermissionToSendNotifications()
+                      .then((_) => Navigator.pop(context)),
+                  child: const Text(
+                    'Allow',
+                    style: TextStyle(
+                      color: Colors.teal,
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          );
+        }
+        else {
+          AwesomeNotifications().createdStream.listen((notification){
+
+          });
+          AwesomeNotifications().actionStream.listen((notification){
+if (notification.title=="have a new task"){
+  setState(() {
+    layoutCuibt.get(context).MyIndex=3;
+  });
+}
+          });
+
+              }
+      },
+    );
+  }
   @override
   Widget build(BuildContext context) {
     var cuibt=layoutCuibt.get(context);
@@ -29,13 +88,13 @@ class homelayout extends StatelessWidget {
 
             ),
 extendBodyBehindAppBar:true,
-            key: cuibt.kayscafold,
+            key: cuibt.kayScaffold,
              body:cuibt.body[cuibt.MyIndex],
               bottomNavigationBar: BottomNavyBar(
                 containerHeight: 60,
              itemCornerRadius: 25.0,
             curve: Curves.fastOutSlowIn,
-            animationDuration: Duration(milliseconds: 900),
+            animationDuration: const Duration(milliseconds: 900),
             selectedIndex:cuibt.MyIndex,
             showElevation: false, // use this to remove appBar's elevation
             onItemSelected: (index){cuibt.ChangeIndex(index);},
@@ -46,6 +105,12 @@ extendBodyBehindAppBar:true,
         }
     );
 
+  }
+  @override
+  void dispose() {
+    AwesomeNotifications().actionSink.close();
+    AwesomeNotifications().createdSink.close();
+    super.dispose();
   }
   SizedBox Wallpaperstack(Size size,context) {
     return SizedBox(

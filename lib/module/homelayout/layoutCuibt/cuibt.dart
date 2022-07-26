@@ -1,61 +1,84 @@
 import 'dart:developer';
-import 'dart:isolate';
-
-import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:bottom_navy_bar/bottom_navy_bar.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_alarm_clock/flutter_alarm_clock.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:my_task/lib/sherdeprefrence/sherdhelp.dart';
 import 'package:my_task/module/AddTasks/AddTasks.dart';
-import 'package:my_task/module/AllTaks/AllTasks.dart';
 import 'package:my_task/module/MoneyOrganiz/MoneyOrganiz.dart';
 import 'package:my_task/module/MyTasks/MyTasks.dart';
 import 'package:my_task/module/homelayout/layoutCuibt/loginstates.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:velocity_x/velocity_x.dart';
 import '../../../Componads/Com.dart';
+import '../../../Model/Model.dart';
 import '../../Gamespointer/Analytics.dart';
+import '../../bootChat/bootChat.dart';
 import '../layout.dart';
 
 class layoutCuibt extends Cubit<mytasks> {
   layoutCuibt() : super(mytasksstateinisal());
-
   static layoutCuibt get(context) => BlocProvider.of(context);
   var MyIndex = 0;
   late Database datab;
   List<Map> tasks = [];
   List<Map> task = [];
-  List<Map> Budget = [];
-  List<Map> Users = [];
-  double sallary = sherdprefrence.getdate(key: "salary") != null
-      ? sherdprefrence.getdate(key: "salary")
-      : 0;
-  late double sallaryAfter = Budget.isNotEmpty
-      ? double.parse(Budget[Budget.length - 1]["MONEYAfter"].toString())
-      : sherdprefrence.getdate(key: "salary");
+  List<Map> budget = [];
+  List<Map> users = [];
+  // massage which will be send from the robot
+  List<RobotChatModel> robotResponded = [
+    RobotChatModel(
+        "Hi, I am your robot assistant. I can help you to manage your tasks and budget. What would you like to do?",
+        "Robot",
+        DateFormat('hh:mm').format(DateTime.now())),
+    RobotChatModel(
+        "Okay lets go ", "Robot", DateFormat('hh:mm').format(DateTime.now())),
+    RobotChatModel("What is your task's title", "Robot",
+        DateFormat('hh:mm').format(DateTime.now())),
+    RobotChatModel(
+        "okay, great", "Robot", DateFormat('hh:mm').format(DateTime.now())),
+    RobotChatModel("What is your task's description", "Robot",
+        DateFormat('hh:mm').format(DateTime.now())),
+    RobotChatModel("what time of your task", "Robot",
+        DateFormat('hh:mm').format(DateTime.now())),
+    RobotChatModel("do you wanna repeat it ", "Robot",
+        DateFormat('hh:mm').format(DateTime.now())),
+    RobotChatModel("how much you pay for it", "Robot",
+        DateFormat('hh:mm').format(DateTime.now())),
+    RobotChatModel("why you pay this money", "Robot",
+        DateFormat('hh:mm').format(DateTime.now())),
+    RobotChatModel("which category do you want to put it in", "Robot",
+        DateFormat('hh:mm').format(DateTime.now())),
+    RobotChatModel("when you pay for it", "Robot",
+        DateFormat('hh:mm').format(DateTime.now())),
+  ];
+  List<RobotChatModel> robotChat = [];
+  var chatField = TextEditingController();
+  double salary = sherdprefrence.getdate(key: "salary") ?? 0;
+  late double salaryAfter = budget.isNotEmpty
+      ? double.parse(budget[budget.length - 1]["MONEYAfter"].toString())
+      : sherdprefrence.getdate(key: "salary") ?? 0;
   var currentStep = 0;
-  bool bottomshown = false;
-  var kayscafold = GlobalKey<ScaffoldState>();
-  var kayform = GlobalKey<FormState>();
+  bool bottomShown = false;
+  var kayScaffold = GlobalKey<ScaffoldState>();
+  var kayForm = GlobalKey<FormState>();
   var addTask = GlobalKey<FormState>();
-  var firstvalue = "5 Min";
-  var Scondvalue = "low";
+  var firstValue = "5 Min";
+  var scondValue = "low";
   var id = 1;
-  var Ondate = DateFormat.yMMMd().format(DateTime.now());
-  var titleContoralr = TextEditingController();
-  var desContoralr = TextEditingController();
-  var catagoryContoralr = TextEditingController();
-  var dataContoralr = TextEditingController();
-  var moneyContoralr = TextEditingController();
-  var controlar = PageController(initialPage: 0);
+  var onDate = DateFormat.yMMMd().format(DateTime.now());
+  var titleController = TextEditingController();
+  var descController = TextEditingController();
+  var catagoryController = TextEditingController();
+  var dataController = TextEditingController();
+  var moneyController = TextEditingController();
+  var controller = PageController(initialPage: 0);
   List body = [
     HomeTasks(),
     MoneyOraganize(),
     analytics(),
-    insight(),
+    RobotChat(),
   ];
 
   List<PreferredSizeWidget> appbar = [
@@ -142,7 +165,7 @@ class layoutCuibt extends Cubit<mytasks> {
       getDataTasks(datab).then((value) {
         task = value;
         task.forEach((element) {
-          if (element["data"] == Ondate) {
+          if (element["data"] == onDate) {
             tasks.add(element);
           }
         });
@@ -153,14 +176,14 @@ class layoutCuibt extends Cubit<mytasks> {
         emit(GetDataBaseError());
       });
       getDataBudget(datab).then((value) {
-        Budget = [];
-        Budget = value;
+        budget = [];
+        budget = value;
         emit(GetDatabudgetSucssesful());
       });
       getDateUsers(datab).then((value) {
-        Users = [];
-        Users = value;
-        print(Users);
+        users = [];
+        users = value;
+        print(users);
         emit(getUsersData());
       });
     });
@@ -185,7 +208,7 @@ class layoutCuibt extends Cubit<mytasks> {
       tasks = [];
       task = value;
       task.forEach((element) {
-        if (element["data"] == Ondate) {
+        if (element["data"] == onDate) {
           tasks.add(element);
         }
         emit(GetDatatasksSucssesful());
@@ -195,18 +218,18 @@ class layoutCuibt extends Cubit<mytasks> {
 
   void getBudgetAfterChange() {
     getDataBudget(datab).then((value) {
-      Budget = [];
-      Budget = value;
-      print(Budget);
+      budget = [];
+      budget = value;
+      print(budget);
       emit(getsallaryafter());
     });
   }
 
   void getUsersAfterChange() {
     getDateUsers(datab).then((value) {
-      Users = [];
-      Users = value;
-      print(Users);
+      users = [];
+      users = value;
+      print(users);
       emit(getUsersData());
     });
   }
@@ -267,21 +290,21 @@ class layoutCuibt extends Cubit<mytasks> {
       if (catogry == "lib/Image/gainMoney.webp") {
         txn
             .rawInsert(
-                'INSERT INTO BUDGET(title,desc,MONEY,MONEYAfter,data,catogry)VALUES("$title","$desc","$MONEY","${sallaryAfter + MONEY}","$data","$catogry")')
+                'INSERT INTO BUDGET(title,desc,MONEY,MONEYAfter,data,catogry)VALUES("$title","$desc","$MONEY","${salaryAfter + MONEY}","$data","$catogry")')
             .then((value) {
           print("$value inserted successes");
           getDataBudget(datab).then((value) {
-            Budget = [];
-            Budget = value;
-            print(Budget);
-            changePrecent(sallaryAfter + MONEY);
+            budget = [];
+            budget = value;
+            print(budget);
+            changePrecent(salaryAfter + MONEY);
             emit(getsallaryafter());
           });
-          titleContoralr.clear();
-          desContoralr.clear();
-          moneyContoralr.clear();
-          dataContoralr.clear();
-          catagoryContoralr.clear();
+          titleController.clear();
+          descController.clear();
+          moneyController.clear();
+          dataController.clear();
+          catagoryController.clear();
         }).catchError((error) {
           print(" the error is ${error.toString()}");
           emit(InsertDataBaseError());
@@ -289,21 +312,21 @@ class layoutCuibt extends Cubit<mytasks> {
       } else {
         txn
             .rawInsert(
-                'INSERT INTO BUDGET(title,desc,MONEY,MONEYAfter,data,catogry)VALUES("$title","$desc","$MONEY","${sallaryAfter - MONEY}","$data","$catogry")')
+                'INSERT INTO BUDGET(title,desc,MONEY,MONEYAfter,data,catogry)VALUES("$title","$desc","$MONEY","${salaryAfter - MONEY}","$data","$catogry")')
             .then((value) {
           print("$value inserted successes");
           getDataBudget(datab).then((value) {
-            Budget = [];
-            Budget = value;
-            print(Budget);
-            changePrecent(sallaryAfter - MONEY);
+            budget = [];
+            budget = value;
+            print(budget);
+            changePrecent(salaryAfter - MONEY);
             emit(getsallaryafter());
           });
-          titleContoralr.clear();
-          desContoralr.clear();
-          moneyContoralr.clear();
-          dataContoralr.clear();
-          catagoryContoralr.clear();
+          titleController.clear();
+          descController.clear();
+          moneyController.clear();
+          dataController.clear();
+          catagoryController.clear();
         }).catchError((error) {
           print(" the error is ${error.toString()}");
           emit(InsertDataBaseError());
@@ -368,10 +391,10 @@ class layoutCuibt extends Cubit<mytasks> {
   void deletebudget({required int id, required index}) async {
     await datab.rawDelete('DELETE FROM BUDGET WHERE id=? ', [id]);
     getDataBudget(datab).then((value) {
-      Budget = [];
-      Budget = value;
-      print(Budget);
-      changePrecent(Budget.isEmpty ? sallary : Budget[index - 1]["MONEYAfter"]);
+      budget = [];
+      budget = value;
+      print(budget);
+      changePrecent(budget.isEmpty ? salary : budget[index - 1]["MONEYAfter"]);
       emit(getsallaryafter());
     });
   }
@@ -380,7 +403,7 @@ class layoutCuibt extends Cubit<mytasks> {
   void changevaluerepeat(
     value,
   ) {
-    firstvalue = value;
+    firstValue = value;
     emit(ChangeMyvaluerepet());
   }
 
@@ -388,7 +411,7 @@ class layoutCuibt extends Cubit<mytasks> {
   void changevaluepri(
     value,
   ) {
-    Scondvalue = value;
+    scondValue = value;
     emit(ChangeMyvaluepri());
   }
 
@@ -404,32 +427,35 @@ class layoutCuibt extends Cubit<mytasks> {
       int hour = _convertHourWhenPm(time.text);
       int minute = int.parse(time.text.split(":")[1].split(" ")[0]);
       final int alarmId = year + month + day + hour + minute;
-      final sound="alart_sound.wav";
       if (addTask.currentState!.validate()) {
         await AwesomeNotifications().createNotification(
           content: NotificationContent(
-            id:alarmId ,
+            id: alarmId,
             channelKey: "tasks1",
             title: title.text,
             body: desc.text,
             autoDismissible: true,
             wakeUpScreen: true,
-            customSound:"resource://raw/alart_sound",
+            customSound: "resource://raw/alart_sound",
             locked: true,
-            category:NotificationCategory.Reminder,
+            category: NotificationCategory.Reminder,
             criticalAlert: true,
             showWhen: true,
             ticker: "ticker",
           ),
-          schedule:NotificationCalendar.fromDate(date:DateTime(year, month, day, hour, minute),allowWhileIdle:true,preciseAlarm:true,repeats:false),
+          schedule: NotificationCalendar.fromDate(
+              date: DateTime(year, month, day, hour, minute),
+              allowWhileIdle: true,
+              preciseAlarm: true,
+              repeats: false),
         );
         insert(
             title: title.text,
             desc: desc.text,
             time: time.text,
             date: date.text,
-            repeat: firstvalue,
-            priority: Scondvalue);
+            repeat: firstValue,
+            priority: scondValue);
         currentStep = 0;
         title.clear();
         desc.clear();
@@ -451,8 +477,8 @@ class layoutCuibt extends Cubit<mytasks> {
     } else {
       update(
           id: id,
-          priority: Scondvalue,
-          repeat: firstvalue,
+          priority: scondValue,
+          repeat: firstValue,
           date: date.text,
           time: time.text);
       currentStep = 0;
@@ -476,43 +502,41 @@ class layoutCuibt extends Cubit<mytasks> {
   }
 
   void changePrecent(value) {
-    print(sallaryAfter);
-    sallaryAfter = double.parse(value.toString());
+    print(salaryAfter);
+    salaryAfter = double.parse(value.toString());
     emit(getsallaryafter());
-    print("this is after ${sallaryAfter}");
+    print("this is after ${salaryAfter}");
   }
 
   void changeSallary(value) {
     sherdprefrence.setdate(key: "salary", value: double.parse(value));
-    sallary = sherdprefrence.getdate(key: "salary");
+    salary = sherdprefrence.getdate(key: "salary");
     emit(getsallary());
   }
 
   void Catogerye(value) {
-    catagoryContoralr.text = "${value}";
+    catagoryController.text = "${value}";
     emit(changeCatogery());
   }
 
   void budgetDate(value) {
-    dataContoralr.text = DateFormat.yMMMd().format(value!);
+    dataController.text = DateFormat.yMMMd().format(value!);
     emit(changedate());
   }
-
 
   void onPressedAdd(context) {
     Nevigator(bool: true, context: context, page: Tasks());
   }
-    Future<List<Map>> getTaskNotification(datab) async {
+
+  Future<List<Map>> getTaskNotification(datab) async {
     return await datab.rawQuery('SELECT*FROM TASKS WHERE data=? time=? ', [
       DateFormat.yMMMd().format(DateTime.now()),
-      "${TimeOfDay.now().hour<12?TimeOfDay.now().hour-12:TimeOfDay.now().hour<12}:${TimeOfDay.now().minute}"
+      "${TimeOfDay.now().hour < 12 ? TimeOfDay.now().hour - 12 : TimeOfDay.now().hour < 12}:${TimeOfDay.now().minute}"
     ]);
   }
 
-    void printHello() async {
-    getTaskNotification(datab).then((value)async {
-
-    });
+  void printHello() async {
+    getTaskNotification(datab).then((value) async {});
 
     print("hello");
   }
@@ -569,6 +593,12 @@ class layoutCuibt extends Cubit<mytasks> {
       }
     } else {
       return int.parse(time.split(":")[0]);
+    }
+  }
+  // to make respond from reboot app
+  void handleChatBoot({required String userResponds}){
+    if(robotChat.isEmpty){
+      robotChat.add(robotResponded[0]);
     }
   }
 }
