@@ -82,13 +82,13 @@ class _HomeTasksState extends State<HomeTasks> {
       child: ListView.separated(
           physics: const BouncingScrollPhysics(),
           itemBuilder: (context, index) {
-            if (tasks[index]["data"] == _date) {
+            /*if (tasks[index]["data"] == _date) {*/
               return cardModel(tasks[index], context, index);
-            } else {
+         /*   } else {
               return const SizedBox(
                 height: 0,
               );
-            }
+            }*/
           },
           separatorBuilder: (context, index) => const SizedBox(
                 height: 1,
@@ -335,9 +335,8 @@ class _HomeTasksState extends State<HomeTasks> {
           selectedTextColor: Colors.white, onDateChange: (value) {
         setState(() {
           _date = DateFormat.yMMMd().format(value);
-          print(_date.toString());
           layoutCuibt.get(context).onDate = _date;
-          layoutCuibt.get(context).getDataTasksAfterChange();
+          layoutCuibt.get(context).insertTaskIntoVar();
         });
       }),
     );

@@ -21,11 +21,12 @@ class _RobotChatState extends State<RobotChat> {
   @override
   void initState() {
     setState(() {
-      layoutCuibt.get(context).robotChat.add(layoutCuibt.get(context).robotResponded[0]);
+      layoutCuibt.get(context).handleChatBoot(context);
     });
+    layoutCuibt.get(context).controllerChat.addListener(() {});
     super.initState();
-
   }
+
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<layoutCuibt, mytasks>(
@@ -34,7 +35,7 @@ class _RobotChatState extends State<RobotChat> {
         var Size = MediaQuery.of(context).size;
         var cuibt = layoutCuibt.get(context);
         return Container(
-          padding: EdgeInsets.only(top: 10),
+          padding: const EdgeInsets.only(top: 10),
           height: Size.height,
           width: Size.width,
           decoration: const BoxDecoration(
@@ -44,73 +45,104 @@ class _RobotChatState extends State<RobotChat> {
             ),
           ),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Flexible(
                 child: ListView.separated(
-                    itemBuilder: (context,I){
-                      if(cuibt.robotChat[I].user=="user")
-                        {
-                          return userMassage(cuibt.robotChat[I]);
-                        }
-                      else {
+                    scrollDirection: Axis.vertical,
+                    controller: cuibt.controllerChat,
+                    itemBuilder: (context, I) {
+                      if (cuibt.robotChat[I].user == "user") {
+                        return userMassage(cuibt.robotChat[I]);
+                      } else {
                         return rebootMassage(cuibt.robotChat[I]);
-
                       }
                     },
-                    separatorBuilder:(context,_)=>const SizedBox(height: 10),
-                    itemCount: cuibt.robotChat.length
-                ),
+                    separatorBuilder: (context, _) =>
+                        const SizedBox(height: 10),
+                    itemCount: cuibt.robotChat.length),
               ),
+              if (cuibt.robotChat.length == 1 ||
+                  cuibt.robotChat.last.massage == "lets go")
+                Container(
+                  margin: const EdgeInsets.only(top: 10, bottom: 10),
+                  padding: const EdgeInsets.only(left: 10, right: 10),
+                  color: Colors.white70,
+                  child: const Text(
+                    "Suggestion words",
+                    style: TextStyle(
+                      fontSize: 23,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              if (cuibt.robotChat.length == 1 ||
+                  cuibt.robotChat.last.massage == "lets go")
+                suggestMassage(massage: "I want to add new task"),
+              if (cuibt.robotChat.length == 1 ||
+                  cuibt.robotChat.last.massage == "lets go")
+                suggestMassage(
+                    massage: "I want to add new financial transaction"),
               SizedBox(
                 height: 50,
                 width: Size.width,
-                child: Mytextfield(hint: "type your massage",suffix: IconButton(
-                  onPressed: () {
-                    setState(() {
-                      cuibt.robotChat.add(RobotChatModel(
-                          cuibt.chatField.text,
-                          "user",
-                          DateFormat('hh:mm').format(DateTime.now())
-                      ));
-                    });
-                    cuibt.chatField.clear();
-                  },
-                  icon: const Icon(Icons.send,color: Colors.teal),
-                ),Controlr: cuibt.chatField,keybordtype: TextInputType.text),
+                child: Mytextfield(
+                    hint: "type your massage",
+                    suffix: IconButton(
+                      onPressed: () {
+                        //to close keyboard when send massage
+                        if (WidgetsBinding.instance.window.viewInsets.bottom > 0) {
+                          FocusManager.instance.primaryFocus?.unfocus();
+                        }
+                        cuibt.robotChat.add(RobotChatModel(
+                            cuibt.chatField.text,
+                            "user",
+                            DateFormat('hh:mm').format(DateTime.now())));
+                        cuibt.handleChatBoot(context);
+                        cuibt.controllerChat.animateTo(
+                            cuibt.controllerChat.position.maxScrollExtent,
+                            duration: const Duration(milliseconds: 300),
+                            curve: Curves.bounceIn);
+                        cuibt.chatField.clear();
+                      },
+                      icon: const Icon(Icons.send, color: Colors.teal),
+                    ),
+                    Controlr: cuibt.chatField,
+                    keybordtype: TextInputType.text),
               ),
             ],
           ),
         );
       },
     );
-
   }
-@override
-  void dispose() {
-  setState(() {
-    layoutCuibt.get(context).robotChat=[];
-  });
-    super.dispose();
-}
-  Widget userMassage(RobotChatModel massage) =>
-      Padding(
+
+  Widget userMassage(RobotChatModel massage) => Padding(
         padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
         child: Align(
           alignment: AlignmentDirectional.bottomStart,
           child: Container(
-            decoration:  const BoxDecoration(
+            decoration: const BoxDecoration(
                 color: Colors.teal,
-                borderRadius:  BorderRadiusDirectional.all(Radius.circular(25.0))),
+                borderRadius:
+                    BorderRadiusDirectional.all(Radius.circular(25.0))),
             padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
             child: Column(
               children: [
                 Text(
                   "${massage.massage}  ",
-                  style: const TextStyle(color: Colors.white, fontSize: 20,fontWeight: FontWeight.bold),
+                  style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold),
                 ),
                 Text(
                   "${massage.time}  ",
-                  style: const TextStyle(color: Colors.grey, fontSize: 17,fontWeight: FontWeight.w700,),
+                  style: const TextStyle(
+                    color: Colors.grey,
+                    fontSize: 17,
+                    fontWeight: FontWeight.w700,
+                  ),
                   textAlign: TextAlign.left,
                 ),
               ],
@@ -119,15 +151,15 @@ class _RobotChatState extends State<RobotChat> {
         ),
       );
 
-  Widget rebootMassage( RobotChatModel massage) =>
-      Padding(
+  Widget rebootMassage(RobotChatModel massage) => Padding(
         padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
         child: Align(
           alignment: AlignmentDirectional.bottomEnd,
           child: Container(
-            decoration:const BoxDecoration(
+            decoration: const BoxDecoration(
                 color: Colors.pinkAccent,
-                borderRadius:  BorderRadiusDirectional.all(Radius.circular(25.0))),
+                borderRadius:
+                    BorderRadiusDirectional.all(Radius.circular(25.0))),
             padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.end,
@@ -138,13 +170,43 @@ class _RobotChatState extends State<RobotChat> {
                 ),
                 Text(
                   "${massage.time}  ",
-                  style: const TextStyle(color: Colors.black87, fontSize: 17,fontWeight: FontWeight.w700,),
+                  style: const TextStyle(
+                    color: Colors.black87,
+                    fontSize: 17,
+                    fontWeight: FontWeight.w700,
+                  ),
                   textAlign: TextAlign.right,
                 ),
-
               ],
             ),
           ),
         ),
       );
+  Widget suggestMassage({required String massage}) {
+    return InkWell(
+      onTap: () {
+        setState(() {
+          layoutCuibt.get(context).robotChat.add(RobotChatModel(
+              massage, "user", DateFormat('hh:mm').format(DateTime.now())));
+        });
+        layoutCuibt.get(context).handleChatBoot(context, message: massage);
+      },
+      child: Container(
+        margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+        padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+        height: 60,
+        width: MediaQuery.of(context).size.width * .9,
+        decoration: BoxDecoration(
+            color: Colors.lightBlue.withOpacity(.9),
+            borderRadius:
+                const BorderRadiusDirectional.all(Radius.circular(20.0))),
+        child: Text(
+          "$massage",
+          style: const TextStyle(
+              color: Colors.black, fontSize: 22, fontWeight: FontWeight.bold),
+          textAlign: TextAlign.left,
+        ),
+      ),
+    );
+  }
 }

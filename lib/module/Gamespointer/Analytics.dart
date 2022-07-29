@@ -61,8 +61,8 @@ class _analyticsState extends State<analytics> {
                       height: 1,
                     ),
                     itemCount: layoutCuibt.get(context).budget.length),
-                fallback: (context) => Padding(
-                  padding: const EdgeInsets.only(left: 50, top: 200),
+                fallback: (context) => const Padding(
+                  padding:  EdgeInsets.only(left: 50, top: 200),
                   child: Text("you dont spent money yet ,good boy🥰",
                       style: TextStyle(
                           fontSize: 30.0,
@@ -107,7 +107,7 @@ class _analyticsState extends State<analytics> {
               quarterTurns: 1,
               child: Text(
                 "${budget["data"]}",
-                style: TextStyle(
+                style: const TextStyle(
                     fontSize: 20.0,
                     fontWeight: FontWeight.w900,
                     color: Colors.white),

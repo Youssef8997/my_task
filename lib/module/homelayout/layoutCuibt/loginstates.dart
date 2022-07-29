@@ -25,4 +25,5 @@ class  getsallaryafter  extends mytasks{}
 class  getUsersData  extends mytasks{}
 class  changeCatogery extends mytasks{}
 class  changedate extends mytasks{}
+class  HandleMassage extends mytasks{}
 

@@ -1,6 +1,5 @@
 
 import 'dart:typed_data';
-
 import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
@@ -8,7 +7,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:my_task/module/SpalshScreen/Spalsh.dart';
 import 'package:my_task/module/homelayout/layoutCuibt/cuibt.dart';
-import 'Componads/Com.dart';
 import 'lib/sherdeprefrence/sherdhelp.dart';
 
 

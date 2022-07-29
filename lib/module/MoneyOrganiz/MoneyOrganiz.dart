@@ -38,7 +38,6 @@ class _MoneyOraganizeState extends State<MoneyOraganize> {
                 scrollDirection: Axis.horizontal,
                 children: [
                   EndWidget(size, cuibt.salaryAfter, context),
-
                 ],
               ),
             ),
@@ -81,7 +80,10 @@ class _MoneyOraganizeState extends State<MoneyOraganize> {
     return Stack(
       children: [
         Wallpaperstack(size),
-        precentge_circular(size, precent,),
+        precentge_circular(
+          size,
+          precent,
+        ),
         Positioned(
           bottom: 0,
           top: 300,
@@ -95,7 +97,6 @@ class _MoneyOraganizeState extends State<MoneyOraganize> {
       ],
     );
   }
-
 
   Padding BudgetCont(Size size, budget) {
     return Padding(
@@ -212,7 +213,14 @@ class _MoneyOraganizeState extends State<MoneyOraganize> {
       physics: const BouncingScrollPhysics(),
       crossAxisCount: 3,
       children: List.generate(
-          layoutCuibt.get(context).users[0]["status"]=="Single"?SingleCategory.length:MarriedCategory.length, (index) => Catogry_Avatar(layoutCuibt.get(context).users[0]["status"]=="Single"?SingleCategory[index]:MarriedCategory[index], context)),
+          layoutCuibt.get(context).users[0]["status"] == "Single"
+              ? SingleCategory.length
+              : MarriedCategory.length,
+          (index) => Catogry_Avatar(
+              layoutCuibt.get(context).users[0]["status"] == "Single"
+                  ? SingleCategory[index]
+                  : MarriedCategory[index],
+              context)),
     );
   }
 
@@ -385,7 +393,7 @@ class _MoneyOraganizeState extends State<MoneyOraganize> {
         child: Container(
           decoration: const BoxDecoration(
               borderRadius: BorderRadiusDirectional.only(
-                  topEnd:  Radius.circular(
+                  topEnd: Radius.circular(
                     25.0,
                   ),
                   topStart: Radius.circular(
@@ -397,7 +405,7 @@ class _MoneyOraganizeState extends State<MoneyOraganize> {
                   children: [
                     const Text(
                       " استلفت اي يسطا",
-                      style:  TextStyle(
+                      style: TextStyle(
                           fontWeight: FontWeight.w900,
                           fontSize: 20.0,
                           fontStyle: FontStyle.italic,
@@ -434,8 +442,7 @@ class _MoneyOraganizeState extends State<MoneyOraganize> {
                       ],
                     ),
                     Mytextfield(
-                      keybordtype: const
-                      TextInputType.numberWithOptions(),
+                        keybordtype: const TextInputType.numberWithOptions(),
                         Controlr: cuibt.moneyController,
                         hint: "وعلي كدا اخدت كام بقي ؟؟"),
                     mybutton(
@@ -463,7 +470,7 @@ class _MoneyOraganizeState extends State<MoneyOraganize> {
                   children: [
                     const Text(
                       "صرفت اي يسطا النهارده",
-                      style:  TextStyle(
+                      style: TextStyle(
                           fontWeight: FontWeight.w900,
                           fontSize: 20.0,
                           fontStyle: FontStyle.italic,
@@ -487,7 +494,10 @@ class _MoneyOraganizeState extends State<MoneyOraganize> {
                             initialDate: DateTime.now(),
                             firstDate: DateTime.now(),
                             lastDate: DateTime.parse('2022-11-07'),
-                          ).then((value) => cuibt.budgetDate(value)),
+                          ).then((value) {
+
+                            cuibt.budgetDate(value);
+                          }),
                         )),
                         const SizedBox(
                           width: 5,
@@ -516,7 +526,10 @@ class _MoneyOraganizeState extends State<MoneyOraganize> {
                                       title: const Text("Alert"),
                                       backgroundColor: Colors.white,
                                       content: const Text(
-                                          "you cant do that bc you dont have enough money ",style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold)),
+                                          "you cant do that bc you dont have enough money ",
+                                          style: TextStyle(
+                                              fontSize: 20,
+                                              fontWeight: FontWeight.bold)),
                                       actions: [
                                         Container(
                                           width: double.maxFinite,
@@ -533,14 +546,16 @@ class _MoneyOraganizeState extends State<MoneyOraganize> {
                                                 cuibt.descController.clear();
                                                 cuibt.moneyController.clear();
                                                 cuibt.dataController.clear();
-                                                cuibt.catagoryController.clear();
+                                                cuibt.catagoryController
+                                                    .clear();
                                               });
                                               Navigator.pop(context);
                                             },
                                             child: const Text("okay!",
                                                 style: TextStyle(
-                                                    color: Colors.black,
-                                                fontSize: 20,)),
+                                                  color: Colors.black,
+                                                  fontSize: 20,
+                                                )),
                                             style: const ButtonStyle(
                                               animationDuration:
                                                   Duration(milliseconds: 900),
@@ -554,8 +569,8 @@ class _MoneyOraganizeState extends State<MoneyOraganize> {
                                 .insertbudget(
                                     title: cuibt.titleController.text,
                                     desc: cuibt.descController.text,
-                                    MONEY:
-                                        double.parse(cuibt.moneyController.text),
+                                    MONEY: double.parse(
+                                        cuibt.moneyController.text),
                                     data: cuibt.dataController.text,
                                     catogry: cuibt.catagoryController.text)
                                 .then((value) {
@@ -610,7 +625,7 @@ List<CategoryModel> SingleCategory = [
     title: "Gained money",
   ),
 ];
-List<CategoryModel> MarriedCategory =[
+List<CategoryModel> MarriedCategory = [
   CategoryModel(
     Photo: "lib/Image/House.png",
     title: "Home",
@@ -633,12 +648,12 @@ List<CategoryModel> MarriedCategory =[
   ),
   CategoryModel(
     Photo:
-    "lib/Image/group-young-friends-having-fun-together-vector-26803087.jpg",
+        "lib/Image/group-young-friends-having-fun-together-vector-26803087.jpg",
     title: "Fun",
   ),
   CategoryModel(
     Photo:
-    "lib/Image/travel-logo-vector-illustration-black-airplane-isolated-white-115729130.jpg",
+        "lib/Image/travel-logo-vector-illustration-black-airplane-isolated-white-115729130.jpg",
     title: "Travel",
   ),
   CategoryModel(
@@ -649,6 +664,4 @@ List<CategoryModel> MarriedCategory =[
     Photo: "lib/Image/gainMoney.webp",
     title: "Gained money",
   ),
-
-
 ];

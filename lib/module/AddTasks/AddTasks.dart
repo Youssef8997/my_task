@@ -28,8 +28,10 @@ class _TasksState extends State<Tasks> {
   _TasksState({this.id});
   @override
   void initState() {
-    time.text = DateFormat('HH:mm').format(now);
+    time.text = DateFormat('HH:mm a').format(now);
     date.text = DateFormat.yMMMd().format(now);
+    layoutCuibt.get(context).firstValue="5 Min";
+    layoutCuibt.get(context).scondValue="medium";
     super.initState();
   }
 

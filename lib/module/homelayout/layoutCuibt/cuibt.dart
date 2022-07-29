@@ -19,6 +19,7 @@ import '../layout.dart';
 
 class layoutCuibt extends Cubit<mytasks> {
   layoutCuibt() : super(mytasksstateinisal());
+
   static layoutCuibt get(context) => BlocProvider.of(context);
   var MyIndex = 0;
   late Database datab;
@@ -26,6 +27,8 @@ class layoutCuibt extends Cubit<mytasks> {
   List<Map> task = [];
   List<Map> budget = [];
   List<Map> users = [];
+  var controllerChat = ScrollController();
+
   // massage which will be send from the robot
   List<RobotChatModel> robotResponded = [
     RobotChatModel(
@@ -33,7 +36,13 @@ class layoutCuibt extends Cubit<mytasks> {
         "Robot",
         DateFormat('hh:mm').format(DateTime.now())),
     RobotChatModel(
-        "Okay lets go ", "Robot", DateFormat('hh:mm').format(DateTime.now())),
+        "hi,user", "Robot", DateFormat('hh:mm').format(DateTime.now())),
+    RobotChatModel(
+        "I'm great ", "Robot", DateFormat('hh:mm').format(DateTime.now())),
+    RobotChatModel(
+        "I'm joe Robot ", "Robot", DateFormat('hh:mm').format(DateTime.now())),
+    RobotChatModel(
+        "lets go", "Robot", DateFormat('hh:mm').format(DateTime.now())),
     RobotChatModel("What is your task's title", "Robot",
         DateFormat('hh:mm').format(DateTime.now())),
     RobotChatModel(
@@ -43,6 +52,8 @@ class layoutCuibt extends Cubit<mytasks> {
     RobotChatModel("what time of your task", "Robot",
         DateFormat('hh:mm').format(DateTime.now())),
     RobotChatModel("do you wanna repeat it ", "Robot",
+        DateFormat('hh:mm').format(DateTime.now())),
+    RobotChatModel("what date of your task", "Robot",
         DateFormat('hh:mm').format(DateTime.now())),
     RobotChatModel("how much you pay for it", "Robot",
         DateFormat('hh:mm').format(DateTime.now())),
@@ -86,14 +97,14 @@ class layoutCuibt extends Cubit<mytasks> {
       elevation: 0,
       backgroundColor: Colors.transparent,
       title: "TASKS".text.make().shimmer(
-            duration: Duration(seconds: 2),
-          ),
+        duration: Duration(seconds: 2),
+      ),
       toolbarHeight: 40,
     ),
     AppBar(
       title: "Today Tasks".text.make().shimmer(
-            duration: Duration(seconds: 2),
-          ),
+        duration: Duration(seconds: 2),
+      ),
       toolbarHeight: 40,
     ),
     AppBar(
@@ -146,52 +157,63 @@ class layoutCuibt extends Cubit<mytasks> {
   void Crdatab() async {
     datab = await openDatabase("endtask.db", version: 1,
         onCreate: (datab, version) {
-      print("create data base");
-      datab.execute(
-          'CREATE TABLE TASKS (id INTEGER PRIMARY KEY,title TEXT,desc TEXT,data TEXT ,time STRING,repeat INTEGER,priority TEXT)');
-      datab.execute(
-          'CREATE TABLE Users (id INTEGER PRIMARY KEY, Name TEXT,Email TEXT,pass TEXT ,Phone TEXT,status STRING)');
-      datab
-          .execute(
+          print("create data base");
+          datab.execute(
+              'CREATE TABLE TASKS (id INTEGER PRIMARY KEY,title TEXT,desc TEXT,data TEXT ,time STRING,repeat INTEGER,priority TEXT)');
+          datab.execute(
+              'CREATE TABLE Users (id INTEGER PRIMARY KEY, Name TEXT,Email TEXT,pass TEXT ,Phone TEXT,status STRING)');
+          datab
+              .execute(
               'CREATE TABLE BUDGET (id INTEGER PRIMARY KEY,title TEXT,desc TEXT,MONEY num, MONEYAfter num,data STRING,catogry TEXT)')
-          .then((value) {
-        emit(CreateDataBaseSucssesful());
-      }).catchError((error) {
-        print("error is${error.toString()}");
-        emit(CreateDataBaseError());
-      });
-    }, onOpen: (datab) {
-      print("open data base");
-      getDataTasks(datab).then((value) {
-        task = value;
-        task.forEach((element) {
-          if (element["data"] == onDate) {
-            tasks.add(element);
-          }
+              .then((value) {
+            emit(CreateDataBaseSucssesful());
+          }).catchError((error) {
+            print("error is${error.toString()}");
+            emit(CreateDataBaseError());
+          });
+        }, onOpen: (datab) {
+          print("open data base");
+          getDataTasks(datab).then((value) {
+            task = value;
+            task.forEach((element) {
+              if (element["data"] == onDate) {
+                tasks.add(element);
+              }
+            });
+            print(tasks);
+            emit(GetDatatasksSucssesful());
+          }).catchError((Error) {
+            print("the error is ${Error.toString()}");
+            emit(GetDataBaseError());
+          });
+          getDataBudget(datab).then((value) {
+            budget = [];
+            budget = value;
+            emit(GetDatabudgetSucssesful());
+          });
+          getDateUsers(datab).then((value) {
+            users = [];
+            users = value;
+            print(users);
+            emit(getUsersData());
+          });
         });
-        print(tasks);
-        emit(GetDatatasksSucssesful());
-      }).catchError((Error) {
-        print("the error is ${Error.toString()}");
-        emit(GetDataBaseError());
-      });
-      getDataBudget(datab).then((value) {
-        budget = [];
-        budget = value;
-        emit(GetDatabudgetSucssesful());
-      });
-      getDateUsers(datab).then((value) {
-        users = [];
-        users = value;
-        print(users);
-        emit(getUsersData());
-      });
-    });
   }
 
   //get data from Database
   Future<List<Map>> getDataTasks(datab) async {
     return await datab.rawQuery('SELECT*FROM TASKS');
+  }
+
+  Future<List<Map>> getTasksDays(datab) async {
+    return await datab.rawQuery('SELECT*FROM TASKS WHERE data=?', [onDate]);
+  }
+
+  void insertTaskIntoVar() {
+    getTasksDays(datab).then((value) {
+      tasks = [];
+      tasks = value;
+    });
   }
 
   Future<List<Map>> getDataBudget(datab) async {
@@ -235,17 +257,16 @@ class layoutCuibt extends Cubit<mytasks> {
   }
 
   //insert new task in DateBase
-  Future insert(
-      {required title,
-      required desc,
-      required time,
-      required date,
-      required repeat,
-      required priority}) async {
+  Future insert({required title,
+    required desc,
+    required time,
+    required date,
+    required repeat,
+    required priority}) async {
     await datab.transaction((txn) {
       txn
           .rawInsert(
-              'INSERT INTO TASKS(title,desc,time,data,repeat,priority)VALUES("$title","$desc","$time","$date","$repeat","$priority")')
+          'INSERT INTO TASKS(title,desc,time,data,repeat,priority)VALUES("$title","$desc","$time","$date","$repeat","$priority")')
           .then((value) {
         print("$value insertetd sucsseffly");
         getDataTasksAfterChange();
@@ -257,17 +278,16 @@ class layoutCuibt extends Cubit<mytasks> {
     });
   }
 
-  Future insertToUsers(
-      {required Name,
-      required Email,
-      required pass,
-      required phone,
-      required status}) async {
+  Future insertToUsers({required Name,
+    required Email,
+    required pass,
+    required phone,
+    required status}) async {
     await datab.transaction((txn) {
       txn
           .rawInsert(
-              'INSERT INTO Users(Name,Email,pass,Phone,status)VALUES("$Name","$Email","$pass","$phone","$status")')
-          //'INSERT INTO TASKS(title,desc,time,data,repeat,priority)VALUES("$title","$desc","$time","$date","$repeat","$priority")')
+          'INSERT INTO Users(Name,Email,pass,Phone,status)VALUES("$Name","$Email","$pass","$phone","$status")')
+      //'INSERT INTO TASKS(title,desc,time,data,repeat,priority)VALUES("$title","$desc","$time","$date","$repeat","$priority")')
           .then((value) {
         print("$value insertetd sucsseffly");
         getUsersAfterChange();
@@ -280,17 +300,17 @@ class layoutCuibt extends Cubit<mytasks> {
   }
 
   //insert new budget in Database
-  Future insertbudget(
-      {required title,
-      required desc,
-      required MONEY,
-      required data,
-      required catogry}) async {
+  Future insertbudget({required title,
+    required desc,
+    required MONEY,
+    required data,
+    required catogry}) async {
     await datab.transaction((txn) {
       if (catogry == "lib/Image/gainMoney.webp") {
         txn
             .rawInsert(
-                'INSERT INTO BUDGET(title,desc,MONEY,MONEYAfter,data,catogry)VALUES("$title","$desc","$MONEY","${salaryAfter + MONEY}","$data","$catogry")')
+            'INSERT INTO BUDGET(title,desc,MONEY,MONEYAfter,data,catogry)VALUES("$title","$desc","$MONEY","${salaryAfter +
+                MONEY}","$data","$catogry")')
             .then((value) {
           print("$value inserted successes");
           getDataBudget(datab).then((value) {
@@ -312,7 +332,8 @@ class layoutCuibt extends Cubit<mytasks> {
       } else {
         txn
             .rawInsert(
-                'INSERT INTO BUDGET(title,desc,MONEY,MONEYAfter,data,catogry)VALUES("$title","$desc","$MONEY","${salaryAfter - MONEY}","$data","$catogry")')
+            'INSERT INTO BUDGET(title,desc,MONEY,MONEYAfter,data,catogry)VALUES("$title","$desc","$MONEY","${salaryAfter -
+                MONEY}","$data","$catogry")')
             .then((value) {
           print("$value inserted successes");
           getDataBudget(datab).then((value) {
@@ -361,19 +382,19 @@ class layoutCuibt extends Cubit<mytasks> {
     }
     if (time != "") {
       datab.rawUpdate('UPDATE TASKS SET time=? WHERE id=? ', [time, id]).then(
-          (value) {
-        print("time");
-        getDataTasksAfterChange();
-        emit(UpdateDataBaseError());
-      });
+              (value) {
+            print("time");
+            getDataTasksAfterChange();
+            emit(UpdateDataBaseError());
+          });
     }
     if (date != "") {
       datab.rawUpdate('UPDATE TASKS SET data=? WHERE id=? ', [date, id]).then(
-          (value) {
-        print("data");
-        getDataTasksAfterChange();
-        emit(UpdateDataBaseError());
-      });
+              (value) {
+            print("data");
+            getDataTasksAfterChange();
+            emit(UpdateDataBaseError());
+          });
     }
   }
 
@@ -400,23 +421,19 @@ class layoutCuibt extends Cubit<mytasks> {
   }
 
   //change value of repeat step
-  void changevaluerepeat(
-    value,
-  ) {
+  void changevaluerepeat(value,) {
     firstValue = value;
     emit(ChangeMyvaluerepet());
   }
 
   //change value of repeat priory
-  void changevaluepri(
-    value,
-  ) {
+  void changevaluepri(value,) {
     scondValue = value;
     emit(ChangeMyvaluepri());
   }
 
   //method to press continue in step and insert task in database
-  void onPressedContinue(context) async {
+  void onPressedContinue(context, {notification = false}) async {
     if (currentStep < 5) {
       currentStep += 1;
       emit(OnPressedonStepper());
@@ -427,46 +444,44 @@ class layoutCuibt extends Cubit<mytasks> {
       int hour = _convertHourWhenPm(time.text);
       int minute = int.parse(time.text.split(":")[1].split(" ")[0]);
       final int alarmId = year + month + day + hour + minute;
-      if (addTask.currentState!.validate()) {
-        await AwesomeNotifications().createNotification(
-          content: NotificationContent(
-            id: alarmId,
-            channelKey: "tasks1",
-            title: title.text,
-            body: desc.text,
-            autoDismissible: true,
-            wakeUpScreen: true,
-            customSound: "resource://raw/alart_sound",
-            locked: true,
-            category: NotificationCategory.Reminder,
-            criticalAlert: true,
-            showWhen: true,
-            ticker: "ticker",
-          ),
-          schedule: NotificationCalendar.fromDate(
-              date: DateTime(year, month, day, hour, minute),
-              allowWhileIdle: true,
-              preciseAlarm: true,
-              repeats: false),
-        );
-        insert(
-            title: title.text,
-            desc: desc.text,
-            time: time.text,
-            date: date.text,
-            repeat: firstValue,
-            priority: scondValue);
-        currentStep = 0;
-        title.clear();
-        desc.clear();
-        time.clear();
-        date.clear();
+
+      await AwesomeNotifications().createNotification(
+        content: NotificationContent(
+          id: task.length + 1,
+          channelKey: "tasks1",
+          title: title.text,
+          body: desc.text,
+          autoDismissible: true,
+          wakeUpScreen: true,
+          customSound: "resource://raw/alart_sound",
+          locked: true,
+          category: NotificationCategory.Reminder,
+          criticalAlert: true,
+          showWhen: true,
+          ticker: "ticker",
+        ),
+        schedule: NotificationCalendar.fromDate(
+            date: DateTime(year, month, day, hour, minute),
+            allowWhileIdle: true,
+            preciseAlarm: true,
+            repeats: false),
+      );
+      insert(
+          title: title.text,
+          desc: desc.text,
+          time: time.text,
+          date: date.text,
+          repeat: firstValue,
+          priority: scondValue);
+      currentStep = 0;
+      title.clear();
+      desc.clear();
+      time.clear();
+      date.clear();
+      if (notification == false) {
         Navigator.pop(context);
-        emit(OnPressedonStepper());
-      } else {
-        currentStep = 0;
-        emit(OnPressedOnStepperError());
       }
+      emit(OnPressedonStepper());
     }
   }
 
@@ -525,20 +540,7 @@ class layoutCuibt extends Cubit<mytasks> {
   }
 
   void onPressedAdd(context) {
-    Nevigator(bool: true, context: context, page: Tasks());
-  }
-
-  Future<List<Map>> getTaskNotification(datab) async {
-    return await datab.rawQuery('SELECT*FROM TASKS WHERE data=? time=? ', [
-      DateFormat.yMMMd().format(DateTime.now()),
-      "${TimeOfDay.now().hour < 12 ? TimeOfDay.now().hour - 12 : TimeOfDay.now().hour < 12}:${TimeOfDay.now().minute}"
-    ]);
-  }
-
-  void printHello() async {
-    getTaskNotification(datab).then((value) async {});
-
-    print("hello");
+    Nevigator(bool: true, context: context, page: const Tasks());
   }
 
   int _convertNameMonthToNumber(month) {
@@ -585,6 +587,7 @@ class layoutCuibt extends Cubit<mytasks> {
 
   // to convert time when be pm to make hour 24 h
   int _convertHourWhenPm(String time) {
+    print(time);
     if (time.split(":")[1].split(" ")[1] == "PM") {
       if (int.parse(time.split(":")[0]) < 12) {
         return int.parse(time.split(":")[0]) + 12;
@@ -595,10 +598,159 @@ class layoutCuibt extends Cubit<mytasks> {
       return int.parse(time.split(":")[0]);
     }
   }
+
   // to make respond from reboot app
-  void handleChatBoot({required String userResponds}){
-    if(robotChat.isEmpty){
+  void handleChatBoot(context, {String? message}) {
+    if (robotChat.isEmpty) {
       robotChat.add(robotResponded[0]);
+    }
+    else if (chatField.text == "hi" ||
+        chatField.text == "hello" ||
+        chatField.text == "hey" ||
+        chatField.text == "hi there") {
+      robotChat.add(robotResponded[1]);
+    }
+    else if (chatField.text == "how are you?" ||
+        chatField.text == "how are you" ||
+        chatField.text == "whats up") {
+      robotChat.add(robotResponded[2]);
+      robotChat.add(robotResponded[4]);
+    }
+    else if (chatField.text == "what is your name?" ||
+        chatField.text == "what is your name") {
+      robotChat.add(robotResponded[3]);
+    }
+    else if (message == "I want to add new task" ||
+        message == "add task" ||
+        message == "task" ||
+        message == "i wanna add new task" ||
+        chatField.text == "i want to add new task" ||
+        chatField.text == "add task" ||
+        chatField.text == "task" ||
+        chatField.text == "i wanna add new task") {
+      robotChat.add(robotResponded[5]);
+    }
+    else if (message == "I want to add new financial transaction" ||
+        message == "add money" ||
+        message == "money" ||
+        message == "i wanna add new financial transaction" ||
+        chatField.text == "I want to add new financial transaction" ||
+        chatField.text == "add money" ||
+        chatField.text == "money" ||
+        chatField.text == "i wanna add new financial transaction") {
+      robotChat.add(robotResponded[11]);
+    }
+    if (robotChat.length > 3) {
+      //task
+      if (robotChat[robotChat.length - 2].massage ==
+          "What is your task's title") {
+        title.text = robotChat[robotChat.length - 1].massage;
+        robotChat.add(robotResponded[6]);
+        robotChat.add(robotResponded[7]);
+      }
+      else if (robotChat[robotChat.length - 2].massage ==
+          "What is your task's description") {
+        desc.text = robotChat[robotChat.length - 1].massage;
+        robotChat.add(robotResponded[6]);
+        robotChat.add(robotResponded[8]);
+        Future.delayed(const Duration(seconds: 6), () {
+          showTimePicker(
+              context: context,
+              initialTime: TimeOfDay.now(),
+              initialEntryMode: TimePickerEntryMode.input)
+              .then((value) {
+            value ??= TimeOfDay.now();
+            time.text = value.format(context).toString();
+            robotChat.add(RobotChatModel(
+                time.text, "user", DateFormat('hh:mm').format(DateTime.now())));
+            handleChatBoot(context);
+          });
+        });
+      }
+      else if (robotChat[robotChat.length - 2].massage ==
+          "what time of your task") {
+        robotChat.add(robotResponded[6]);
+        robotChat.add(robotResponded[10]);
+        Future.delayed(const Duration(seconds: 6), () {
+          showDatePicker(
+            context: context,
+            initialDate: DateTime.now(),
+            firstDate: DateTime.now(),
+            lastDate: DateTime.parse('2022-11-07'),
+          ).then((value) {
+            value ??= DateTime.now();
+            date.text = DateFormat.yMMMd().format(value);
+            robotChat.add(RobotChatModel(
+                date.text, "user", DateFormat('hh:mm').format(DateTime.now())));
+            emit(HandleMassage());
+            handleChatBoot(context);
+          });
+        });
+      }
+      else if (robotChat[robotChat.length - 2].massage ==
+          "do you wanna repeat it ") {
+        //to make method work to insert data to database and make notification
+        currentStep = 6;
+        firstValue = robotChat[robotChat.length - 1].massage;
+        robotChat.add(robotResponded[6]);
+        onPressedContinue(context, notification: true);
+      }
+      else if (robotChat[robotChat.length - 2].massage ==
+          "what date of your task") {
+        date.text = robotChat[robotChat.length - 1].massage;
+        robotChat.add(robotResponded[6]);
+        robotChat.add(robotResponded[9]);
+      }
+      //financial transaction
+      if (robotChat[robotChat.length - 2].massage ==
+          "how much you pay for it") {
+        moneyController.text = robotChat[robotChat.length - 1].massage;
+        robotChat.add(robotResponded[6]);
+        robotChat.add(robotResponded[12]);
+      }
+      else if (robotChat[robotChat.length - 2].massage ==
+          "why you pay this money") {
+        descController.text = robotChat[robotChat.length - 1].massage;
+        robotChat.add(robotResponded[6]);
+        robotChat.add(robotResponded[13]);
+      }
+      else if (robotChat[robotChat.length - 2].massage ==
+          "which category do you want to put it in") {
+        robotChat.add(robotResponded[6]);
+        robotChat.add(robotResponded[14]);
+        Future.delayed(const Duration(milliseconds: 300),(){   showDatePicker(
+          context: context,
+          initialDate: DateTime.now(),
+          firstDate: DateTime.now(),
+          lastDate: DateTime.parse('2022-11-07'),
+        ).then((value) {
+          value ??= DateTime.now();
+          dataController.text = DateFormat.yMMMd().format(value);
+          robotChat.add(RobotChatModel(dataController.text, "user", DateFormat('hh:mm').format(DateTime.now())));
+          handleChatBoot(context);
+        });});
+      }
+      else if (robotChat[robotChat.length - 2].massage ==
+          "when you pay for it") {
+        //to make method work to insert data to database and make notification
+        robotChat.add(robotResponded[6]);
+        insertbudget(
+            title: titleController.text,
+            desc: descController.text,
+            MONEY: double.parse(
+                moneyController.text),
+            data: dataController.text,
+            catogry: catagoryController.text);
+      }
+
+
+      Future.delayed(const Duration(milliseconds: 300), () {
+        controllerChat.animateTo(controllerChat.position.maxScrollExtent,
+            duration: const Duration(milliseconds: 300),
+            curve: Curves.bounceIn);
+      });
+
+      emit(HandleMassage());
     }
   }
 }

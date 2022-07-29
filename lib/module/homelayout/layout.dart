@@ -1,13 +1,11 @@
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:bottom_navy_bar/bottom_navy_bar.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:my_task/module/homelayout/layoutCuibt/cuibt.dart';
 import 'package:my_task/module/homelayout/layoutCuibt/loginstates.dart';
 
-import '../../Componads/Com.dart';
 class homelayout extends StatefulWidget {
   @override
   State<homelayout> createState() => _homelayoutState();
@@ -18,13 +16,14 @@ class _homelayoutState extends State<homelayout> {
   void initState() {
     super.initState();
     AwesomeNotifications().isNotificationAllowed().then(
-          (isAllowed) {
+      (isAllowed) {
         if (!isAllowed) {
           showDialog(
             context: context,
             builder: (context) => AlertDialog(
               title: const Text('Allow Notifications'),
-              content: const Text('Our app would like to send you notifications'),
+              content:
+                  const Text('Our app would like to send you notifications'),
               actions: [
                 TextButton(
                   onPressed: () {
@@ -51,74 +50,68 @@ class _homelayoutState extends State<homelayout> {
               ],
             ),
           );
+        } else {
+          AwesomeNotifications().createdStream.listen((notification) {
+            layoutCuibt.get(context).delete(id: notification.id!);
+          });
+          AwesomeNotifications().actionStream.listen((notification) {
+            if (notification.title == "have a new task") {
+              setState(() {
+                layoutCuibt.get(context).MyIndex = 3;
+              });
+              layoutCuibt.get(context).delete(id: notification.id!);
+            }
+          });
         }
-        else {
-          AwesomeNotifications().createdStream.listen((notification){
-
-          });
-          AwesomeNotifications().actionStream.listen((notification){
-if (notification.title=="have a new task"){
-  setState(() {
-    layoutCuibt.get(context).MyIndex=3;
-  });
-}
-          });
-
-              }
       },
     );
   }
+
   @override
   Widget build(BuildContext context) {
-    var cuibt=layoutCuibt.get(context);
-    return BlocConsumer<layoutCuibt,mytasks>
-      (
-        listener: (context,state){},
-        builder: (context,state){
+    var cuibt = layoutCuibt.get(context);
+    return BlocConsumer<layoutCuibt, mytasks>(
+        listener: (context, state) {},
+        builder: (context, state) {
           return Scaffold(
-
             appBar: AppBar(
-              systemOverlayStyle:const  SystemUiOverlayStyle(
+              systemOverlayStyle: const SystemUiOverlayStyle(
                 statusBarColor: Colors.black,
                 statusBarBrightness: Brightness.light,
                 statusBarIconBrightness: Brightness.light,
-
               ),
               toolbarHeight: 0,
-
             ),
-extendBodyBehindAppBar:true,
+            extendBodyBehindAppBar: true,
             key: cuibt.kayScaffold,
-             body:cuibt.body[cuibt.MyIndex],
-              bottomNavigationBar: BottomNavyBar(
+            body: cuibt.body[cuibt.MyIndex],
+            bottomNavigationBar: BottomNavyBar(
                 containerHeight: 60,
-             itemCornerRadius: 25.0,
-            curve: Curves.fastOutSlowIn,
-            animationDuration: const Duration(milliseconds: 900),
-            selectedIndex:cuibt.MyIndex,
-            showElevation: false, // use this to remove appBar's elevation
-            onItemSelected: (index){cuibt.ChangeIndex(index);},
-            items: cuibt.ItemNav
-              ),
-
+                itemCornerRadius: 25.0,
+                curve: Curves.fastOutSlowIn,
+                animationDuration: const Duration(milliseconds: 900),
+                selectedIndex: cuibt.MyIndex,
+                showElevation: false, // use this to remove appBar's elevation
+                onItemSelected: (index) {
+                  cuibt.ChangeIndex(index);
+                },
+                items: cuibt.ItemNav),
           );
-        }
-    );
-
+        });
   }
+
   @override
   void dispose() {
     AwesomeNotifications().actionSink.close();
     AwesomeNotifications().createdSink.close();
     super.dispose();
   }
-  SizedBox Wallpaperstack(Size size,context) {
-    return SizedBox(
 
-      height:(MediaQuery.of(context).size.height-60),
+  SizedBox Wallpaperstack(Size size, context) {
+    return SizedBox(
+      height: (MediaQuery.of(context).size.height - 60),
       width: size.width,
       child: Image.asset("lib/Image/wallpaper.jpg", fit: BoxFit.fill),
-
     );
   }
 }
