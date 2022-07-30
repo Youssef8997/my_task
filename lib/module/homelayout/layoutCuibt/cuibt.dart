@@ -443,7 +443,6 @@ class layoutCuibt extends Cubit<mytasks> {
       int day = int.parse(date.text.split(" ")[1].split(",")[0]);
       int hour = _convertHourWhenPm(time.text);
       int minute = int.parse(time.text.split(":")[1].split(" ")[0]);
-      final int alarmId = year + month + day + hour + minute;
 
       await AwesomeNotifications().createNotification(
         content: NotificationContent(
@@ -530,7 +529,7 @@ class layoutCuibt extends Cubit<mytasks> {
   }
 
   void Catogerye(value) {
-    catagoryController.text = "${value}";
+    catagoryController.text = "$value";
     emit(changeCatogery());
   }
 
@@ -587,7 +586,7 @@ class layoutCuibt extends Cubit<mytasks> {
 
   // to convert time when be pm to make hour 24 h
   int _convertHourWhenPm(String time) {
-    print(time);
+    log(time);
     if (time.split(":")[1].split(" ")[1] == "PM") {
       if (int.parse(time.split(":")[0]) < 12) {
         return int.parse(time.split(":")[0]) + 12;
@@ -716,9 +715,12 @@ class layoutCuibt extends Cubit<mytasks> {
       }
       else if (robotChat[robotChat.length - 2].massage ==
           "which category do you want to put it in") {
-        robotChat.add(robotResponded[6]);
-        robotChat.add(robotResponded[14]);
-        Future.delayed(const Duration(milliseconds: 300),(){   showDatePicker(
+        _handleSelectedCategory(robotChat[robotChat.length - 1].massage);
+        Future.delayed(const Duration(milliseconds: 500), () {
+          robotChat.add(robotResponded[6]);
+          robotChat.add(robotResponded[14]);
+        });
+        Future.delayed(const Duration(milliseconds: 600),(){   showDatePicker(
           context: context,
           initialDate: DateTime.now(),
           firstDate: DateTime.now(),
@@ -738,7 +740,10 @@ class layoutCuibt extends Cubit<mytasks> {
             title: titleController.text,
             desc: descController.text,
             MONEY: double.parse(
-                moneyController.text),
+                moneyController.text,(_){
+           return 0.0;
+            }),
+
             data: dataController.text,
             catogry: catagoryController.text);
       }
@@ -753,4 +758,42 @@ class layoutCuibt extends Cubit<mytasks> {
       emit(HandleMassage());
     }
   }
+  //to select Category
+void _handleSelectedCategory(String category) {
+    log(category);
+  switch(category){
+    case "home":
+      catagoryController.text ="lib/Image/House.png";
+      break;
+    case "Clothes":
+      catagoryController.text ="lib/Image/Clothing-Logo-Vector.png";
+      break;
+    case "Health care":
+      catagoryController.text ="lib/Image/helthcare.jpg";
+break;
+    case "Fun":
+      catagoryController.text ="lib/Image/group-young-friends-having-fun-together-vector-26803087.jpg";
+      break;
+    case "Travel":
+      catagoryController.text ="lib/Image/travel-logo-vector-illustration-black-airplane-isolated-white-115729130.jpg";
+      break;
+    case "Money Saving":
+      catagoryController.text ="lib/Image/logo-template-44-.jpg";
+      break;
+    case "teaching":
+      catagoryController.text ="lib/Image/Teaching.png";
+      break;
+    case "Food":
+      catagoryController.text ="lib/Image/food.jpg";
+      break;
+    case "Gained money":
+      catagoryController.text ="lib/Image/gainMoney.webp";
+      break;
+    default:
+      catagoryController.text ="lib/Image/icon.jpg";
+      break;
+  }
+
+
+}
 }

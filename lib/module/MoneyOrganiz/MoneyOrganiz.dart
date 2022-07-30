@@ -44,7 +44,7 @@ class _MoneyOraganizeState extends State<MoneyOraganize> {
             fallback: (context) => Stack(
               alignment: AlignmentDirectional.topCenter,
               children: [
-                Wallpaperstack(size),
+                wallpaperStack(size),
                 Textupmoney("Enter your salary!           "),
                 Positioned(
                   top: 200,
@@ -79,8 +79,8 @@ class _MoneyOraganizeState extends State<MoneyOraganize> {
     double precent = (cuibt.salaryAfter / cuibt.salary);
     return Stack(
       children: [
-        Wallpaperstack(size),
-        precentge_circular(
+        wallpaperStack(size),
+        precentgeCircular(
           size,
           precent,
         ),
@@ -134,7 +134,7 @@ class _MoneyOraganizeState extends State<MoneyOraganize> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                CatogryShow(budget),
+                catogryShow(budget),
                 const SizedBox(
                   width: 5,
                 ),
@@ -214,12 +214,12 @@ class _MoneyOraganizeState extends State<MoneyOraganize> {
       crossAxisCount: 3,
       children: List.generate(
           layoutCuibt.get(context).users[0]["status"] == "Single"
-              ? SingleCategory.length
-              : MarriedCategory.length,
+              ? singleCategory.length
+              : marriedCategory.length,
           (index) => Catogry_Avatar(
               layoutCuibt.get(context).users[0]["status"] == "Single"
-                  ? SingleCategory[index]
-                  : MarriedCategory[index],
+                  ? singleCategory[index]
+                  : marriedCategory[index],
               context)),
     );
   }
@@ -241,7 +241,7 @@ class _MoneyOraganizeState extends State<MoneyOraganize> {
               ),
               InkWell(
                 onTap: () {
-                  layoutCuibt.get(context).Catogerye(model.Photo);
+                  layoutCuibt.get(context).catagoryController.text = model.photo!;
                   if (layoutCuibt.get(context).catagoryController.text ==
                       "lib/Image/gainMoney.webp") {
                     setState(() {
@@ -261,7 +261,7 @@ class _MoneyOraganizeState extends State<MoneyOraganize> {
                   child: CircleAvatar(
                     foregroundColor: Colors.white,
                     backgroundImage: AssetImage(
-                      model.Photo!,
+                      model.photo!,
                     ),
                     radius: 50.0,
                     backgroundColor: Colors.white,
@@ -279,7 +279,7 @@ class _MoneyOraganizeState extends State<MoneyOraganize> {
     );
   }
 
-  CircleAvatar CatogryShow(model) {
+  CircleAvatar catogryShow(model) {
     return CircleAvatar(
       radius: 40,
       backgroundColor: Colors.pinkAccent,
@@ -295,7 +295,7 @@ class _MoneyOraganizeState extends State<MoneyOraganize> {
     );
   }
 
-  Widget precentge_circular(
+  Widget precentgeCircular(
     Size size,
     double precent,
   ) {
@@ -326,7 +326,7 @@ class _MoneyOraganizeState extends State<MoneyOraganize> {
     );
   }
 
-  SizedBox Wallpaperstack(Size size) {
+  SizedBox wallpaperStack(Size size) {
     return SizedBox(
       height: size.height,
       width: size.width,
@@ -360,7 +360,7 @@ class _MoneyOraganizeState extends State<MoneyOraganize> {
       cat = "Home";
     }
     if (cuibt.catagoryController.text == "lib/Image/Clothing-Logo-Vector.png") {
-      cat = "Clothing";
+      cat = "Clothes";
     }
     if (cuibt.catagoryController.text == "lib/Image/helthcare.jpg") {
       cat = "Health Care";
@@ -587,81 +587,81 @@ class _MoneyOraganizeState extends State<MoneyOraganize> {
 }
 
 class CategoryModel {
-  final String? Photo;
+  final String? photo;
   final String? title;
 
-  CategoryModel({required this.Photo, required this.title});
+  CategoryModel({required this.photo, required this.title});
 }
 
-List<CategoryModel> SingleCategory = [
+List<CategoryModel> singleCategory = [
   CategoryModel(
-    Photo: "lib/Image/House.png",
+    photo: "lib/Image/House.png",
     title: "Home",
   ),
   CategoryModel(
-    Photo: "lib/Image/Clothing-Logo-Vector.png",
+    photo: "lib/Image/Clothing-Logo-Vector.png",
     title: "Clothes",
   ),
   CategoryModel(
-    Photo: "lib/Image/helthcare.jpg",
+    photo: "lib/Image/helthcare.jpg",
     title: "Health care",
   ),
   CategoryModel(
-    Photo:
+    photo:
         "lib/Image/group-young-friends-having-fun-together-vector-26803087.jpg",
     title: "Fun",
   ),
   CategoryModel(
-    Photo:
+    photo:
         "lib/Image/travel-logo-vector-illustration-black-airplane-isolated-white-115729130.jpg",
     title: "Travel",
   ),
   CategoryModel(
-    Photo: "lib/Image/logo-template-44-.jpg",
+    photo: "lib/Image/logo-template-44-.jpg",
     title: "Money saving",
   ),
   CategoryModel(
-    Photo: "lib/Image/gainMoney.webp",
+    photo: "lib/Image/gainMoney.webp",
     title: "Gained money",
   ),
 ];
-List<CategoryModel> MarriedCategory = [
+List<CategoryModel> marriedCategory = [
   CategoryModel(
-    Photo: "lib/Image/House.png",
+    photo: "lib/Image/House.png",
     title: "Home",
   ),
   CategoryModel(
-    Photo: "lib/Image/Teaching.png",
+    photo: "lib/Image/Teaching.png",
     title: "teaching",
   ),
   CategoryModel(
-    Photo: "lib/Image/food.png",
+    photo: "lib/Image/food.png",
     title: "Food",
   ),
   CategoryModel(
-    Photo: "lib/Image/Clothing-Logo-Vector.png",
+    photo: "lib/Image/Clothing-Logo-Vector.png",
     title: "Clothes",
   ),
   CategoryModel(
-    Photo: "lib/Image/helthcare.jpg",
+    photo: "lib/Image/helthcare.jpg",
     title: "Health care",
   ),
   CategoryModel(
-    Photo:
+    photo:
         "lib/Image/group-young-friends-having-fun-together-vector-26803087.jpg",
     title: "Fun",
   ),
   CategoryModel(
-    Photo:
+    photo:
         "lib/Image/travel-logo-vector-illustration-black-airplane-isolated-white-115729130.jpg",
     title: "Travel",
   ),
   CategoryModel(
-    Photo: "lib/Image/logo-template-44-.jpg",
+    photo: "lib/Image/logo-template-44-.jpg",
     title: "Money saving",
   ),
   CategoryModel(
-    Photo: "lib/Image/gainMoney.webp",
+    photo: "lib/Image/gainMoney.webp",
     title: "Gained money",
   ),
 ];

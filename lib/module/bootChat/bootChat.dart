@@ -62,27 +62,8 @@ class _RobotChatState extends State<RobotChat> {
                         const SizedBox(height: 10),
                     itemCount: cuibt.robotChat.length),
               ),
-              if (cuibt.robotChat.length == 1 ||
-                  cuibt.robotChat.last.massage == "lets go")
-                Container(
-                  margin: const EdgeInsets.only(top: 10, bottom: 10),
-                  padding: const EdgeInsets.only(left: 10, right: 10),
-                  color: Colors.white70,
-                  child: const Text(
-                    "Suggestion words",
-                    style: TextStyle(
-                      fontSize: 23,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-              if (cuibt.robotChat.length == 1 ||
-                  cuibt.robotChat.last.massage == "lets go")
-                suggestMassage(massage: "I want to add new task"),
-              if (cuibt.robotChat.length == 1 ||
-                  cuibt.robotChat.last.massage == "lets go")
-                suggestMassage(
-                    massage: "I want to add new financial transaction"),
+              suggestionWords(cuibt),
+              suggestionCategory(cuibt),
               SizedBox(
                 height: 50,
                 width: Size.width,
@@ -94,6 +75,7 @@ class _RobotChatState extends State<RobotChat> {
                         if (WidgetsBinding.instance.window.viewInsets.bottom > 0) {
                           FocusManager.instance.primaryFocus?.unfocus();
                         }
+
                         cuibt.robotChat.add(RobotChatModel(
                             cuibt.chatField.text,
                             "user",
@@ -108,7 +90,8 @@ class _RobotChatState extends State<RobotChat> {
                       icon: const Icon(Icons.send, color: Colors.teal),
                     ),
                     Controlr: cuibt.chatField,
-                    keybordtype: TextInputType.text),
+                    keybordtype: TextInputType.text
+                ),
               ),
             ],
           ),
@@ -116,6 +99,64 @@ class _RobotChatState extends State<RobotChat> {
       },
     );
   }
+Column suggestionWords(layoutCuibt cuibt){
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      if (cuibt.robotChat.length == 1 ||
+          cuibt.robotChat.last.massage == "lets go")
+        Container(
+          margin: const EdgeInsets.only(top: 10, bottom: 10),
+          padding: const EdgeInsets.only(left: 10, right: 10),
+          color: Colors.white70,
+          child: const Text(
+            "Suggestion words",
+            style: TextStyle(
+              fontSize: 23,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+      if (cuibt.robotChat.length == 1 ||
+          cuibt.robotChat.last.massage == "lets go")
+        suggestMassage(massage: "I want to add new task"),
+      if (cuibt.robotChat.length == 1 ||
+          cuibt.robotChat.last.massage == "lets go")
+        suggestMassage(
+            massage: "I want to add new financial transaction"),
+    ],
+  );
+}
+  Widget suggestionCategory(layoutCuibt cuibt){
+    return cuibt.robotChat.last.massage == "which category do you want to put it in"?
+      Flexible(
+        child: ListView (
+          children: [
+            Container(
+              margin: const EdgeInsets.only(top: 10, bottom: 10),
+              padding: const EdgeInsets.only(left: 10, right: 10),
+              color: Colors.white70,
+              child: const Text(
+                "Suggestion words",
+                style: TextStyle(
+                  fontSize: 23,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+            suggestMassage(massage: "home"),
+            suggestMassage(massage: "teaching"),
+            suggestMassage(massage: "Food"),
+            suggestMassage(massage: "Clothes"),
+            suggestMassage(massage: "Health care"),
+            suggestMassage(massage: "Fun"),
+            suggestMassage(massage: "Travel"),
+            suggestMassage(massage: "Money saving"),
+            suggestMassage(massage: "Gained money"),
+          ],
+        ),
+      ):const SizedBox();
+}
 
   Widget userMassage(RobotChatModel massage) => Padding(
         padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
@@ -150,7 +191,6 @@ class _RobotChatState extends State<RobotChat> {
           ),
         ),
       );
-
   Widget rebootMassage(RobotChatModel massage) => Padding(
         padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
         child: Align(
