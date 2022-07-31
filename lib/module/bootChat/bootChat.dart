@@ -1,6 +1,5 @@
 import 'dart:ui';
 
-import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
@@ -21,9 +20,12 @@ class _RobotChatState extends State<RobotChat> {
   @override
   void initState() {
     setState(() {
-      layoutCuibt.get(context).handleChatBoot(context);
+      if( layoutCuibt.get(context).robotChat.isNotEmpty){
+        layoutCuibt.get(context).robotChat.clear();
+      }
+        layoutCuibt.get(context).handleChatBoot(context);
     });
-    layoutCuibt.get(context).controllerChat.addListener(() {});
+
     super.initState();
   }
 
@@ -196,10 +198,10 @@ Column suggestionWords(layoutCuibt cuibt){
         child: Align(
           alignment: AlignmentDirectional.bottomEnd,
           child: Container(
-            decoration: const BoxDecoration(
-                color: Colors.pinkAccent,
+            decoration: BoxDecoration(
+                color: Colors.pink.withOpacity( 0.7),
                 borderRadius:
-                    BorderRadiusDirectional.all(Radius.circular(25.0))),
+                const BorderRadiusDirectional.all(Radius.circular(25.0))),
             padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.end,
@@ -237,7 +239,7 @@ Column suggestionWords(layoutCuibt cuibt){
         height: 60,
         width: MediaQuery.of(context).size.width * .9,
         decoration: BoxDecoration(
-            color: Colors.lightBlue.withOpacity(.9),
+            color: Colors.indigo[300]!.withOpacity(.9),
             borderRadius:
                 const BorderRadiusDirectional.all(Radius.circular(20.0))),
         child: Text(
@@ -249,4 +251,5 @@ Column suggestionWords(layoutCuibt cuibt){
       ),
     );
   }
+
 }

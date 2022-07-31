@@ -15,9 +15,8 @@ import '../../../Componads/Com.dart';
 import '../../../Model/Model.dart';
 import '../../Gamespointer/Analytics.dart';
 import '../../bootChat/bootChat.dart';
-import '../layout.dart';
 
-class layoutCuibt extends Cubit<mytasks> {
+class layoutCuibt extends Cubit<mytasks>    {
   layoutCuibt() : super(mytasksstateinisal());
 
   static layoutCuibt get(context) => BlocProvider.of(context);
@@ -443,7 +442,9 @@ class layoutCuibt extends Cubit<mytasks> {
       int day = int.parse(date.text.split(" ")[1].split(",")[0]);
       int hour = _convertHourWhenPm(time.text);
       int minute = int.parse(time.text.split(":")[1].split(" ")[0]);
-
+      int badge=0;
+     await AwesomeNotifications().getGlobalBadgeCounter().then((value) =>badge= value + 1);
+      await AwesomeNotifications().setGlobalBadgeCounter(badge);
       await AwesomeNotifications().createNotification(
         content: NotificationContent(
           id: task.length + 1,
@@ -652,8 +653,9 @@ class layoutCuibt extends Cubit<mytasks> {
         desc.text = robotChat[robotChat.length - 1].massage;
         robotChat.add(robotResponded[6]);
         robotChat.add(robotResponded[8]);
-        Future.delayed(const Duration(seconds: 6), () {
+        Future.delayed(const Duration(seconds: 3), () {
           showTimePicker(
+            helpText: "Select your task's Time ",
               context: context,
               initialTime: TimeOfDay.now(),
               initialEntryMode: TimePickerEntryMode.input)
@@ -670,8 +672,9 @@ class layoutCuibt extends Cubit<mytasks> {
           "what time of your task") {
         robotChat.add(robotResponded[6]);
         robotChat.add(robotResponded[10]);
-        Future.delayed(const Duration(seconds: 6), () {
+        Future.delayed(const Duration(seconds: 3), () {
           showDatePicker(
+            helpText: "Select your task's Date",
             context: context,
             initialDate: DateTime.now(),
             firstDate: DateTime.now(),

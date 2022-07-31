@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:my_task/module/homelayout/layoutCuibt/cuibt.dart';
 import 'package:my_task/module/homelayout/layoutCuibt/loginstates.dart';
 
+
 class homelayout extends StatefulWidget {
   @override
   State<homelayout> createState() => _homelayoutState();
@@ -51,16 +52,27 @@ class _homelayoutState extends State<homelayout> {
             ),
           );
         } else {
-          AwesomeNotifications().createdStream.listen((notification) {
-            layoutCuibt.get(context).delete(id: notification.id!);
-          });
           AwesomeNotifications().actionStream.listen((notification) {
-            if (notification.title == "have a new task") {
+
+            if (notification.channelKey == "tasks1") {
               setState(() {
-                layoutCuibt.get(context).MyIndex = 3;
+                layoutCuibt.get(context).MyIndex = 0;
               });
               layoutCuibt.get(context).delete(id: notification.id!);
             }
+            if (notification.channelKey == "chatBoot") {
+              setState(() {
+                layoutCuibt.get(context).MyIndex = 3;
+              });
+
+            }
+            if (notification.channelKey == "Budget") {
+              setState(() {
+                layoutCuibt.get(context).MyIndex = 1;
+              });
+
+            }
+
           });
         }
       },
