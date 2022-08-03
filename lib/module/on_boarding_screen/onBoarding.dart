@@ -1,4 +1,4 @@
-
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -19,12 +19,19 @@ class OnBoarding extends StatefulWidget {
 class _OnBoardingState extends State<OnBoarding> {
   bool islast = false;
   var controlar = PageController();
+  @override
+  void initState() {
+    AwesomeNotifications().requestPermissionToSendNotifications();
+    super.initState();
+  }
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
         child: Column(
           children: [
-            buildpageview(),
+            pageView(),
+            //indicators
             Container(
               height: 100,
               color: ColorManger.maincolor,
@@ -72,6 +79,47 @@ class _OnBoardingState extends State<OnBoarding> {
                     backgroundColor: Colors.white,
                     onPressed: () {
                       if (controlar.page == module.length - 1) {
+                        AwesomeNotifications().createNotification(
+                            content: NotificationContent(
+                              channelKey: 'chatBoot',
+                              id: 2 * 6000,
+                              title: 'do you have a New task?',
+                              notificationLayout: NotificationLayout.BigText,
+                            ),
+                            actionButtons: [
+                              NotificationActionButton(
+                                color: Colors.grey,
+                                key: 'sendMassage',
+                                label: 'Go to chat',
+                              ),
+                            ],
+                            schedule: NotificationInterval(
+                              interval: 21600,
+                              preciseAlarm: true,
+                              allowWhileIdle: true,
+                              repeats: true,
+                            ));
+                        AwesomeNotifications().createNotification(
+                            content: NotificationContent(
+                              channelKey: 'Budget',
+                              id: 2 * 700,
+                              title: 'Have you spent anything recently?',
+                              fullScreenIntent: true,
+                              notificationLayout: NotificationLayout.BigText,
+                            ),
+                            actionButtons: [
+                              NotificationActionButton(
+                                color: Colors.grey,
+                                key: 'transaction',
+                                label: 'Record the transaction',
+                              ),
+                            ],
+                            schedule: NotificationInterval(
+                              interval: 21700,
+                              preciseAlarm: true,
+                              allowWhileIdle: true,
+                              repeats: true,
+                            ));
                         Nevigator(bool: false, page: Login(), context: context);
                       } else {
                         controlar.nextPage(
@@ -98,10 +146,10 @@ class _OnBoardingState extends State<OnBoarding> {
     );
   }
 
-  Expanded buildpageview() {
+  Expanded pageView() {
     return Expanded(
       child: PageView.builder(
-        itemBuilder: (context, index) => buildptage(module[index], context),
+        itemBuilder: (context, index) => page(module[index], context),
         onPageChanged: (index) {
           if (index == module.length - 1) {
             setState(() {
@@ -143,7 +191,7 @@ List<pagemodel> module = [
       page: "lib/Image/3index.jpg", title: "we are here for you 24/7", body: "")
 ];
 
-Widget buildptage(pagemodel module, context) {
+Widget page(pagemodel module, context) {
   var size = MediaQuery.of(context).size;
   return Stack(
     alignment: AlignmentDirectional.bottomCenter,
@@ -154,11 +202,10 @@ Widget buildptage(pagemodel module, context) {
             height: size.height * .6,
             width: 400,
             child: Image.asset(
-              filterQuality:FilterQuality.high,
+              filterQuality: FilterQuality.high,
               module.page,
               width: MediaQuery.of(context).size.width,
               fit: BoxFit.fill,
-
             )),
       ),
       Container(

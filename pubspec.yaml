@@ -39,24 +39,18 @@ dependencies:
   condition: ^0.0.8
   conditional_builder_null_safety: ^0.0.6
   hexcolor: ^2.0.5
-  fluttertoast: ^8.0.8
   shared_preferences: ^2.0.11
-  google_fonts: ^2.2.0
   bottom_navy_bar: ^6.0.0
   flutter_zoom_drawer: ^2.2.2+1
+  google_fonts: ^2.2.0
   cupertino_stepper: ^0.2.1
   date_picker_timeline: ^1.2.3
   blurrycontainer: ^0.1.0
   fl_chart: ^0.41.0
   awesome_notifications: ^0.6.21
   percent_indicator: ^3.4.0
-  timeline_tile: ^2.0.0
-  bottom_sheet: ^1.0.5
-  flutter_alarm_clock: ^0.0.2
-  android_alarm_manager_plus: ^2.0.6
-  ease: ^0.0.10
   motion_toast: ^2.1.1
-  velocity_x: ^3.4.0
+  shimmer: ^2.0.0
 dev_dependencies:
   flutter_test:
     sdk: flutter

@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 
 Future Nevigator({page, context, bool = false}) {
-  return Navigator.pushAndRemoveUntil(context,
-      MaterialPageRoute(builder: (context) => page), (Route route) => bool);
+      return Navigator.pushAndRemoveUntil(context,MaterialPageRoute(builder: (context)=> page),(Route route)=>bool);
 }
 
 Container wallPaperContainer({required Child,required pathImage,required Size size}){

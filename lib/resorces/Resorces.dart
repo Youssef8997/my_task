@@ -7,3 +7,4 @@ class ColorManger {
   static Color TaskLowColors = HexColor("#8eb5f0");
 }
 
+

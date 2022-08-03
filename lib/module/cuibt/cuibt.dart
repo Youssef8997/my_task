@@ -8,17 +8,15 @@ import 'package:my_task/lib/sherdeprefrence/sherdhelp.dart';
 import 'package:my_task/module/AddTasks/AddTasks.dart';
 import 'package:my_task/module/MoneyOrganiz/MoneyOrganiz.dart';
 import 'package:my_task/module/MyTasks/MyTasks.dart';
-import 'package:my_task/module/homelayout/layoutCuibt/loginstates.dart';
+import 'package:my_task/module/Setting/Settings.dart';
+import 'package:my_task/module/cuibt/loginstates.dart';
 import 'package:sqflite/sqflite.dart';
-import 'package:velocity_x/velocity_x.dart';
 import '../../../Componads/Com.dart';
 import '../../../Model/Model.dart';
-import '../../Gamespointer/Analytics.dart';
-import '../../bootChat/bootChat.dart';
+import '../Analytics/Analytics.dart';
 
-class layoutCuibt extends Cubit<mytasks>    {
+class layoutCuibt extends Cubit<mytasks> {
   layoutCuibt() : super(mytasksstateinisal());
-
   static layoutCuibt get(context) => BlocProvider.of(context);
   var MyIndex = 0;
   late Database datab;
@@ -27,7 +25,9 @@ class layoutCuibt extends Cubit<mytasks>    {
   List<Map> budget = [];
   List<Map> users = [];
   var controllerChat = ScrollController();
-
+  String category = "Gained money";
+  var dialogFormKey = GlobalKey<FormState>();
+  bool isDarkMode=false;
   // massage which will be send from the robot
   List<RobotChatModel> robotResponded = [
     RobotChatModel(
@@ -85,34 +85,82 @@ class layoutCuibt extends Cubit<mytasks>    {
   var moneyController = TextEditingController();
   var controller = PageController(initialPage: 0);
   List body = [
-    HomeTasks(),
-    MoneyOraganize(),
+    const HomeTasks(),
+    moneyOraganize(),
     analytics(),
-    RobotChat(),
+    const Settings(),
   ];
 
-  List<PreferredSizeWidget> appbar = [
-    AppBar(
-      elevation: 0,
-      backgroundColor: Colors.transparent,
-      title: "TASKS".text.make().shimmer(
-        duration: Duration(seconds: 2),
-      ),
-      toolbarHeight: 40,
+  List<CategoryModel> singleCategory = [
+    CategoryModel(
+      photo: "lib/Image/House.png",
+      title: "Home",
     ),
-    AppBar(
-      title: "Today Tasks".text.make().shimmer(
-        duration: Duration(seconds: 2),
-      ),
-      toolbarHeight: 40,
+    CategoryModel(
+      photo: "lib/Image/Clothing-Logo-Vector.png",
+      title: "Clothes",
     ),
-    AppBar(
-      title: const Text("Analytics"),
-      toolbarHeight: 40,
+    CategoryModel(
+      photo: "lib/Image/helthcare.jpg",
+      title: "Health care",
     ),
-    AppBar(
-      toolbarHeight: 40,
-      title: const Text("insight"),
+    CategoryModel(
+      photo:
+          "lib/Image/group-young-friends-having-fun-together-vector-26803087.jpg",
+      title: "Fun",
+    ),
+    CategoryModel(
+      photo:
+          "lib/Image/travel-logo-vector-illustration-black-airplane-isolated-white-115729130.jpg",
+      title: "Travel",
+    ),
+    CategoryModel(
+      photo: "lib/Image/logo-template-44-.jpg",
+      title: "Money saving",
+    ),
+    CategoryModel(
+      photo: "lib/Image/gainMoney.webp",
+      title: "Gained money",
+    ),
+  ];
+  List<CategoryModel> marriedCategory = [
+    CategoryModel(
+      photo: "lib/Image/House.png",
+      title: "Home",
+    ),
+    CategoryModel(
+      photo: "lib/Image/Teaching.png",
+      title: "teaching",
+    ),
+    CategoryModel(
+      photo: "lib/Image/food.png",
+      title: "Food",
+    ),
+    CategoryModel(
+      photo: "lib/Image/Clothing-Logo-Vector.png",
+      title: "Clothes",
+    ),
+    CategoryModel(
+      photo: "lib/Image/helthcare.jpg",
+      title: "Health care",
+    ),
+    CategoryModel(
+      photo:
+          "lib/Image/group-young-friends-having-fun-together-vector-26803087.jpg",
+      title: "Fun",
+    ),
+    CategoryModel(
+      photo:
+          "lib/Image/travel-logo-vector-illustration-black-airplane-isolated-white-115729130.jpg",
+      title: "Travel",
+    ),
+    CategoryModel(
+      photo: "lib/Image/logo-template-44-.jpg",
+      title: "Money saving",
+    ),
+    CategoryModel(
+      photo: "lib/Image/gainMoney.webp",
+      title: "Gained money",
     ),
   ];
   List<BottomNavyBarItem> ItemNav = [
@@ -139,9 +187,9 @@ class layoutCuibt extends Cubit<mytasks>    {
         activeColor: Colors.pink),
     BottomNavyBarItem(
         icon: const Icon(
-          Icons.insert_chart,
+          Icons.settings,
         ),
-        title: const Text('insight '),
+        title: const Text('Settings '),
         activeColor: Colors.blue),
   ];
 
@@ -153,50 +201,50 @@ class layoutCuibt extends Cubit<mytasks>    {
   }
 
 //create database and open it every time run app
-  void Crdatab() async {
+  void createDataBase() async {
     datab = await openDatabase("endtask.db", version: 1,
         onCreate: (datab, version) {
-          print("create data base");
-          datab.execute(
-              'CREATE TABLE TASKS (id INTEGER PRIMARY KEY,title TEXT,desc TEXT,data TEXT ,time STRING,repeat INTEGER,priority TEXT)');
-          datab.execute(
-              'CREATE TABLE Users (id INTEGER PRIMARY KEY, Name TEXT,Email TEXT,pass TEXT ,Phone TEXT,status STRING)');
-          datab
-              .execute(
-              'CREATE TABLE BUDGET (id INTEGER PRIMARY KEY,title TEXT,desc TEXT,MONEY num, MONEYAfter num,data STRING,catogry TEXT)')
-              .then((value) {
-            emit(CreateDataBaseSucssesful());
-          }).catchError((error) {
-            print("error is${error.toString()}");
-            emit(CreateDataBaseError());
-          });
-        }, onOpen: (datab) {
-          print("open data base");
-          getDataTasks(datab).then((value) {
-            task = value;
-            task.forEach((element) {
-              if (element["data"] == onDate) {
-                tasks.add(element);
-              }
-            });
-            print(tasks);
-            emit(GetDatatasksSucssesful());
-          }).catchError((Error) {
-            print("the error is ${Error.toString()}");
-            emit(GetDataBaseError());
-          });
-          getDataBudget(datab).then((value) {
-            budget = [];
-            budget = value;
-            emit(GetDatabudgetSucssesful());
-          });
-          getDateUsers(datab).then((value) {
-            users = [];
-            users = value;
-            print(users);
-            emit(getUsersData());
-          });
+      print("create data base");
+      datab.execute(
+          'CREATE TABLE TASKS (id INTEGER PRIMARY KEY,title TEXT,desc TEXT,data TEXT ,time STRING,repeat INTEGER,priority TEXT)');
+      datab.execute(
+          'CREATE TABLE Users (id INTEGER PRIMARY KEY, Name TEXT,Email TEXT,pass TEXT ,Phone TEXT,status STRING)');
+      datab
+          .execute(
+              'CREATE TABLE BUDGET (id INTEGER PRIMARY KEY,title TEXT,MONEY num, MONEYAfter num,data STRING,catogry TEXT)')
+          .then((value) {
+        emit(CreateDataBaseSucssesful());
+      }).catchError((error) {
+        print("error is${error.toString()}");
+        emit(CreateDataBaseError());
+      });
+    }, onOpen: (datab) {
+      print("open data base");
+      getDataTasks(datab).then((value) {
+        task = value;
+        task.forEach((element) {
+          if (element["data"] == onDate) {
+            tasks.add(element);
+          }
         });
+        print(tasks);
+        emit(GetDatatasksSucssesful());
+      }).catchError((Error) {
+        print("the error is ${Error.toString()}");
+        emit(GetDataBaseError());
+      });
+      getDataBudget(datab).then((value) {
+        budget = [];
+        budget = value;
+        emit(GetDatabudgetSucssesful());
+      });
+      getDateUsers(datab).then((value) {
+        users = [];
+        users = value;
+        print(users);
+        emit(getUsersData());
+      });
+    });
   }
 
   //get data from Database
@@ -256,16 +304,17 @@ class layoutCuibt extends Cubit<mytasks>    {
   }
 
   //insert new task in DateBase
-  Future insert({required title,
-    required desc,
-    required time,
-    required date,
-    required repeat,
-    required priority}) async {
+  Future insert(
+      {required title,
+      required desc,
+      required time,
+      required date,
+      required repeat,
+      required priority}) async {
     await datab.transaction((txn) {
       txn
           .rawInsert(
-          'INSERT INTO TASKS(title,desc,time,data,repeat,priority)VALUES("$title","$desc","$time","$date","$repeat","$priority")')
+              'INSERT INTO TASKS(title,desc,time,data,repeat,priority)VALUES("$title","$desc","$time","$date","$repeat","$priority")')
           .then((value) {
         print("$value insertetd sucsseffly");
         getDataTasksAfterChange();
@@ -277,16 +326,17 @@ class layoutCuibt extends Cubit<mytasks>    {
     });
   }
 
-  Future insertToUsers({required Name,
-    required Email,
-    required pass,
-    required phone,
-    required status}) async {
+  Future insertToUsers(
+      {required Name,
+      required Email,
+      required pass,
+      required phone,
+      required status}) async {
     await datab.transaction((txn) {
       txn
           .rawInsert(
-          'INSERT INTO Users(Name,Email,pass,Phone,status)VALUES("$Name","$Email","$pass","$phone","$status")')
-      //'INSERT INTO TASKS(title,desc,time,data,repeat,priority)VALUES("$title","$desc","$time","$date","$repeat","$priority")')
+              'INSERT INTO Users(Name,Email,pass,Phone,status)VALUES("$Name","$Email","$pass","$phone","$status")')
+          //'INSERT INTO TASKS(title,desc,time,data,repeat,priority)VALUES("$title","$desc","$time","$date","$repeat","$priority")')
           .then((value) {
         print("$value insertetd sucsseffly");
         getUsersAfterChange();
@@ -299,54 +349,47 @@ class layoutCuibt extends Cubit<mytasks>    {
   }
 
   //insert new budget in Database
-  Future insertbudget({required title,
-    required desc,
-    required MONEY,
-    required data,
-    required catogry}) async {
+  Future insertBudget(
+      {required title,
+      required money,
+      required data,
+      required category}) async {
     await datab.transaction((txn) {
-      if (catogry == "lib/Image/gainMoney.webp") {
+      //if the user gain money he will be add to the budget
+      if (category == "lib/Image/gainMoney.webp") {
         txn
             .rawInsert(
-            'INSERT INTO BUDGET(title,desc,MONEY,MONEYAfter,data,catogry)VALUES("$title","$desc","$MONEY","${salaryAfter +
-                MONEY}","$data","$catogry")')
+                'INSERT INTO BUDGET(title,MONEY,MONEYAfter,data,catogry)VALUES("$title","$money","${salaryAfter + money}","$data","$category")')
             .then((value) {
           print("$value inserted successes");
-          getDataBudget(datab).then((value) {
-            budget = [];
-            budget = value;
-            print(budget);
-            changePrecent(salaryAfter + MONEY);
-            emit(getsallaryafter());
-          });
+          getBudgetAfterChange();
+          changePrecent(salaryAfter + money);
           titleController.clear();
           descController.clear();
           moneyController.clear();
           dataController.clear();
           catagoryController.clear();
+          emit(getsallaryafter());
         }).catchError((error) {
           print(" the error is ${error.toString()}");
           emit(InsertDataBaseError());
         });
-      } else {
+      }
+      //if the user spend money will decrease from the budget
+      else {
         txn
             .rawInsert(
-            'INSERT INTO BUDGET(title,desc,MONEY,MONEYAfter,data,catogry)VALUES("$title","$desc","$MONEY","${salaryAfter -
-                MONEY}","$data","$catogry")')
+                'INSERT INTO BUDGET(title,MONEY,MONEYAfter,data,catogry)VALUES("$title","$money","${salaryAfter - money}","$data","$category")')
             .then((value) {
           print("$value inserted successes");
-          getDataBudget(datab).then((value) {
-            budget = [];
-            budget = value;
-            print(budget);
-            changePrecent(salaryAfter - MONEY);
-            emit(getsallaryafter());
-          });
+          getBudgetAfterChange();
+          changePrecent(salaryAfter - money);
           titleController.clear();
           descController.clear();
           moneyController.clear();
           dataController.clear();
           catagoryController.clear();
+          emit(getsallaryafter());
         }).catchError((error) {
           print(" the error is ${error.toString()}");
           emit(InsertDataBaseError());
@@ -381,19 +424,19 @@ class layoutCuibt extends Cubit<mytasks>    {
     }
     if (time != "") {
       datab.rawUpdate('UPDATE TASKS SET time=? WHERE id=? ', [time, id]).then(
-              (value) {
-            print("time");
-            getDataTasksAfterChange();
-            emit(UpdateDataBaseError());
-          });
+          (value) {
+        print("time");
+        getDataTasksAfterChange();
+        emit(UpdateDataBaseError());
+      });
     }
     if (date != "") {
       datab.rawUpdate('UPDATE TASKS SET data=? WHERE id=? ', [date, id]).then(
-              (value) {
-            print("data");
-            getDataTasksAfterChange();
-            emit(UpdateDataBaseError());
-          });
+          (value) {
+        print("data");
+        getDataTasksAfterChange();
+        emit(UpdateDataBaseError());
+      });
     }
   }
 
@@ -420,13 +463,17 @@ class layoutCuibt extends Cubit<mytasks>    {
   }
 
   //change value of repeat step
-  void changevaluerepeat(value,) {
+  void changevaluerepeat(
+    value,
+  ) {
     firstValue = value;
     emit(ChangeMyvaluerepet());
   }
 
   //change value of repeat priory
-  void changevaluepri(value,) {
+  void changevaluepri(
+    value,
+  ) {
     scondValue = value;
     emit(ChangeMyvaluepri());
   }
@@ -442,9 +489,9 @@ class layoutCuibt extends Cubit<mytasks>    {
       int day = int.parse(date.text.split(" ")[1].split(",")[0]);
       int hour = _convertHourWhenPm(time.text);
       int minute = int.parse(time.text.split(":")[1].split(" ")[0]);
-      int badge=0;
-     await AwesomeNotifications().getGlobalBadgeCounter().then((value) =>badge= value + 1);
-      await AwesomeNotifications().setGlobalBadgeCounter(badge);
+        await AwesomeNotifications().getGlobalBadgeCounter().then(
+            (badge) => AwesomeNotifications().setGlobalBadgeCounter(badge + 1));
+
       await AwesomeNotifications().createNotification(
         content: NotificationContent(
           id: task.length + 1,
@@ -517,15 +564,14 @@ class layoutCuibt extends Cubit<mytasks>    {
   }
 
   void changePrecent(value) {
-    print(salaryAfter);
     salaryAfter = double.parse(value.toString());
     emit(getsallaryafter());
-    print("this is after ${salaryAfter}");
   }
 
-  void changeSallary(value) {
+  void setSalary(value) {
     sherdprefrence.setdate(key: "salary", value: double.parse(value));
-    salary = sherdprefrence.getdate(key: "salary");
+    salary = double.parse(value);
+    salaryAfter = double.parse(value);
     emit(getsallary());
   }
 
@@ -603,24 +649,20 @@ class layoutCuibt extends Cubit<mytasks>    {
   void handleChatBoot(context, {String? message}) {
     if (robotChat.isEmpty) {
       robotChat.add(robotResponded[0]);
-    }
-    else if (chatField.text == "hi" ||
+    } else if (chatField.text == "hi" ||
         chatField.text == "hello" ||
         chatField.text == "hey" ||
         chatField.text == "hi there") {
       robotChat.add(robotResponded[1]);
-    }
-    else if (chatField.text == "how are you?" ||
+    } else if (chatField.text == "how are you?" ||
         chatField.text == "how are you" ||
         chatField.text == "whats up") {
       robotChat.add(robotResponded[2]);
       robotChat.add(robotResponded[4]);
-    }
-    else if (chatField.text == "what is your name?" ||
+    } else if (chatField.text == "what is your name?" ||
         chatField.text == "what is your name") {
       robotChat.add(robotResponded[3]);
-    }
-    else if (message == "I want to add new task" ||
+    } else if (message == "I want to add new task" ||
         message == "add task" ||
         message == "task" ||
         message == "i wanna add new task" ||
@@ -629,8 +671,7 @@ class layoutCuibt extends Cubit<mytasks>    {
         chatField.text == "task" ||
         chatField.text == "i wanna add new task") {
       robotChat.add(robotResponded[5]);
-    }
-    else if (message == "I want to add new financial transaction" ||
+    } else if (message == "I want to add new financial transaction" ||
         message == "add money" ||
         message == "money" ||
         message == "i wanna add new financial transaction" ||
@@ -647,18 +688,17 @@ class layoutCuibt extends Cubit<mytasks>    {
         title.text = robotChat[robotChat.length - 1].massage;
         robotChat.add(robotResponded[6]);
         robotChat.add(robotResponded[7]);
-      }
-      else if (robotChat[robotChat.length - 2].massage ==
+      } else if (robotChat[robotChat.length - 2].massage ==
           "What is your task's description") {
         desc.text = robotChat[robotChat.length - 1].massage;
         robotChat.add(robotResponded[6]);
         robotChat.add(robotResponded[8]);
         Future.delayed(const Duration(seconds: 3), () {
           showTimePicker(
-            helpText: "Select your task's Time ",
-              context: context,
-              initialTime: TimeOfDay.now(),
-              initialEntryMode: TimePickerEntryMode.input)
+                  helpText: "Select your task's Time ",
+                  context: context,
+                  initialTime: TimeOfDay.now(),
+                  initialEntryMode: TimePickerEntryMode.input)
               .then((value) {
             value ??= TimeOfDay.now();
             time.text = value.format(context).toString();
@@ -667,8 +707,7 @@ class layoutCuibt extends Cubit<mytasks>    {
             handleChatBoot(context);
           });
         });
-      }
-      else if (robotChat[robotChat.length - 2].massage ==
+      } else if (robotChat[robotChat.length - 2].massage ==
           "what time of your task") {
         robotChat.add(robotResponded[6]);
         robotChat.add(robotResponded[10]);
@@ -688,16 +727,14 @@ class layoutCuibt extends Cubit<mytasks>    {
             handleChatBoot(context);
           });
         });
-      }
-      else if (robotChat[robotChat.length - 2].massage ==
+      } else if (robotChat[robotChat.length - 2].massage ==
           "do you wanna repeat it ") {
         //to make method work to insert data to database and make notification
         currentStep = 6;
         firstValue = robotChat[robotChat.length - 1].massage;
         robotChat.add(robotResponded[6]);
         onPressedContinue(context, notification: true);
-      }
-      else if (robotChat[robotChat.length - 2].massage ==
+      } else if (robotChat[robotChat.length - 2].massage ==
           "what date of your task") {
         date.text = robotChat[robotChat.length - 1].massage;
         robotChat.add(robotResponded[6]);
@@ -709,48 +746,44 @@ class layoutCuibt extends Cubit<mytasks>    {
         moneyController.text = robotChat[robotChat.length - 1].massage;
         robotChat.add(robotResponded[6]);
         robotChat.add(robotResponded[12]);
-      }
-      else if (robotChat[robotChat.length - 2].massage ==
+      } else if (robotChat[robotChat.length - 2].massage ==
           "why you pay this money") {
         descController.text = robotChat[robotChat.length - 1].massage;
         robotChat.add(robotResponded[6]);
         robotChat.add(robotResponded[13]);
-      }
-      else if (robotChat[robotChat.length - 2].massage ==
+      } else if (robotChat[robotChat.length - 2].massage ==
           "which category do you want to put it in") {
         _handleSelectedCategory(robotChat[robotChat.length - 1].massage);
         Future.delayed(const Duration(milliseconds: 500), () {
           robotChat.add(robotResponded[6]);
           robotChat.add(robotResponded[14]);
         });
-        Future.delayed(const Duration(milliseconds: 600),(){   showDatePicker(
-          context: context,
-          initialDate: DateTime.now(),
-          firstDate: DateTime.now(),
-          lastDate: DateTime.parse('2022-11-07'),
-        ).then((value) {
-          value ??= DateTime.now();
-          dataController.text = DateFormat.yMMMd().format(value);
-          robotChat.add(RobotChatModel(dataController.text, "user", DateFormat('hh:mm').format(DateTime.now())));
-          handleChatBoot(context);
-        });});
-      }
-      else if (robotChat[robotChat.length - 2].massage ==
+        Future.delayed(const Duration(milliseconds: 600), () {
+          showDatePicker(
+            context: context,
+            initialDate: DateTime.now(),
+            firstDate: DateTime.now(),
+            lastDate: DateTime.parse('2022-11-07'),
+          ).then((value) {
+            value ??= DateTime.now();
+            dataController.text = DateFormat.yMMMd().format(value);
+            robotChat.add(RobotChatModel(dataController.text, "user",
+                DateFormat('hh:mm').format(DateTime.now())));
+            handleChatBoot(context);
+          });
+        });
+      } else if (robotChat[robotChat.length - 2].massage ==
           "when you pay for it") {
         //to make method work to insert data to database and make notification
         robotChat.add(robotResponded[6]);
-        insertbudget(
+        insertBudget(
             title: titleController.text,
-            desc: descController.text,
-            MONEY: double.parse(
-                moneyController.text,(_){
-           return 0.0;
+            money: double.parse(moneyController.text, (_) {
+              return 0.0;
             }),
-
             data: dataController.text,
-            catogry: catagoryController.text);
+            category: catagoryController.text);
       }
-
 
       Future.delayed(const Duration(milliseconds: 300), () {
         controllerChat.animateTo(controllerChat.position.maxScrollExtent,
@@ -761,42 +794,68 @@ class layoutCuibt extends Cubit<mytasks>    {
       emit(HandleMassage());
     }
   }
+
   //to select Category
-void _handleSelectedCategory(String category) {
+  void _handleSelectedCategory(String category) {
     log(category);
-  switch(category){
-    case "home":
-      catagoryController.text ="lib/Image/House.png";
-      break;
-    case "Clothes":
-      catagoryController.text ="lib/Image/Clothing-Logo-Vector.png";
-      break;
-    case "Health care":
-      catagoryController.text ="lib/Image/helthcare.jpg";
-break;
-    case "Fun":
-      catagoryController.text ="lib/Image/group-young-friends-having-fun-together-vector-26803087.jpg";
-      break;
-    case "Travel":
-      catagoryController.text ="lib/Image/travel-logo-vector-illustration-black-airplane-isolated-white-115729130.jpg";
-      break;
-    case "Money Saving":
-      catagoryController.text ="lib/Image/logo-template-44-.jpg";
-      break;
-    case "teaching":
-      catagoryController.text ="lib/Image/Teaching.png";
-      break;
-    case "Food":
-      catagoryController.text ="lib/Image/food.jpg";
-      break;
-    case "Gained money":
-      catagoryController.text ="lib/Image/gainMoney.webp";
-      break;
-    default:
-      catagoryController.text ="lib/Image/icon.jpg";
-      break;
+    switch (category) {
+      case "home":
+        catagoryController.text = "lib/Image/House.png";
+        break;
+      case "Clothes":
+        catagoryController.text = "lib/Image/Clothing-Logo-Vector.png";
+        break;
+      case "Health care":
+        catagoryController.text = "lib/Image/helthcare.jpg";
+        break;
+      case "Fun":
+        catagoryController.text =
+            "lib/Image/group-young-friends-having-fun-together-vector-26803087.jpg";
+        break;
+      case "Travel":
+        catagoryController.text =
+            "lib/Image/travel-logo-vector-illustration-black-airplane-isolated-white-115729130.jpg";
+        break;
+      case "Money Saving":
+        catagoryController.text = "lib/Image/logo-template-44-.jpg";
+        break;
+      case "teaching":
+        catagoryController.text = "lib/Image/Teaching.png";
+        break;
+      case "Food":
+        catagoryController.text = "lib/Image/food.jpg";
+        break;
+      case "Gained money":
+        catagoryController.text = "lib/Image/gainMoney.webp";
+        break;
+      default:
+        catagoryController.text = "lib/Image/icon.jpg";
+        break;
+    }
   }
 
-
-}
+  String handleCategory(String category) {
+    switch (category) {
+      case "lib/Image/House.png":
+        return "home";
+      case "lib/Image/Clothing-Logo-Vector.png":
+        return "Clothes";
+      case "lib/Image/helthcare.jpg":
+        return "Health care";
+      case "lib/Image/group-young-friends-having-fun-together-vector-26803087.jpg":
+        return "Fun";
+      case "lib/Image/travel-logo-vector-illustration-black-airplane-isolated-white-115729130.jpg":
+        return "Travel";
+      case "lib/Image/logo-template-44-.jpg":
+        return "Money Saving";
+      case "lib/Image/Teaching.png":
+        return "teaching";
+      case "lib/Image/food.jpg":
+        return "Food";
+      case "lib/Image/gainMoney.webp":
+        return "Gained money";
+      default:
+        return "unknown";
+    }
+  }
 }

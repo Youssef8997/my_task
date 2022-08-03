@@ -10,8 +10,8 @@ import 'package:my_task/Componads/my%20textformfild.dart';
 import 'package:my_task/Componads/mybutton.dart';
 import 'package:my_task/lib/sherdeprefrence/sherdhelp.dart';
 import 'package:my_task/module/homelayout/layout.dart';
-import 'package:my_task/module/homelayout/layoutCuibt/cuibt.dart';
-import 'package:my_task/module/homelayout/layoutCuibt/loginstates.dart';
+import 'package:my_task/module/cuibt/cuibt.dart';
+import 'package:my_task/module/cuibt/loginstates.dart';
 
 import '../../resorces/Resorces.dart';
 import '../signup/Signup.dart';
@@ -156,6 +156,9 @@ keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.manual,
                                   if (passwordcontrolar.text ==
                                       users[0]["pass"])
                                     {
+                                    if (WidgetsBinding.instance.window.viewInsets.bottom > 0) {
+                                    FocusManager.instance.primaryFocus?.unfocus()
+                                    },
                                       Nevigator(
                                           context: context,
                                           bool: false,

@@ -4,9 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:my_task/module/SpalshScreen/Spalsh.dart';
-import 'package:my_task/module/homelayout/layoutCuibt/cuibt.dart';
 import 'lib/sherdeprefrence/sherdhelp.dart';
-
+import 'package:my_task/module/cuibt/cuibt.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   AwesomeNotifications().initialize(
@@ -27,6 +26,7 @@ Future<void> main() async {
         vibrationPattern: Int64List(1000),
         groupAlertBehavior: GroupAlertBehavior.All,
         soundSource: "resource://raw/alart_sound",
+        criticalAlerts:true
       ),
       NotificationChannel(
         channelKey: 'chatBoot',
@@ -67,51 +67,6 @@ Future<void> main() async {
   bool? IsLogin = sherdprefrence.getdate(key: "login");
 
   runApp(MyApp(IsfirstTime, IsLogin));
-  AwesomeNotifications().resetGlobalBadge();
-  AwesomeNotifications().createNotification(
-      content: NotificationContent(
-        channelKey: 'chatBoot',
-        id: 2*6000,
-        title: 'do you have a New task?',
-        fullScreenIntent:true,
-        notificationLayout: NotificationLayout.BigText,
-      ),
-      actionButtons: [
-        NotificationActionButton(
-          color: Colors.grey,
-          key: 'sendMassage',
-          label: 'Go to chat',
-      ),
-      ],
-    schedule:  NotificationInterval (
-      interval:32400,
-      preciseAlarm: true,
-      allowWhileIdle: true,
-      repeats: true,
-    )
-  );
-  AwesomeNotifications().createNotification(
-      content: NotificationContent(
-        channelKey: 'Budget',
-        id: 2*700,
-        title: 'Have you spent anything recently?',
-        fullScreenIntent:true,
-        notificationLayout: NotificationLayout.BigText,
-      ),
-      actionButtons: [
-        NotificationActionButton(
-          color: Colors.grey,
-          key: 'transaction',
-          label: 'Record the transaction',
-        ),
-      ],
-      schedule:  NotificationInterval (
-        interval:10800,
-        preciseAlarm: true,
-        allowWhileIdle: true,
-        repeats: true,
-      )
-  );
 }
 
 class MyApp extends StatelessWidget {
@@ -125,7 +80,7 @@ class MyApp extends StatelessWidget {
     return MultiBlocProvider(
         providers: [
           BlocProvider(
-              create: (BuildContext context) => layoutCuibt()..Crdatab()),
+              create: (BuildContext context) => layoutCuibt()..createDataBase()),
         ],
         child: MaterialApp(
           debugShowCheckedModeBanner: false,

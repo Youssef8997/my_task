@@ -5,11 +5,10 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:my_task/Componads/Com.dart';
 import 'package:my_task/Componads/my%20textformfild.dart';
 import 'package:my_task/Componads/mybutton.dart';
-import 'dart:ui';
 import 'package:my_task/lib/sherdeprefrence/sherdhelp.dart';
 import 'package:my_task/module/homelayout/layout.dart';
-import 'package:my_task/module/homelayout/layoutCuibt/cuibt.dart';
-import 'package:my_task/module/homelayout/layoutCuibt/loginstates.dart';
+import 'package:my_task/module/cuibt/cuibt.dart';
+import 'package:my_task/module/cuibt/loginstates.dart';
 
 import '../../../resorces/Resorces.dart';
 
@@ -241,6 +240,9 @@ class _SignupState extends State<Signup> {
                       fontSize: 18.0,
                     )),
                 function: () => {
+                  if (WidgetsBinding.instance.window.viewInsets.bottom > 0) {
+                    FocusManager.instance.primaryFocus?.unfocus()
+                  },
                   if (kayform.currentState!.validate())
                     {
                       Navigator.pop(context),

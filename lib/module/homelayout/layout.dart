@@ -1,10 +1,12 @@
+import 'dart:io';
+
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:bottom_navy_bar/bottom_navy_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:my_task/module/homelayout/layoutCuibt/cuibt.dart';
-import 'package:my_task/module/homelayout/layoutCuibt/loginstates.dart';
+import 'package:my_task/module/cuibt/cuibt.dart';
+import 'package:my_task/module/cuibt/loginstates.dart';
 
 
 class homelayout extends StatefulWidget {
@@ -52,9 +54,12 @@ class _homelayoutState extends State<homelayout> {
             ),
           );
         } else {
-          AwesomeNotifications().actionStream.listen((notification) {
-
+          AwesomeNotifications().actionStream.listen((notification) async {
             if (notification.channelKey == "tasks1") {
+              if(Platform.isIOS){
+                await  AwesomeNotifications().incrementGlobalBadgeCounter();
+
+              }
               setState(() {
                 layoutCuibt.get(context).MyIndex = 0;
               });
@@ -72,7 +77,6 @@ class _homelayoutState extends State<homelayout> {
               });
 
             }
-
           });
         }
       },

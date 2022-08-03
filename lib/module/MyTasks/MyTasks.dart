@@ -1,21 +1,13 @@
-import 'dart:isolate';
 
-import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
-import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:blurrycontainer/blurrycontainer.dart';
-import 'package:ease/animations/hero_page_route.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:flutter_alarm_clock/flutter_alarm_clock.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:hexcolor/hexcolor.dart';
 import 'package:intl/intl.dart';
 import 'package:my_task/Componads/Com.dart';
 import 'package:my_task/Componads/mybutton.dart';
-import 'package:my_task/module/homelayout/layoutCuibt/cuibt.dart';
-import 'package:my_task/module/homelayout/layoutCuibt/loginstates.dart';
+import 'package:my_task/module/cuibt/cuibt.dart';
+import 'package:my_task/module/cuibt/loginstates.dart';
 import 'package:date_picker_timeline/date_picker_timeline.dart';
 import '../../resorces/Resorces.dart';
 import '../AddTasks/AddTasks.dart';
@@ -83,7 +75,7 @@ class _HomeTasksState extends State<HomeTasks> {
           physics: const BouncingScrollPhysics(),
           itemBuilder: (context, index) {
             /*if (tasks[index]["data"] == _date) {*/
-              return cardModel(tasks[index], context, index);
+              return cardModel(tasks[index], context, index,size);
          /*   } else {
               return const SizedBox(
                 height: 0,
@@ -97,32 +89,8 @@ class _HomeTasksState extends State<HomeTasks> {
     );
   }
 
-  emptyText() {
-    return Container(
-        padding: const EdgeInsetsDirectional.only(
-          start: 10.0,
-          top: 20,
-          bottom: 20,
-        ),
-        width: double.infinity,
-        height: 450,
-        decoration: BoxDecoration(
-          color: HexColor("#ED9797"),
-          borderRadius: const BorderRadius.only(
-            topRight: Radius.circular(100),
-          ),
-        ),
-        child: const Center(
-          child: Text("you dont have any task,wish a good day to you 🥰🌚 ",
-              style: TextStyle(
-                fontSize: 25.0,
-                fontWeight: FontWeight.w900,
-                fontStyle: FontStyle.italic,
-              )),
-        ));
-  }
 
-  Padding cardModel(tasks, context, index) {
+  Padding cardModel(tasks, context, index,Size size) {
     //to get the color of the task depend on the priority
     var color;
     if (tasks["priority"] == "low") color = ColorManger.TaskLowColors;
@@ -163,10 +131,15 @@ class _HomeTasksState extends State<HomeTasks> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      Text(
-                        "${tasks["title"]}",
-                        style: const TextStyle(
-                            fontSize: 20, fontWeight: FontWeight.bold),
+                      SizedBox(
+                        width: size.width *.5,
+                        child: Text(
+                          "${tasks["title"]}",
+                          style: const TextStyle(
+                              fontSize: 20, fontWeight: FontWeight.bold),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
                       ),
                       const Spacer(),
                       const Icon(Icons.access_time_outlined),
@@ -182,12 +155,16 @@ class _HomeTasksState extends State<HomeTasks> {
                   ),
                   Row(
                     children: [
-                      Text(
-                        "${tasks["desc"]}",
-                        style: TextStyle(
-                            fontSize: 15,
-                            color: Colors.grey[300],
-                            fontWeight: FontWeight.bold),
+                      SizedBox(
+                        width: size.width *.5,
+                        child: Text(
+                          "${tasks["desc"]}",
+                          style: TextStyle(
+                              fontSize: 15,
+                              color: Colors.grey[300],
+                              fontWeight: FontWeight.bold),
+                          overflow: TextOverflow.ellipsis,
+                        ),
                       ),
                       const Spacer(),
                       const Icon(Icons.event),
@@ -214,7 +191,7 @@ class _HomeTasksState extends State<HomeTasks> {
     var size = MediaQuery.of(context).size;
     return Container(
       padding: const EdgeInsetsDirectional.only(start: 15, top: 5, end: 10),
-      height: 250,
+      height: 260,
       width: 300,
       clipBehavior: Clip.antiAlias,
       decoration:
@@ -225,7 +202,7 @@ class _HomeTasksState extends State<HomeTasks> {
         children: [
           SizedBox(
             width: size.width / 2,
-            height: 35,
+            height: 60,
             child: Text(
               "${tasks["title"]}",
               maxLines: 2,

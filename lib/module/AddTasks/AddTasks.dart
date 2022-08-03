@@ -1,13 +1,12 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:cupertino_stepper/cupertino_stepper.dart';
 import 'package:my_task/Componads/Com.dart';
 import 'package:my_task/Componads/my%20textformfild.dart';
-import 'package:velocity_x/velocity_x.dart';
-import 'package:my_task/module/homelayout/layoutCuibt/cuibt.dart';
-import 'package:my_task/module/homelayout/layoutCuibt/loginstates.dart';
+import 'package:my_task/module/cuibt/cuibt.dart';
+import 'package:my_task/module/cuibt/loginstates.dart';
+import 'package:shimmer/shimmer.dart';
 
 var title = TextEditingController();
 var desc = TextEditingController();
@@ -113,7 +112,8 @@ class _TasksState extends State<Tasks> {
                         initialTime: TimeOfDay.now(),
                         initialEntryMode: TimePickerEntryMode.input)
                     .then((value) {
-                  time.text = value!.format(context).toString();
+                      value??=TimeOfDay.now();
+                  time.text = value.format(context).toString();
                 });
               },
               child: Row(
@@ -252,9 +252,14 @@ class _TasksState extends State<Tasks> {
         },
       ),
       backgroundColor: Colors.transparent,
-      title: "Add Task".text.make().shimmer(
-            duration: const Duration(seconds: 2),
-          ),
+      title: Shimmer.fromColors(
+        baseColor: Colors.black,
+        highlightColor: Colors.grey,
+        child: Text(
+          "Add Task",
+          style: TextStyle(color: Colors.black),
+        ),
+      ),
       centerTitle: true,
       actions: const [
         Padding(
