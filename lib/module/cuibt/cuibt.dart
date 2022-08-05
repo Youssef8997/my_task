@@ -1,9 +1,11 @@
 import 'dart:developer';
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:bottom_navy_bar/bottom_navy_bar.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:my_task/Translition/locale_kays.g.dart';
 import 'package:my_task/lib/sherdeprefrence/sherdhelp.dart';
 import 'package:my_task/module/AddTasks/AddTasks.dart';
 import 'package:my_task/module/MoneyOrganiz/MoneyOrganiz.dart';
@@ -27,40 +29,42 @@ class layoutCuibt extends Cubit<mytasks> {
   var controllerChat = ScrollController();
   String category = "Gained money";
   var dialogFormKey = GlobalKey<FormState>();
-  bool isDarkMode=false;
+  bool isDarkMode = false;
+  bool taskReminder = true;
+  bool moneyReminder = true;
   // massage which will be send from the robot
   List<RobotChatModel> robotResponded = [
     RobotChatModel(
-        "Hi, I am your robot assistant. I can help you to manage your tasks and budget. What would you like to do?",
+        LocaleKeys.firstMassage.tr(),
         "Robot",
         DateFormat('hh:mm').format(DateTime.now())),
     RobotChatModel(
-        "hi,user", "Robot", DateFormat('hh:mm').format(DateTime.now())),
+        LocaleKeys.hiuser.tr(), "Robot", DateFormat('hh:mm').format(DateTime.now())),
     RobotChatModel(
-        "I'm great ", "Robot", DateFormat('hh:mm').format(DateTime.now())),
+        LocaleKeys.Imgreat.tr(), "Robot", DateFormat('hh:mm').format(DateTime.now())),
     RobotChatModel(
-        "I'm joe Robot ", "Robot", DateFormat('hh:mm').format(DateTime.now())),
+        LocaleKeys.ImjoeRobot.tr(), "Robot", DateFormat('hh:mm').format(DateTime.now())),
     RobotChatModel(
-        "lets go", "Robot", DateFormat('hh:mm').format(DateTime.now())),
-    RobotChatModel("What is your task's title", "Robot",
+        LocaleKeys.letsgo.tr(), "Robot", DateFormat('hh:mm').format(DateTime.now())),
+    RobotChatModel(LocaleKeys.whatTitleChat.tr(), "Robot",
         DateFormat('hh:mm').format(DateTime.now())),
     RobotChatModel(
-        "okay, great", "Robot", DateFormat('hh:mm').format(DateTime.now())),
-    RobotChatModel("What is your task's description", "Robot",
+        LocaleKeys.okaygreat.tr(), "Robot", DateFormat('hh:mm').format(DateTime.now())),
+    RobotChatModel(LocaleKeys.whatDescriptionChat.tr(), "Robot",
         DateFormat('hh:mm').format(DateTime.now())),
-    RobotChatModel("what time of your task", "Robot",
+    RobotChatModel(LocaleKeys.whatTimeChat.tr(), "Robot",
         DateFormat('hh:mm').format(DateTime.now())),
     RobotChatModel("do you wanna repeat it ", "Robot",
         DateFormat('hh:mm').format(DateTime.now())),
-    RobotChatModel("what date of your task", "Robot",
+    RobotChatModel(LocaleKeys.whatDateChat.tr(), "Robot",
         DateFormat('hh:mm').format(DateTime.now())),
-    RobotChatModel("how much you pay for it", "Robot",
+    RobotChatModel(LocaleKeys.howMuchPay.tr(), "Robot",
         DateFormat('hh:mm').format(DateTime.now())),
-    RobotChatModel("why you pay this money", "Robot",
+    RobotChatModel(LocaleKeys.WhyPayMoney.tr(), "Robot",
         DateFormat('hh:mm').format(DateTime.now())),
-    RobotChatModel("which category do you want to put it in", "Robot",
+    RobotChatModel(LocaleKeys.whichCategories.tr(), "Robot",
         DateFormat('hh:mm').format(DateTime.now())),
-    RobotChatModel("when you pay for it", "Robot",
+    RobotChatModel(LocaleKeys.whenPay.tr(), "Robot",
         DateFormat('hh:mm').format(DateTime.now())),
   ];
   List<RobotChatModel> robotChat = [];
@@ -91,107 +95,7 @@ class layoutCuibt extends Cubit<mytasks> {
     const Settings(),
   ];
 
-  List<CategoryModel> singleCategory = [
-    CategoryModel(
-      photo: "lib/Image/House.png",
-      title: "Home",
-    ),
-    CategoryModel(
-      photo: "lib/Image/Clothing-Logo-Vector.png",
-      title: "Clothes",
-    ),
-    CategoryModel(
-      photo: "lib/Image/helthcare.jpg",
-      title: "Health care",
-    ),
-    CategoryModel(
-      photo:
-          "lib/Image/group-young-friends-having-fun-together-vector-26803087.jpg",
-      title: "Fun",
-    ),
-    CategoryModel(
-      photo:
-          "lib/Image/travel-logo-vector-illustration-black-airplane-isolated-white-115729130.jpg",
-      title: "Travel",
-    ),
-    CategoryModel(
-      photo: "lib/Image/logo-template-44-.jpg",
-      title: "Money saving",
-    ),
-    CategoryModel(
-      photo: "lib/Image/gainMoney.webp",
-      title: "Gained money",
-    ),
-  ];
-  List<CategoryModel> marriedCategory = [
-    CategoryModel(
-      photo: "lib/Image/House.png",
-      title: "Home",
-    ),
-    CategoryModel(
-      photo: "lib/Image/Teaching.png",
-      title: "teaching",
-    ),
-    CategoryModel(
-      photo: "lib/Image/food.png",
-      title: "Food",
-    ),
-    CategoryModel(
-      photo: "lib/Image/Clothing-Logo-Vector.png",
-      title: "Clothes",
-    ),
-    CategoryModel(
-      photo: "lib/Image/helthcare.jpg",
-      title: "Health care",
-    ),
-    CategoryModel(
-      photo:
-          "lib/Image/group-young-friends-having-fun-together-vector-26803087.jpg",
-      title: "Fun",
-    ),
-    CategoryModel(
-      photo:
-          "lib/Image/travel-logo-vector-illustration-black-airplane-isolated-white-115729130.jpg",
-      title: "Travel",
-    ),
-    CategoryModel(
-      photo: "lib/Image/logo-template-44-.jpg",
-      title: "Money saving",
-    ),
-    CategoryModel(
-      photo: "lib/Image/gainMoney.webp",
-      title: "Gained money",
-    ),
-  ];
-  List<BottomNavyBarItem> ItemNav = [
-    BottomNavyBarItem(
-      icon: Image.asset(
-        "lib/Image/icon.jpg",
-        height: 30,
-        width: 25,
-      ),
-      title: const Text('tasks'),
-      activeColor: Colors.red,
-    ),
-    BottomNavyBarItem(
-        icon: const Icon(
-          Icons.account_balance_wallet,
-        ),
-        title: const Text('balances'),
-        activeColor: Colors.cyan),
-    BottomNavyBarItem(
-        icon: const Icon(
-          Icons.insert_chart,
-        ),
-        title: const Text('Analytics'),
-        activeColor: Colors.pink),
-    BottomNavyBarItem(
-        icon: const Icon(
-          Icons.settings,
-        ),
-        title: const Text('Settings '),
-        activeColor: Colors.blue),
-  ];
+
 
   void ChangeIndex(index) {
     MyIndex = index;
@@ -227,7 +131,7 @@ class layoutCuibt extends Cubit<mytasks> {
             tasks.add(element);
           }
         });
-        print(tasks);
+        print(value);
         emit(GetDatatasksSucssesful());
       }).catchError((Error) {
         print("the error is ${Error.toString()}");
@@ -489,8 +393,8 @@ class layoutCuibt extends Cubit<mytasks> {
       int day = int.parse(date.text.split(" ")[1].split(",")[0]);
       int hour = _convertHourWhenPm(time.text);
       int minute = int.parse(time.text.split(":")[1].split(" ")[0]);
-        await AwesomeNotifications().getGlobalBadgeCounter().then(
-            (badge) => AwesomeNotifications().setGlobalBadgeCounter(badge + 1));
+      await AwesomeNotifications().getGlobalBadgeCounter().then(
+          (badge) => AwesomeNotifications().setGlobalBadgeCounter(badge + 1));
 
       await AwesomeNotifications().createNotification(
         content: NotificationContent(
@@ -798,64 +702,125 @@ class layoutCuibt extends Cubit<mytasks> {
   //to select Category
   void _handleSelectedCategory(String category) {
     log(category);
-    switch (category) {
-      case "home":
-        catagoryController.text = "lib/Image/House.png";
-        break;
-      case "Clothes":
-        catagoryController.text = "lib/Image/Clothing-Logo-Vector.png";
-        break;
-      case "Health care":
-        catagoryController.text = "lib/Image/helthcare.jpg";
-        break;
-      case "Fun":
-        catagoryController.text =
-            "lib/Image/group-young-friends-having-fun-together-vector-26803087.jpg";
-        break;
-      case "Travel":
-        catagoryController.text =
-            "lib/Image/travel-logo-vector-illustration-black-airplane-isolated-white-115729130.jpg";
-        break;
-      case "Money Saving":
-        catagoryController.text = "lib/Image/logo-template-44-.jpg";
-        break;
-      case "teaching":
-        catagoryController.text = "lib/Image/Teaching.png";
-        break;
-      case "Food":
-        catagoryController.text = "lib/Image/food.jpg";
-        break;
-      case "Gained money":
-        catagoryController.text = "lib/Image/gainMoney.webp";
-        break;
-      default:
-        catagoryController.text = "lib/Image/icon.jpg";
-        break;
+    if(category==LocaleKeys.Home.tr()){
+    catagoryController.text = "lib/Image/House.png";
+    }
+  else if(category==LocaleKeys.clothes.tr()){
+      catagoryController.text = "lib/Image/Clothing-Logo-Vector.png";
+    }
+    else  if(category==LocaleKeys.Healthcare.tr()){
+      catagoryController.text = "lib/Image/helthcare.jpg";
+    }
+    else  if(category==LocaleKeys.Fun.tr()){
+      catagoryController.text =
+      "lib/Image/group-young-friends-having-fun-together-vector-26803087.jpg";    }
+    else  if(category==LocaleKeys.Travel.tr()){
+      catagoryController.text =
+      "lib/Image/travel-logo-vector-illustration-black-airplane-isolated-white-115729130.jpg";
+    }
+    else  if(category==LocaleKeys.MoneySaving.tr()){
+      catagoryController.text = "lib/Image/logo-template-44-.jpg";
+
+    }
+    else  if(category==LocaleKeys.Teaching.tr()){
+      catagoryController.text = "lib/Image/Teaching.png";
+    }
+    else  if(category==LocaleKeys.food.tr()){
+      catagoryController.text = "lib/Image/food.jpg";
+    }
+    else  if(category==LocaleKeys.GainedMoney.tr()){
+      catagoryController.text = "lib/Image/gainMoney.webp";
+    }
+  else{
+    catagoryController.text = "lib/Image/House.png";
     }
   }
 
   String handleCategory(String category) {
     switch (category) {
       case "lib/Image/House.png":
-        return "home";
+        return LocaleKeys.Home.tr();
       case "lib/Image/Clothing-Logo-Vector.png":
-        return "Clothes";
+        return LocaleKeys.clothes.tr();
       case "lib/Image/helthcare.jpg":
-        return "Health care";
+        return LocaleKeys.Healthcare.tr();
       case "lib/Image/group-young-friends-having-fun-together-vector-26803087.jpg":
-        return "Fun";
+        return LocaleKeys.Fun.tr();
       case "lib/Image/travel-logo-vector-illustration-black-airplane-isolated-white-115729130.jpg":
-        return "Travel";
+        return LocaleKeys.Travel.tr();
       case "lib/Image/logo-template-44-.jpg":
-        return "Money Saving";
+        return LocaleKeys.MoneySaving.tr();
       case "lib/Image/Teaching.png":
-        return "teaching";
+        return LocaleKeys.Teaching.tr();
       case "lib/Image/food.jpg":
-        return "Food";
+        return LocaleKeys.food.tr();
       case "lib/Image/gainMoney.webp":
-        return "Gained money";
+        return LocaleKeys.GainedMoney.tr();
       default:
         return "unknown";
     }
+  }
+  void cancelTaskReminder(value){
+    taskReminder=value;
+    if(taskReminder==false) {
+      AwesomeNotifications().cancel(2 * 6000);
+      AwesomeNotifications().cancelSchedule(2 * 6000);
+    }
+    else{
+      AwesomeNotifications().createNotification(
+          content: NotificationContent(
+            channelKey: 'chatBoot',
+            id: 2 * 6000,
+            title: 'do you have a New task?',
+            notificationLayout: NotificationLayout.BigText,
+          ),
+          actionButtons: [
+            NotificationActionButton(
+              color: Colors.grey,
+              key: 'sendMassage',
+              label: 'Go to chat',
+            ),
+          ],
+          schedule: NotificationInterval(
+            interval: 21600,
+            preciseAlarm: true,
+            allowWhileIdle: true,
+            repeats: true,
+          ));
+    }
+    emit(CancelTasksRemind());
+  }
+  void cancelMoneyReminder(value){
+    moneyReminder=value;
+    if(moneyReminder==false) {
+      AwesomeNotifications().cancel(2 * 700);
+      AwesomeNotifications().cancelSchedule(2 * 700);
+    }
+    else{ AwesomeNotifications().createNotification(
+        content: NotificationContent(
+          channelKey: 'Budget',
+          id: 2 * 700,
+          title: 'Have you spent anything recently?',
+          fullScreenIntent: true,
+          notificationLayout: NotificationLayout.BigText,
+        ),
+        actionButtons: [
+          NotificationActionButton(
+            color: Colors.grey,
+            key: 'transaction',
+            label: 'Record the transaction',
+          ),
+        ],
+        schedule: NotificationInterval(
+          interval: 21700,
+          preciseAlarm: true,
+          allowWhileIdle: true,
+          repeats: true,
+        ));}
+    emit(CancelMoneyRemind());
+  }
+  void changeLocale(BuildContext context ,language){
+    context.setLocale(language);
+    emit(ChangeLocale());
   }
 }

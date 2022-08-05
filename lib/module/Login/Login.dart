@@ -1,4 +1,5 @@
 import 'dart:ui';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -12,7 +13,7 @@ import 'package:my_task/lib/sherdeprefrence/sherdhelp.dart';
 import 'package:my_task/module/homelayout/layout.dart';
 import 'package:my_task/module/cuibt/cuibt.dart';
 import 'package:my_task/module/cuibt/loginstates.dart';
-
+import '../../Translition/locale_kays.g.dart';
 import '../../resorces/Resorces.dart';
 import '../signup/Signup.dart';
 
@@ -40,7 +41,7 @@ class _LoginState extends State<Login> {
             appBar: AppBar(
               backgroundColor: Colors.transparent,
               title: Text(
-                "login".toUpperCase(),
+                LocaleKeys.titleLogin.tr(),
                 style: const TextStyle(
                   color: Colors.black,
                   fontSize: 22,
@@ -52,7 +53,7 @@ class _LoginState extends State<Login> {
               bottom:AppBar(
                 centerTitle: false,
                 backgroundColor: Colors.transparent,title:Text(
-                "hallo again,...",
+                LocaleKeys.hallo.tr(),
                 style: GoogleFonts.ptSerif(
                   color: Colors.black,
                   fontSize: 35.0,
@@ -104,7 +105,7 @@ keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.manual,
           children: [
             Mytextfield(
                 Controlr: emailcontrolar,
-                hint: "Enter you email,...",
+                hint: LocaleKeys.EmailHint.tr(),
                 keybordtype: TextInputType.emailAddress,
                 Prefix: const Icon(Icons.person_outline),
                 validator: (value) {
@@ -115,7 +116,7 @@ keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.manual,
                 }),
             Mytextfield(
                 Controlr: passwordcontrolar,
-                hint: "Enter you pass,...",
+                hint: LocaleKeys.passwordHint.tr(),
                 keybordtype: TextInputType.visiblePassword,
                 validator: (value) {
                   if (value!.isEmpty) {
@@ -141,8 +142,8 @@ keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.manual,
                       : const Icon(Icons.remove_red_eye, color: Colors.grey),
                 )),
             mybutton(
-                Widget: const Text("Login",
-                    style: TextStyle(
+                Widget: Text(LocaleKeys.titleLogin.tr(),
+                    style:const TextStyle(
                       color: Colors.white,
                       fontSize: 18.0,
                     )),
@@ -168,7 +169,7 @@ keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.manual,
                                     }
                                   else
                                     MotionToast.error(
-                                      position: MOTION_TOAST_POSITION.bottom,
+                                      position: MotionToastPosition.bottom,
                                       animationDuration:
                                           const Duration(seconds: 2),
                                       borderRadius: 25.0,
@@ -176,8 +177,8 @@ keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.manual,
                                       animationCurve: Curves.fastOutSlowIn,
                                       toastDuration: const Duration(seconds: 5),
                                       title: const Text("Wrong password"),
-                                      layoutOrientation: ORIENTATION.rtl,
-                                      animationType: ANIMATION.fromBottom,
+                                      layoutOrientation: ToastOrientation.rtl,
+                                      animationType: AnimationType.fromBottom,
                                       width: 350,
                                       description: const Text(
                                           "Please write your password correct"),
@@ -191,8 +192,8 @@ keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.manual,
                                   animationCurve: Curves.fastOutSlowIn,
                                   toastDuration: const Duration(seconds: 5),
                                   title: const Text("Wrong Email"),
-                                  layoutOrientation: ORIENTATION.rtl,
-                                  animationType: ANIMATION.fromRight,
+                                  layoutOrientation: ToastOrientation.rtl,
+                                  animationType: AnimationType.fromRight,
                                   width: 350,
                                   description: const Text(
                                       "Please write your Email correct"),
@@ -207,8 +208,8 @@ keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.manual,
                                 animationCurve: Curves.fastOutSlowIn,
                                 toastDuration: const Duration(seconds: 5),
                                 title: const Text("You don't have Email "),
-                                layoutOrientation: ORIENTATION.rtl,
-                                animationType: ANIMATION.fromRight,
+                                layoutOrientation: ToastOrientation.rtl,
+                                animationType: AnimationType.fromRight,
                                 width: 350,
                                 description: const Text(
                                     "Please signup to be can use the app "),
@@ -217,8 +218,8 @@ keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.manual,
                         },
                     }),
             mybutton(
-                Widget: const Text("Signup",
-                    style: TextStyle(
+                Widget:  Text(LocaleKeys.signUp.tr(),
+                    style:const TextStyle(
                       color: Colors.white,
                       fontSize: 18.0,
                     )),

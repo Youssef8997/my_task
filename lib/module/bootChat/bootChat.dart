@@ -1,8 +1,10 @@
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:my_task/Componads/my%20textformfild.dart';
+import 'package:my_task/Translition/locale_kays.g.dart';
 import '../../Model/Model.dart';
 import 'package:my_task/module/cuibt/cuibt.dart';
 import 'package:my_task/module/cuibt/loginstates.dart';
@@ -68,7 +70,7 @@ class _RobotChatState extends State<RobotChat> {
                   height: 50,
                   width: Size.width,
                   child: Mytextfield(
-                      hint: "type your massage",
+                      hint: LocaleKeys.MessageHint.tr(),
                       suffix: IconButton(
                         onPressed: () {
                           //to close keyboard when send massage
@@ -105,31 +107,31 @@ Column suggestionWords(layoutCuibt cuibt){
       crossAxisAlignment: CrossAxisAlignment.start,
     children: [
       if (cuibt.robotChat.length == 1 ||
-          cuibt.robotChat.last.massage == "lets go")
+          cuibt.robotChat.last.massage == LocaleKeys.letsgo.tr())
         Container(
           margin: const EdgeInsets.only(top: 10, bottom: 10),
           padding: const EdgeInsets.only(left: 10, right: 10),
           color: Colors.white70,
-          child: const Text(
-            "Suggestion words",
-            style: TextStyle(
+          child:  Text(
+            LocaleKeys.SuggestionWords.tr(),
+            style: const TextStyle(
               fontSize: 23,
               fontWeight: FontWeight.bold,
             ),
           ),
         ),
       if (cuibt.robotChat.length == 1 ||
-          cuibt.robotChat.last.massage == "lets go")
-        suggestMassage(massage: "I want to add new task"),
+          cuibt.robotChat.last.massage == LocaleKeys.letsgo.tr())
+        suggestMassage(massage: LocaleKeys.WannaTask.tr()),
       if (cuibt.robotChat.length == 1 ||
-          cuibt.robotChat.last.massage == "lets go")
+          cuibt.robotChat.last.massage == LocaleKeys.letsgo.tr())
         suggestMassage(
-            massage: "I want to add new financial transaction"),
+            massage: LocaleKeys.wannaMoney.tr()),
     ],
   );
 }
   Widget suggestionCategory(layoutCuibt cuibt){
-    return cuibt.robotChat.last.massage == "which category do you want to put it in"?
+    return cuibt.robotChat.last.massage ==LocaleKeys.whichCategories.tr()?
       Flexible(
         child: ListView (
           children: [
@@ -137,23 +139,23 @@ Column suggestionWords(layoutCuibt cuibt){
               margin: const EdgeInsets.only(top: 10, bottom: 10),
               padding: const EdgeInsets.only(left: 10, right: 10),
               color: Colors.white70,
-              child: const Text(
-                "Suggestion words",
-                style: TextStyle(
+              child:  Text(
+                LocaleKeys.SuggestionWords.tr(),
+                style:const TextStyle(
                   fontSize: 23,
                   fontWeight: FontWeight.bold,
                 ),
               ),
             ),
-            suggestMassage(massage: "home"),
-            suggestMassage(massage: "teaching"),
-            suggestMassage(massage: "Food"),
-            suggestMassage(massage: "Clothes"),
-            suggestMassage(massage: "Health care"),
-            suggestMassage(massage: "Fun"),
-            suggestMassage(massage: "Travel"),
-            suggestMassage(massage: "Money saving"),
-            suggestMassage(massage: "Gained money"),
+            suggestMassage(massage: LocaleKeys.Home.tr()),
+            suggestMassage(massage: LocaleKeys.Teaching.tr()),
+            suggestMassage(massage:LocaleKeys.food.tr()),
+            suggestMassage(massage: LocaleKeys.clothes.tr()),
+            suggestMassage(massage: LocaleKeys.Healthcare.tr()),
+            suggestMassage(massage: LocaleKeys.Fun.tr()),
+            suggestMassage(massage: LocaleKeys.Travel.tr()),
+            suggestMassage(massage: LocaleKeys.MoneySaving.tr()),
+            suggestMassage(massage: LocaleKeys.GainedMoney.tr()),
           ],
         ),
       ):const SizedBox();

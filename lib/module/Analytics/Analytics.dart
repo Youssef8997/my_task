@@ -1,7 +1,8 @@
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../Translition/locale_kays.g.dart';
 import '../../resorces/Resorces.dart';
 import 'package:my_task/module/cuibt/cuibt.dart';
 import 'package:my_task/module/cuibt/loginstates.dart';
@@ -83,10 +84,10 @@ class _analyticsState extends State<analytics> {
                 height: 1,
               ),
               itemCount: cuibt.budget.length),
-          fallback: (context) => const Padding(
-            padding:  EdgeInsets.only(left: 50, top: 200),
-            child: Text("you don't spent money yet ,good boy🥰",
-                style: TextStyle(
+          fallback: (context) =>  Padding(
+            padding: const  EdgeInsets.only(left: 50, top: 200),
+            child: Text(LocaleKeys.MoneyNotFound.tr(),
+                style:const TextStyle(
                     fontSize: 30.0,
                     color: Colors.white,
                     fontWeight: FontWeight.w900,

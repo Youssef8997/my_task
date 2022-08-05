@@ -1,4 +1,5 @@
 import 'package:awesome_notifications/awesome_notifications.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -7,6 +8,7 @@ import 'package:my_task/module/Login/Login.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:my_task/lib/sherdeprefrence/sherdhelp.dart';
 
+import '../../Translition/locale_kays.g.dart';
 import '../../resorces/Resorces.dart';
 
 class OnBoarding extends StatefulWidget {
@@ -24,6 +26,7 @@ class _OnBoardingState extends State<OnBoarding> {
     AwesomeNotifications().requestPermissionToSendNotifications();
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -180,15 +183,14 @@ class pagemodel {
 List<pagemodel> module = [
   pagemodel(
       page: "lib/Image/firstindex.png",
-      title:
-          "you must be bored from trying to organize your time,we will help you  ",
-      body: "we will organize your tasks,business and time"),
+      title:LocaleKeys.onBoardingTitle1.tr(),
+      body: LocaleKeys.onBoardingDec1.tr()),
   pagemodel(
       page: "lib/Image/scond2.png",
-      title: "your time and business is in the Right hands ",
+      title:LocaleKeys.onBoardingTitle2.tr(),
       body: ""),
   pagemodel(
-      page: "lib/Image/3index.jpg", title: "we are here for you 24/7", body: "")
+      page: "lib/Image/3index.jpg", title:LocaleKeys.onBoardingTitle3.tr(), body: "")
 ];
 
 Widget page(pagemodel module, context) {

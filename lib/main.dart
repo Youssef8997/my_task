@@ -1,13 +1,16 @@
 import 'dart:typed_data';
 import 'package:awesome_notifications/awesome_notifications.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:my_task/module/SpalshScreen/Spalsh.dart';
+import 'Translition/codegen_loader.g.dart';
 import 'lib/sherdeprefrence/sherdhelp.dart';
 import 'package:my_task/module/cuibt/cuibt.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await EasyLocalization.ensureInitialized();
   AwesomeNotifications().initialize(
     null,
     [
@@ -65,8 +68,21 @@ Future<void> main() async {
   await sherdprefrence.init();
   bool? IsfirstTime = sherdprefrence.getdate(key: "spalsh");
   bool? IsLogin = sherdprefrence.getdate(key: "login");
-
+  runApp(
+    EasyLocalization(
+        supportedLocales:const [
+          Locale('en'),
+          Locale('ar')
+        ],
+        path: 'Asset/Translition', // <-- change the path of the translation files
+        fallbackLocale:const Locale('en'),
+        assetLoader: CodegenLoader(),
+        child:MyApp(IsfirstTime, IsLogin)
+    ),
+  );
+/*
   runApp(MyApp(IsfirstTime, IsLogin));
+*/
 }
 
 class MyApp extends StatelessWidget {
@@ -84,6 +100,9 @@ class MyApp extends StatelessWidget {
         ],
         child: MaterialApp(
           debugShowCheckedModeBanner: false,
+          localizationsDelegates: context.localizationDelegates,
+          supportedLocales: context.supportedLocales,
+          locale: context.locale,
           theme: ThemeData(
               appBarTheme: const AppBarTheme(
                   systemOverlayStyle: SystemUiOverlayStyle(

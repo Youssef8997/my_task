@@ -1,4 +1,5 @@
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:my_task/Componads/my%20textformfild.dart';
@@ -9,6 +10,7 @@ import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 
 import '../../Model/Model.dart';
+import '../../Translition/locale_kays.g.dart';
 import '../../resorces/Resorces.dart';
 
 class moneyOraganize extends StatefulWidget {
@@ -26,6 +28,78 @@ class _moneyOraganizeState extends State<moneyOraganize> {
     return BlocConsumer<layoutCuibt, mytasks>(
         listener: (context, state) {},
         builder: (context, state) {
+          List<CategoryModel> singleCategory = [
+            CategoryModel(
+              photo: "lib/Image/House.png",
+              title: LocaleKeys.Home.tr(),
+            ),
+            CategoryModel(
+              photo: "lib/Image/Clothing-Logo-Vector.png",
+              title: LocaleKeys.clothes.tr(),
+            ),
+            CategoryModel(
+              photo: "lib/Image/helthcare.jpg",
+              title: LocaleKeys.Healthcare.tr(),
+            ),
+            CategoryModel(
+              photo:
+              "lib/Image/group-young-friends-having-fun-together-vector-26803087.jpg",
+              title: LocaleKeys.Fun.tr(),
+            ),
+            CategoryModel(
+              photo:
+              "lib/Image/travel-logo-vector-illustration-black-airplane-isolated-white-115729130.jpg",
+              title: LocaleKeys.Travel.tr(),
+            ),
+            CategoryModel(
+              photo: "lib/Image/logo-template-44-.jpg",
+              title: LocaleKeys.MoneySaving.tr(),
+            ),
+            CategoryModel(
+              photo: "lib/Image/gainMoney.webp",
+              title: LocaleKeys.GainedMoney.tr(),
+            ),
+          ];
+          List<CategoryModel> marriedCategory = [
+            CategoryModel(
+              photo: "lib/Image/House.png",
+              title: LocaleKeys.Home.tr(),
+            ),
+            CategoryModel(
+              photo: "lib/Image/Teaching.png",
+              title: LocaleKeys.Teaching.tr(),
+            ),
+            CategoryModel(
+              photo: "lib/Image/food.png",
+              title: LocaleKeys.food.tr(),
+            ),
+            CategoryModel(
+              photo: "lib/Image/Clothing-Logo-Vector.png",
+              title: LocaleKeys.clothes.tr(),
+            ),
+            CategoryModel(
+              photo: "lib/Image/helthcare.jpg",
+              title: LocaleKeys.Healthcare.tr(),
+            ),
+            CategoryModel(
+              photo:
+              "lib/Image/group-young-friends-having-fun-together-vector-26803087.jpg",
+              title: LocaleKeys.Fun.tr(),
+            ),
+            CategoryModel(
+              photo:
+              "lib/Image/travel-logo-vector-illustration-black-airplane-isolated-white-115729130.jpg",
+              title: LocaleKeys.Travel.tr(),
+            ),
+            CategoryModel(
+              photo: "lib/Image/logo-template-44-.jpg",
+              title: LocaleKeys.MoneySaving.tr(),
+            ),
+            CategoryModel(
+              photo: "lib/Image/gainMoney.webp",
+              title: LocaleKeys.GainedMoney.tr(),
+            ),
+          ];
           var cuibt = layoutCuibt.get(context);
           var size = MediaQuery
               .of(context)
@@ -53,7 +127,7 @@ class _moneyOraganizeState extends State<moneyOraganize> {
                           Flexible(child: precentgeCircular(size, precent,)),
                           Flexible(
                             flex: 2,
-                              child: showCategoryByGridView(context, cuibt)),
+                              child: showCategoryByGridView(context, cuibt,singleCategory,marriedCategory)),
                          const  SizedBox(height: 25)
                         ],
                       ),
@@ -62,7 +136,6 @@ class _moneyOraganizeState extends State<moneyOraganize> {
                 ),
             fallback: (context) =>
                 Container(
-
                   decoration: const BoxDecoration(
                     image: DecorationImage(
                       image: AssetImage("lib/Image/businessWallpepar.jpg"),
@@ -73,9 +146,9 @@ class _moneyOraganizeState extends State<moneyOraganize> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        const Text(
-                          "Enter your salary",
-                          style: TextStyle(
+                         Text(
+                           LocaleKeys.EnterSalary.tr(),
+                          style:const TextStyle(
                               fontWeight: FontWeight.w900,
                               fontSize: 30.0,
                               fontStyle: FontStyle.italic,
@@ -94,15 +167,15 @@ class _moneyOraganizeState extends State<moneyOraganize> {
                             child: TextFormField(
                                 controller: salaryController,
                                 keyboardType: TextInputType.number,
-                                decoration: const InputDecoration(
+                                decoration:  InputDecoration(
                                     border: InputBorder.none,
-                                    hintText: "Write your salary",
-                                    prefixIcon: Icon(
+                                    hintText: LocaleKeys.SalaryHint.tr(),
+                                    prefixIcon:const Icon(
                                       Icons.attach_money,
                                       color: Colors.green,
                                     )),
-                                onFieldSubmitted: (String) =>
-                                    cuibt.setSalary(String)),
+                                onFieldSubmitted: (salary) =>
+                                    cuibt.setSalary(salary)),
                           ),
                         )
                       ],
@@ -113,7 +186,7 @@ class _moneyOraganizeState extends State<moneyOraganize> {
         });
   }
 
-  Widget showCategoryByGridView(context, layoutCuibt cuibt) {
+  Widget showCategoryByGridView(context, layoutCuibt cuibt,singleCategory,marriedCategory) {
     return GridView.count(
       shrinkWrap: true,
       controller: scrollController,
@@ -124,25 +197,17 @@ class _moneyOraganizeState extends State<moneyOraganize> {
           layoutCuibt
               .get(context)
               .users[0]["status"] == "Single"
-              ? layoutCuibt
-              .get(context)
-              .singleCategory
+              ? singleCategory
               .length
-              : layoutCuibt
-              .get(context)
-              .marriedCategory
+              :marriedCategory
               .length,
               (index) =>
               categoryAvatar(
                   layoutCuibt
                       .get(context)
                       .users[0]["status"] == "Single"
-                      ? layoutCuibt
-                      .get(context)
-                      .singleCategory[index]
-                      : layoutCuibt
-                      .get(context)
-                      .marriedCategory[index],
+                      ? singleCategory[index]
+                      : marriedCategory[index],
                   context, cuibt)),
     );
   }
@@ -175,7 +240,7 @@ class _moneyOraganizeState extends State<moneyOraganize> {
           },
           child: Container(
             width: 130,
-            height: 130,
+            height: 140,
             decoration: BoxDecoration(
                 color: Colors.white.withOpacity(.8),
                 borderRadius: BorderRadiusDirectional.circular(30.0)),
@@ -276,9 +341,9 @@ class _moneyOraganizeState extends State<moneyOraganize> {
                     child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                    const Text(
-                      "Gain Money",
-                      style: TextStyle(
+                     Text(
+                        LocaleKeys.SheetTitle2.tr(),
+                      style: const TextStyle(
                           fontWeight: FontWeight.w900,
                           fontSize: 20.0,
                           fontStyle: FontStyle.italic,
@@ -286,7 +351,7 @@ class _moneyOraganizeState extends State<moneyOraganize> {
                     ),
                     Mytextfield(
                         Controlr: cuibt.titleController,
-                        hint: "How you gain this money?",
+                        hint: LocaleKeys.ReasonGainMoney.tr(),
                       validator: (value){
                         if(value.isEmpty){
                           return "Please enter a title";
@@ -302,7 +367,7 @@ class _moneyOraganizeState extends State<moneyOraganize> {
                             child: Mytextfield(
                               keybordtype: TextInputType.none,
                               Controlr: cuibt.dataController,
-                              hint: "When?",
+                              hint: LocaleKeys.when.tr(),
                               func: () =>
                                   showDatePicker(
                                     context: context,
@@ -334,7 +399,7 @@ class _moneyOraganizeState extends State<moneyOraganize> {
                     Mytextfield(
                         keybordtype: const TextInputType.numberWithOptions(),
                         Controlr: cuibt.moneyController,
-                        hint: "How much you gain?",
+                        hint: LocaleKeys.HowMuchGain.tr(),
                         validator: (value){
                           if(value.isEmpty){
                             return "Please enter a money";
@@ -344,9 +409,8 @@ class _moneyOraganizeState extends State<moneyOraganize> {
 
 
                     ),
-
                     mybutton(
-                        Widget: const Text("Okay!"),
+                        Widget:  Text(LocaleKeys.okay.tr()),
                         function: () {
                           if(cuibt.dialogFormKey.currentState!.validate()){
                             cuibt.insertBudget(
@@ -372,9 +436,9 @@ class _moneyOraganizeState extends State<moneyOraganize> {
                     child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                    const Text(
-                      "Why you spend money ?",
-                      style: TextStyle(
+                     Text(
+                       LocaleKeys.SheetTitle.tr(),
+                      style:const TextStyle(
                           fontWeight: FontWeight.w900,
                           fontSize: 20.0,
                           fontStyle: FontStyle.italic,
@@ -382,7 +446,7 @@ class _moneyOraganizeState extends State<moneyOraganize> {
                     ),
                     Mytextfield(
                         Controlr: cuibt.titleController,
-                        hint: "Reason for spending money ?",
+                        hint: LocaleKeys.ReasonHint.tr(),
                     validator: (value){
                       if(value.isEmpty){
                         return "Please enter a title";
@@ -397,7 +461,7 @@ class _moneyOraganizeState extends State<moneyOraganize> {
                             child: Mytextfield(
                               keybordtype: TextInputType.none,
                               Controlr: cuibt.dataController,
-                              hint: "When?",
+                              hint: LocaleKeys.when.tr(),
                               func: () =>
                                   showDatePicker(
                                     context: context,
@@ -428,7 +492,7 @@ class _moneyOraganizeState extends State<moneyOraganize> {
                     Mytextfield(
                         keybordtype: const TextInputType.numberWithOptions(),
                         Controlr: cuibt.moneyController,
-                        hint: "How much did you spend ?",
+                        hint: LocaleKeys.HowMuch.tr(),
                     validator:(value){
                       if(value.isEmpty){
                         return "Please enter a money";
@@ -438,7 +502,7 @@ class _moneyOraganizeState extends State<moneyOraganize> {
                     ),
 
                     mybutton(
-                        Widget: const Text("Okay!"),
+                        Widget:  Text(LocaleKeys.okay.tr()),
                         function: () {
                           if(cuibt.dialogFormKey.currentState!.validate()){
                             if (double.parse(cuibt.moneyController.text) >
@@ -514,4 +578,5 @@ class _moneyOraganizeState extends State<moneyOraganize> {
       },
     );
   }
+
 }

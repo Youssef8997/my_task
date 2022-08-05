@@ -1,5 +1,6 @@
 
 import 'package:blurrycontainer/blurrycontainer.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -9,6 +10,7 @@ import 'package:my_task/Componads/mybutton.dart';
 import 'package:my_task/module/cuibt/cuibt.dart';
 import 'package:my_task/module/cuibt/loginstates.dart';
 import 'package:date_picker_timeline/date_picker_timeline.dart';
+import '../../Translition/locale_kays.g.dart';
 import '../../resorces/Resorces.dart';
 import '../AddTasks/AddTasks.dart';
 
@@ -44,13 +46,13 @@ class _HomeTasksState extends State<HomeTasks> {
                     height: size.height * 0.02,
                   ),
                   if (_tasks.isEmpty)
-                    const Center(
+                     Center(
                         heightFactor: 5,
-                        child: Padding(
-                          padding: EdgeInsets.all(15),
-                          child: Text(
-                            "you don't have any task today🥰,I wish nice day to you ❤️",
-                            style: TextStyle(
+                        child:  Padding(
+                          padding: const EdgeInsets.all(15),
+                          child:  Text(
+                            LocaleKeys.dontHaveTask.tr(),
+                            style: const TextStyle(
                                 fontSize: 25.0, fontWeight: FontWeight.w900),
                           ),
                         ))
@@ -96,6 +98,7 @@ class _HomeTasksState extends State<HomeTasks> {
     if (tasks["priority"] == "low") color = ColorManger.TaskLowColors;
     if (tasks["priority"] == "medium") color = ColorManger.TaskMedColors;
     if (tasks["priority"] == "high") color = ColorManger.taskHighColors;
+
     return Padding(
       padding: const EdgeInsets.all(10.0),
       child: GestureDetector(
@@ -191,7 +194,7 @@ class _HomeTasksState extends State<HomeTasks> {
     var size = MediaQuery.of(context).size;
     return Container(
       padding: const EdgeInsetsDirectional.only(start: 15, top: 5, end: 10),
-      height: 260,
+      height: 280,
       width: 300,
       clipBehavior: Clip.antiAlias,
       decoration:
@@ -282,7 +285,7 @@ class _HomeTasksState extends State<HomeTasks> {
         Padding(
           padding: const EdgeInsets.only(left: 5),
           child: Text(
-            "hallo again,...",
+            LocaleKeys.hallo.tr(),
             style: GoogleFonts.ptSerif(
                 color: Colors.black,
                 fontSize: 30.0,
@@ -294,7 +297,7 @@ class _HomeTasksState extends State<HomeTasks> {
         Padding(
           padding: const EdgeInsets.only(top: 10, right: 20),
           child: mybutton(
-              Widget: const Text("Add task...",
+              Widget:  Text("${LocaleKeys.AddTask.tr()}....",
                   style: const TextStyle(color: Colors.white)),
               function: ()=>cuibt.onPressedAdd(context)),
         )
@@ -306,12 +309,13 @@ class _HomeTasksState extends State<HomeTasks> {
     return SizedBox(
       height: 80,
       width: size.width,
-      child: DatePicker(DateTime.now(),
+      child: DatePicker(
+          DateTime.now(),
           initialSelectedDate: DateTime.now(),
           selectionColor: Colors.black,
           selectedTextColor: Colors.white, onDateChange: (value) {
         setState(() {
-          _date = DateFormat.yMMMd().format(value);
+          _date = DateFormat.yMMMd("en").format(value);
           layoutCuibt.get(context).onDate = _date;
           layoutCuibt.get(context).insertTaskIntoVar();
         });

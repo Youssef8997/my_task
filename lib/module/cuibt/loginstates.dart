@@ -26,4 +26,7 @@ class  getUsersData  extends mytasks{}
 class  changeCatogery extends mytasks{}
 class  changedate extends mytasks{}
 class  HandleMassage extends mytasks{}
+class  CancelTasksRemind extends mytasks{}
+class  CancelMoneyRemind extends mytasks{}
+class  ChangeLocale extends mytasks{}
 

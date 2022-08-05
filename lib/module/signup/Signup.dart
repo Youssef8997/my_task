@@ -9,7 +9,8 @@ import 'package:my_task/lib/sherdeprefrence/sherdhelp.dart';
 import 'package:my_task/module/homelayout/layout.dart';
 import 'package:my_task/module/cuibt/cuibt.dart';
 import 'package:my_task/module/cuibt/loginstates.dart';
-
+import '../../Translition/locale_kays.g.dart';
+import 'package:easy_localization/easy_localization.dart';
 import '../../../resorces/Resorces.dart';
 
 class Signup extends StatefulWidget {
@@ -56,7 +57,7 @@ class _SignupState extends State<Signup> {
                 leading: const SizedBox(width: 0),
                 centerTitle: false,
                 backgroundColor: Colors.transparent,title:Text(
-                "Hi,Sign up now ,...",
+                "${LocaleKeys.hi.tr()}, ${LocaleKeys.SignUpNow.tr()}",
                 style: GoogleFonts.ptSerif(
                   color: Colors.black,
                   fontSize: 35.0,
@@ -144,7 +145,7 @@ class _SignupState extends State<Signup> {
           children: [
             Mytextfield(
                 Controlr: name,
-                hint: "Enter you name,...",
+                hint: LocaleKeys.NameHint.tr(),
                 keybordtype: TextInputType.name,
                 Prefix:
                 const Icon(Icons.drive_file_rename_outline, color: Colors.grey),
@@ -156,7 +157,7 @@ class _SignupState extends State<Signup> {
                 }),
             Mytextfield(
                 Controlr: email,
-                hint: "Enter you email,...",
+                hint: LocaleKeys.EmailHint.tr(),
                 keybordtype: TextInputType.emailAddress,
                 Prefix: const Icon(Icons.person_outline),
                 validator: (value) {
@@ -167,7 +168,7 @@ class _SignupState extends State<Signup> {
                 }),
             Mytextfield(
                 Controlr: pass,
-                hint: "Enter you pass,...",
+                hint: LocaleKeys.passwordHint.tr(),
                 keybordtype: TextInputType.visiblePassword,
                 validator: (value) {
                   if (value!.isEmpty) {
@@ -194,7 +195,7 @@ class _SignupState extends State<Signup> {
                 )),
             Mytextfield(
                 Controlr: repass,
-                hint: "Enter you pass again,...",
+                hint: LocaleKeys.passwordHint.tr(),
                 keybordtype: TextInputType.visiblePassword,
                 validator: (value) {
                   if (value!.isEmpty) {
@@ -224,7 +225,7 @@ class _SignupState extends State<Signup> {
                 )),
             Mytextfield(
                 Controlr: phone,
-                hint: "Enter you phone,...",
+                hint: LocaleKeys.phoneHint.tr(),
                 keybordtype: TextInputType.visiblePassword,
                 Prefix: const Icon(Icons.phone, color: Colors.grey),
                 validator: (value) {
@@ -234,8 +235,8 @@ class _SignupState extends State<Signup> {
                   return null;
                 }),
             mybutton(
-                Widget: const Text("Done",
-                    style: TextStyle(
+                Widget: Text(LocaleKeys.Done.tr(),
+                    style:const TextStyle(
                       color: Colors.white,
                       fontSize: 18.0,
                     )),
@@ -346,17 +347,17 @@ class StatusModel {
 List<StatusModel> Status = [
   StatusModel(
     Photo: "lib/Image/single.jpg",
-    title: "Single",
+    title: LocaleKeys.Single.tr(),
     ontap: true,
   ),
   StatusModel(
     Photo: "lib/Image/married.jpg",
-    title: "Married",
+    title:LocaleKeys.Married.tr(),
     ontap: true,
   ),
   StatusModel(
     Photo: "lib/Image/bussinesStatus.jpg",
-    title: "Business",
+    title: LocaleKeys.Business.tr(),
     ontap: true,
   ),
 ];

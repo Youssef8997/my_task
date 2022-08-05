@@ -2,11 +2,17 @@ import 'dart:io';
 
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:bottom_navy_bar/bottom_navy_bar.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:my_task/module/cuibt/cuibt.dart';
 import 'package:my_task/module/cuibt/loginstates.dart';
+import 'package:quick_actions/quick_actions.dart';
+
+import '../../Translition/locale_kays.g.dart';
+import '../AddTasks/AddTasks.dart';
+import '../MoneyOrganiz/MoneyOrganiz.dart';
 
 
 class homelayout extends StatefulWidget {
@@ -15,9 +21,27 @@ class homelayout extends StatefulWidget {
 }
 
 class _homelayoutState extends State<homelayout> {
+  var quickActions= const QuickActions();
   @override
   void initState() {
     super.initState();
+    quickActions.setShortcutItems(
+        const [
+          ShortcutItem(type: "New Task", localizedTitle: "New Task",icon: "baseline_add_black_24dp"),
+          ShortcutItem(type: "money", localizedTitle: "Spent Money",icon: "baseline_attach_money_black_24dp"),
+          ShortcutItem(type: "goals", localizedTitle: "New goals",icon: "baseline_sports_soccer_black_24dp"),
+        ]
+    );
+    quickActions.initialize((type) {
+      if(type=="New Task"){
+        Navigator.push(context, MaterialPageRoute(builder: (context)=>const Tasks()));
+      }
+      if(type=="money"){
+        setState(() {
+          layoutCuibt.get(context).MyIndex=1;
+        });
+      }
+    });
     AwesomeNotifications().isNotificationAllowed().then(
       (isAllowed) {
         if (!isAllowed) {
@@ -85,10 +109,39 @@ class _homelayoutState extends State<homelayout> {
 
   @override
   Widget build(BuildContext context) {
-    var cuibt = layoutCuibt.get(context);
     return BlocConsumer<layoutCuibt, mytasks>(
         listener: (context, state) {},
         builder: (context, state) {
+          var cuibt = layoutCuibt.get(context);
+          List<BottomNavyBarItem> navigationItem = [
+            BottomNavyBarItem(
+              icon: Image.asset(
+                "lib/Image/icon.jpg",
+                height: 30,
+                width: 25,
+              ),
+              title:  Text(LocaleKeys.Tasks.tr()),
+              activeColor: Colors.red,
+            ),
+            BottomNavyBarItem(
+                icon: const Icon(
+                  Icons.account_balance_wallet,
+                ),
+                title:  Text(LocaleKeys.Balance.tr()),
+                activeColor: Colors.cyan),
+            BottomNavyBarItem(
+                icon: const Icon(
+                  Icons.insert_chart,
+                ),
+                title:  Text(LocaleKeys.analytics.tr()),
+                activeColor: Colors.pink),
+            BottomNavyBarItem(
+                icon: const Icon(
+                  Icons.settings,
+                ),
+                title:  Text(LocaleKeys.Settings.tr()),
+                activeColor: Colors.blue),
+          ];
           return Scaffold(
             appBar: AppBar(
               systemOverlayStyle: const SystemUiOverlayStyle(
@@ -111,7 +164,7 @@ class _homelayoutState extends State<homelayout> {
                 onItemSelected: (index) {
                   cuibt.ChangeIndex(index);
                 },
-                items: cuibt.ItemNav),
+                items: navigationItem),
           );
         });
   }

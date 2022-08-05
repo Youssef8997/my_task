@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
@@ -7,6 +8,9 @@ import 'package:my_task/Componads/my%20textformfild.dart';
 import 'package:my_task/module/cuibt/cuibt.dart';
 import 'package:my_task/module/cuibt/loginstates.dart';
 import 'package:shimmer/shimmer.dart';
+
+import '../../Translition/locale_kays.g.dart';
+
 
 var title = TextEditingController();
 var desc = TextEditingController();
@@ -27,8 +31,8 @@ class _TasksState extends State<Tasks> {
   _TasksState({this.id});
   @override
   void initState() {
-    time.text = DateFormat('HH:mm a').format(now);
-    date.text = DateFormat.yMMMd().format(now);
+    time.text = DateFormat('HH:mm a',"en").format(now);
+    date.text = DateFormat.yMMMd("en").format(now);
     layoutCuibt.get(context).firstValue="5 Min";
     layoutCuibt.get(context).scondValue="medium";
     super.initState();
@@ -57,18 +61,18 @@ class _TasksState extends State<Tasks> {
     return Form(
       key: cuibt.addTask,
       child: Stepper(
-
         currentStep: cuibt.currentStep,
         type: StepperType.vertical,
         steps: [
           Step(
-            title: const Text("title",
-                style: TextStyle(
+            title:Text(
+      LocaleKeys.Title.tr(),
+                style: const TextStyle(
                     color: Colors.black,
                     fontSize: 18,
                     fontWeight: FontWeight.bold)),
             content: Mytextfield(
-              hint: "Write title of your task......",
+              hint: "${LocaleKeys.TitleHint.tr()}......",
               Controlr: title,
               validator: (value) {
                 if (value.isEmpty) {
@@ -81,13 +85,13 @@ class _TasksState extends State<Tasks> {
                 cuibt.currentStep > 0 ? StepState.complete : StepState.indexed,
           ),
           Step(
-            title: const Text("description",
-                style: TextStyle(
+            title:  Text(LocaleKeys.Description.tr(),
+                style:const TextStyle(
                     color: Colors.black,
                     fontSize: 18,
                     fontWeight: FontWeight.bold)),
             content: Mytextfield(
-              hint: "Write description of your task......",
+              hint: "${LocaleKeys.DescriptionHint.tr()}......",
               Controlr: desc,
               validator: (value) {
                 if (value.isEmpty) {
@@ -100,8 +104,8 @@ class _TasksState extends State<Tasks> {
                 cuibt.currentStep > 1 ? StepState.complete : StepState.indexed,
           ),
           Step(
-            title: const Text("Time",
-                style: TextStyle(
+            title:  Text(LocaleKeys.time.tr(),
+                style:const TextStyle(
                     color: Colors.black,
                     fontSize: 18,
                     fontWeight: FontWeight.bold)),
@@ -123,8 +127,8 @@ class _TasksState extends State<Tasks> {
                   const SizedBox(
                     width: 10,
                   ),
-                  const Text("Enter time ",
-                      style: TextStyle(
+                   Text(LocaleKeys.EnterDate.tr(),
+                      style:const TextStyle(
                           color: Colors.black,
                           fontSize: 18,
                           fontWeight: FontWeight.bold)),
@@ -135,8 +139,8 @@ class _TasksState extends State<Tasks> {
                 cuibt.currentStep > 2 ? StepState.complete : StepState.indexed,
           ),
           Step(
-            title: const Text("date",
-                style: TextStyle(
+            title:  Text(LocaleKeys.Date.tr(),
+                style:const TextStyle(
                     color: Colors.black,
                     fontSize: 18,
                     fontWeight: FontWeight.bold)),
@@ -148,17 +152,17 @@ class _TasksState extends State<Tasks> {
                   firstDate: DateTime.now(),
                   lastDate: DateTime.parse('2022-11-07'),
                 ).then((value) {
-                  date.text = DateFormat.yMMMd().format(value!);
+                  date.text = DateFormat.yMMMd("en").format(value!);
                 });
               },
               child: Row(
-                children: const [
-                  Icon(Icons.calendar_today_outlined),
-                  SizedBox(
+                children:  [
+                  const Icon(Icons.calendar_today_outlined),
+                  const SizedBox(
                     width: 10,
                   ),
-                  Text("Enter date ",
-                      style: TextStyle(
+                  Text(LocaleKeys.EnterDate.tr(),
+                      style: const TextStyle(
                           color: Colors.black,
                           fontSize: 18,
                           fontWeight: FontWeight.bold)),
@@ -206,27 +210,27 @@ class _TasksState extends State<Tasks> {
                 cuibt.currentStep > 4 ? StepState.complete : StepState.indexed,
           ),
           Step(
-            title: const Text("priority",
-                style: TextStyle(
+            title:  Text(LocaleKeys.priority.tr(),
+                style:const TextStyle(
                     color: Colors.black,
                     fontSize: 18,
                     fontWeight: FontWeight.bold)),
             content: DropdownButton(
                 hint: Text("${cuibt.scondValue} priority",
                     style: const TextStyle(color: Colors.black)),
-                items: const [
+                items:  [
                   DropdownMenuItem(
-                    child: Text("high,"),
+                    child: Text(LocaleKeys.High.tr()),
                     value: "high",
                     enabled: true,
                   ),
                   DropdownMenuItem(
-                    child: Text("medium"),
+                    child: Text(LocaleKeys.Medium.tr()),
                     value: "medium",
                     enabled: true,
                   ),
                   DropdownMenuItem(
-                    child: Text("low"),
+                    child: Text(LocaleKeys.Low.tr()),
                     value: "low",
                     enabled: true,
                   ),
@@ -239,6 +243,7 @@ class _TasksState extends State<Tasks> {
         ],
         onStepContinue: () =>id==null? cuibt.onPressedContinue(context):cuibt.pressedContinueEdit(context: context,id:id,),
         onStepCancel: () => cuibt.onPressedCancel(context),
+
       ),
     );
   }
@@ -256,8 +261,8 @@ class _TasksState extends State<Tasks> {
         baseColor: Colors.black,
         highlightColor: Colors.grey,
         child: Text(
-          "Add Task",
-          style: TextStyle(color: Colors.black),
+            LocaleKeys.AddTask.tr(),
+            style: const TextStyle(color: Colors.black),
         ),
       ),
       centerTitle: true,
