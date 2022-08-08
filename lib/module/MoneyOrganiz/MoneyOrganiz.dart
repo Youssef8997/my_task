@@ -8,7 +8,7 @@ import 'package:my_task/module/cuibt/cuibt.dart';
 import 'package:my_task/module/cuibt/loginstates.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:percent_indicator/percent_indicator.dart';
-
+import 'package:my_task/lib/sherdeprefrence/sherdhelp.dart';
 import '../../Model/Model.dart';
 import '../../Translition/locale_kays.g.dart';
 import '../../resorces/Resorces.dart';
@@ -22,7 +22,13 @@ class _moneyOraganizeState extends State<moneyOraganize> {
   var salaryController = TextEditingController();
   var scrollController = ScrollController();
   var gaining = false;
+@override
+  void initState() {
+  layoutCuibt.get(context).insertBudgetIntoVar(datab: layoutCuibt.get(context).datab,context: context);
 
+    super.initState();
+
+}
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<layoutCuibt, mytasks>(
@@ -415,8 +421,7 @@ class _moneyOraganizeState extends State<moneyOraganize> {
                           if(cuibt.dialogFormKey.currentState!.validate()){
                             cuibt.insertBudget(
                                 title: cuibt.titleController.text,
-                                money:
-                                double.parse(cuibt.moneyController.text),
+                                money:double.tryParse(cuibt.moneyController.text)??0.0,
                                 data: cuibt.dataController.text,
                                 category: cuibt.catagoryController.text)
                                 .then((value) {
@@ -558,8 +563,7 @@ class _moneyOraganizeState extends State<moneyOraganize> {
                               cuibt
                                   .insertBudget(
                                   title: cuibt.titleController.text,
-                                  money: double.parse(
-                                      cuibt.moneyController.text),
+                                  money:double.tryParse(cuibt.moneyController.text)??0.0,
                                   data: cuibt.dataController.text,
                                   category: cuibt.catagoryController.text)
                                   .then((value) {

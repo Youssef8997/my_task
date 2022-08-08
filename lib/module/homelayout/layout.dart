@@ -1,5 +1,5 @@
 import 'dart:io';
-
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:bottom_navy_bar/bottom_navy_bar.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -12,8 +12,6 @@ import 'package:quick_actions/quick_actions.dart';
 
 import '../../Translition/locale_kays.g.dart';
 import '../AddTasks/AddTasks.dart';
-import '../MoneyOrganiz/MoneyOrganiz.dart';
-
 
 class homelayout extends StatefulWidget {
   @override
@@ -21,27 +19,44 @@ class homelayout extends StatefulWidget {
 }
 
 class _homelayoutState extends State<homelayout> {
-  var quickActions= const QuickActions();
+  var quickActions = const QuickActions();
+  final bannar=BannerAd(
+      size: AdSize.banner,
+      adUnitId: Platform.isAndroid
+          ? 'ca-app-pub-3940256099942544/3419835294'
+          : 'ca-app-pub-3940256099942544/2934735716',
+      listener: BannerAdListener(),
+      request: AdRequest());
+
   @override
   void initState() {
     super.initState();
-    quickActions.setShortcutItems(
-        const [
-          ShortcutItem(type: "New Task", localizedTitle: "New Task",icon: "baseline_add_black_24dp"),
-          ShortcutItem(type: "money", localizedTitle: "Spent Money",icon: "baseline_attach_money_black_24dp"),
-          ShortcutItem(type: "goals", localizedTitle: "New goals",icon: "baseline_sports_soccer_black_24dp"),
-        ]
-    );
+
+    //  QuickAction button which appears when you long press the app icon
+    quickActions.setShortcutItems(const [
+      ShortcutItem(
+          type: "New Task",
+          localizedTitle: "New Task",
+          icon: "baseline_add_black_24dp"),
+      ShortcutItem(
+          type: "money",
+          localizedTitle: "Spent Money",
+          icon: "baseline_attach_money_black_24dp",
+
+      ),
+    ]);
     quickActions.initialize((type) {
-      if(type=="New Task"){
-        Navigator.push(context, MaterialPageRoute(builder: (context)=>const Tasks()));
+      if (type == "New Task") {
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => const Tasks()));
       }
-      if(type=="money"){
+      if (type == "money") {
         setState(() {
-          layoutCuibt.get(context).MyIndex=1;
+          layoutCuibt.get(context).MyIndex = 1;
         });
       }
     });
+    //to ask for permission to access the notification
     AwesomeNotifications().isNotificationAllowed().then(
       (isAllowed) {
         if (!isAllowed) {
@@ -80,26 +95,19 @@ class _homelayoutState extends State<homelayout> {
         } else {
           AwesomeNotifications().actionStream.listen((notification) async {
             if (notification.channelKey == "tasks1") {
-              if(Platform.isIOS){
-                await  AwesomeNotifications().incrementGlobalBadgeCounter();
-
-              }
               setState(() {
                 layoutCuibt.get(context).MyIndex = 0;
               });
               layoutCuibt.get(context).delete(id: notification.id!);
             }
             if (notification.channelKey == "chatBoot") {
-              setState(() {
-                layoutCuibt.get(context).MyIndex = 3;
-              });
-
+              Navigator.push(
+                  context, MaterialPageRoute(builder: (context) => const Tasks()));
             }
             if (notification.channelKey == "Budget") {
               setState(() {
                 layoutCuibt.get(context).MyIndex = 1;
               });
-
             }
           });
         }
@@ -120,26 +128,26 @@ class _homelayoutState extends State<homelayout> {
                 height: 30,
                 width: 25,
               ),
-              title:  Text(LocaleKeys.Tasks.tr()),
+              title: Text(LocaleKeys.Tasks.tr()),
               activeColor: Colors.red,
             ),
             BottomNavyBarItem(
                 icon: const Icon(
                   Icons.account_balance_wallet,
                 ),
-                title:  Text(LocaleKeys.Balance.tr()),
+                title: Text(LocaleKeys.Balance.tr()),
                 activeColor: Colors.cyan),
             BottomNavyBarItem(
                 icon: const Icon(
                   Icons.insert_chart,
                 ),
-                title:  Text(LocaleKeys.analytics.tr()),
+                title: Text(LocaleKeys.analytics.tr()),
                 activeColor: Colors.pink),
             BottomNavyBarItem(
                 icon: const Icon(
                   Icons.settings,
                 ),
-                title:  Text(LocaleKeys.Settings.tr()),
+                title: Text(LocaleKeys.Settings.tr()),
                 activeColor: Colors.blue),
           ];
           return Scaffold(
@@ -149,7 +157,7 @@ class _homelayoutState extends State<homelayout> {
                 statusBarBrightness: Brightness.light,
                 statusBarIconBrightness: Brightness.light,
               ),
-              toolbarHeight: 0,
+              toolbarHeight:0,
             ),
             extendBodyBehindAppBar: true,
             key: cuibt.kayScaffold,
@@ -162,6 +170,7 @@ class _homelayoutState extends State<homelayout> {
                 selectedIndex: cuibt.MyIndex,
                 showElevation: false, // use this to remove appBar's elevation
                 onItemSelected: (index) {
+
                   cuibt.ChangeIndex(index);
                 },
                 items: navigationItem),

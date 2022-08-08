@@ -24,7 +24,7 @@ class HomeTasks extends StatefulWidget {
 
 class _HomeTasksState extends State<HomeTasks> {
   var _date = DateFormat.yMMMd().format(DateTime.now());
-
+@override
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<layoutCuibt, mytasks>(
@@ -264,6 +264,8 @@ class _HomeTasksState extends State<HomeTasks> {
                   Widget: const Icon(Icons.edit),
                   function: () {
                     setState(() {
+                      title.text=tasks["title"];
+                      desc.text=tasks["desc"];
                       layoutCuibt.get(context).currentStep = 2;
                     });
                     Nevigator(
@@ -305,19 +307,22 @@ class _HomeTasksState extends State<HomeTasks> {
     );
   }
 
-  SizedBox dateCalendar(context, Size size) {
+  SizedBox dateCalendar(BuildContext context, Size size) {
     return SizedBox(
-      height: 80,
+      height: 90,
       width: size.width,
       child: DatePicker(
           DateTime.now(),
           initialSelectedDate: DateTime.now(),
           selectionColor: Colors.black,
-          selectedTextColor: Colors.white, onDateChange: (value) {
+          selectedTextColor: Colors.white,
+          locale:context.locale.languageCode,
+          onDateChange: (value) {
         setState(() {
           _date = DateFormat.yMMMd("en").format(value);
+          print(_date);
           layoutCuibt.get(context).onDate = _date;
-          layoutCuibt.get(context).insertTaskIntoVar();
+          layoutCuibt.get(context).insertTaskIntoVar(datab: layoutCuibt.get(context).datab);
         });
       }),
     );

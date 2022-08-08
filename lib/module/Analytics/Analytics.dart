@@ -1,7 +1,11 @@
+import 'dart:io';
+
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
+import 'package:date_picker_timeline/date_picker_widget.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shimmer/shimmer.dart';
 import '../../Translition/locale_kays.g.dart';
 import '../../resorces/Resorces.dart';
 import 'package:my_task/module/cuibt/cuibt.dart';
@@ -12,6 +16,7 @@ class analytics extends StatefulWidget {
 }
 
 class _analyticsState extends State<analytics> {
+  var _date = DateFormat.yMMMd().format(DateTime.now());
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<layoutCuibt,mytasks>
@@ -32,22 +37,30 @@ class _analyticsState extends State<analytics> {
             child:SafeArea(
               child: Column(
                 children: [
+                  dateCalendar(context,size),
                   Align(
                     alignment: Alignment.topRight,
                     child: Padding(
                       padding: const EdgeInsets.all(10.0),
-                      child: Text(
-                       " ${cuibt.salaryAfter} LE",
-                        style:const  TextStyle(
-                            fontWeight: FontWeight.w900,
-                            fontSize: 30.0,
-                            fontStyle: FontStyle.italic,
-                            color: Colors.white),
-                        textAlign: TextAlign.right,
+                      child: Shimmer.fromColors(
+                        child: Text(
+                         " ${cuibt.salaryAfter} LE",
+                          style:const  TextStyle(
+                              fontWeight: FontWeight.w900,
+                              fontSize: 30.0,
+                              fontStyle: FontStyle.italic,
+                              color: Colors.white),
+                          textAlign: TextAlign.right,
+                        ),
+                        baseColor: Colors.white,
+                        highlightColor: Colors.grey[700]!
                       ),
                     ),
                   ),
                   showMoney(cuibt,context,size),
+
+
+
                 ],
               ),
             ),
@@ -84,16 +97,39 @@ class _analyticsState extends State<analytics> {
                 height: 1,
               ),
               itemCount: cuibt.budget.length),
-          fallback: (context) =>  Padding(
-            padding: const  EdgeInsets.only(left: 50, top: 200),
+          fallback: (context) =>  Center(
             child: Text(LocaleKeys.MoneyNotFound.tr(),
                 style:const TextStyle(
                     fontSize: 30.0,
                     color: Colors.white,
                     fontWeight: FontWeight.w900,
-                    fontStyle: FontStyle.italic)),
+                    fontStyle: FontStyle.italic),
+            textAlign: TextAlign.center,
+
+            ),
           ),
         ));
+  }
+  SizedBox dateCalendar(BuildContext context, Size size) {
+    return SizedBox(
+      height: 90,
+      width: size.width,
+      child: DatePicker(
+          DateTime(DateTime.now().year, DateTime.now().month-1, DateTime.now().day+15),
+          initialSelectedDate: DateTime.now(),
+          selectionColor: Colors.black,
+          selectedTextColor: Colors.white,
+          locale:context.locale.languageCode,
+          onDateChange: (value) {
+            setState(() {
+              _date = DateFormat.yMMMd("en").format(value);
+              print(_date);
+              layoutCuibt.get(context).onDate = _date;
+              layoutCuibt.get(context).insertBudgetIntoVar(datab: layoutCuibt.get(context).datab);
+
+            });
+          }),
+    );
   }
 
 

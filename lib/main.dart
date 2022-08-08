@@ -8,8 +8,11 @@ import 'package:my_task/module/SpalshScreen/Spalsh.dart';
 import 'Translition/codegen_loader.g.dart';
 import 'lib/sherdeprefrence/sherdhelp.dart';
 import 'package:my_task/module/cuibt/cuibt.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  MobileAds.instance.initialize();
   await EasyLocalization.ensureInitialized();
   AwesomeNotifications().initialize(
     null,

@@ -33,7 +33,7 @@ class _TasksState extends State<Tasks> {
   void initState() {
     time.text = DateFormat('HH:mm a',"en").format(now);
     date.text = DateFormat.yMMMd("en").format(now);
-    layoutCuibt.get(context).firstValue="5 Min";
+    layoutCuibt.get(context).firstValue="Never";
     layoutCuibt.get(context).scondValue="medium";
     super.initState();
   }
@@ -179,28 +179,23 @@ class _TasksState extends State<Tasks> {
                     style: const TextStyle(color: Colors.black)),
                 items: const [
                   DropdownMenuItem(
-                    child: Text("5 Min"),
-                    value: "5 Min",
-                    enabled: true,
-                  ),
-                  DropdownMenuItem(
-                    child: Text("10 Min"),
-                    value: "10 Min",
-                    enabled: true,
-                  ),
-                  DropdownMenuItem(
-                    child: Text("30 Min"),
-                    value: "30 Min",
-                    enabled: true,
-                  ),
-                  DropdownMenuItem(
-                    child: Text("1 hour"),
-                    value: "1 hour",
-                    enabled: true,
-                  ),
-                  DropdownMenuItem(
                     child: Text("Daily"),
                     value: "Daily",
+                    enabled: true,
+                  ),
+                  DropdownMenuItem(
+                    child: Text("weekly"),
+                    value: "weekly",
+                    enabled: true,
+                  ),
+                  DropdownMenuItem(
+                    child: Text("Monthly"),
+                    value: "Monthly",
+                    enabled: true,
+                  ),
+                  DropdownMenuItem(
+                    child: Text("Never"),
+                    value: "Never",
                     enabled: true,
                   ),
                 ],

@@ -1,10 +1,8 @@
 import 'dart:developer';
 import 'package:awesome_notifications/awesome_notifications.dart';
-import 'package:bottom_navy_bar/bottom_navy_bar.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:intl/intl.dart';
 import 'package:my_task/Translition/locale_kays.g.dart';
 import 'package:my_task/lib/sherdeprefrence/sherdhelp.dart';
 import 'package:my_task/module/AddTasks/AddTasks.dart';
@@ -13,10 +11,10 @@ import 'package:my_task/module/MyTasks/MyTasks.dart';
 import 'package:my_task/module/Setting/Settings.dart';
 import 'package:my_task/module/cuibt/loginstates.dart';
 import 'package:sqflite/sqflite.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../../Componads/Com.dart';
 import '../../../Model/Model.dart';
 import '../Analytics/Analytics.dart';
-
 class layoutCuibt extends Cubit<mytasks> {
   layoutCuibt() : super(mytasksstateinisal());
   static layoutCuibt get(context) => BlocProvider.of(context);
@@ -25,6 +23,7 @@ class layoutCuibt extends Cubit<mytasks> {
   List<Map> tasks = [];
   List<Map> task = [];
   List<Map> budget = [];
+  var  _now=DateFormat.d("en").format(DateTime.now());
   List<Map> users = [];
   var controllerChat = ScrollController();
   String category = "Gained money";
@@ -32,24 +31,36 @@ class layoutCuibt extends Cubit<mytasks> {
   bool isDarkMode = false;
   bool taskReminder = true;
   bool moneyReminder = true;
+  void faceBook() async{
+    var url = 'fb://facewebmodal/f?href=https://www.facebook.com/yuossfa';
+    if (await canLaunch(url)) {
+      await launchUrl(Uri.parse(url),mode: LaunchMode.externalNonBrowserApplication);
+    } else { throw 'There was a problem to open the url: $url'; }
+
+  }
+  void instagram() async{
+    var url = "instagram://user?username=_youssef_ahmed44";
+    if (await canLaunchUrl(Uri.parse(url))) {
+      await launchUrl(Uri.parse(url),mode: LaunchMode.externalNonBrowserApplication);
+    } else { throw 'There was a problem to open the url: $url'; }
+
+  }
   // massage which will be send from the robot
   List<RobotChatModel> robotResponded = [
-    RobotChatModel(
-        LocaleKeys.firstMassage.tr(),
-        "Robot",
+    RobotChatModel(LocaleKeys.firstMassage.tr(), "Robot",
         DateFormat('hh:mm').format(DateTime.now())),
-    RobotChatModel(
-        LocaleKeys.hiuser.tr(), "Robot", DateFormat('hh:mm').format(DateTime.now())),
-    RobotChatModel(
-        LocaleKeys.Imgreat.tr(), "Robot", DateFormat('hh:mm').format(DateTime.now())),
-    RobotChatModel(
-        LocaleKeys.ImjoeRobot.tr(), "Robot", DateFormat('hh:mm').format(DateTime.now())),
-    RobotChatModel(
-        LocaleKeys.letsgo.tr(), "Robot", DateFormat('hh:mm').format(DateTime.now())),
+    RobotChatModel(LocaleKeys.hiuser.tr(), "Robot",
+        DateFormat('hh:mm').format(DateTime.now())),
+    RobotChatModel(LocaleKeys.Imgreat.tr(), "Robot",
+        DateFormat('hh:mm').format(DateTime.now())),
+    RobotChatModel(LocaleKeys.ImjoeRobot.tr(), "Robot",
+        DateFormat('hh:mm').format(DateTime.now())),
+    RobotChatModel(LocaleKeys.letsgo.tr(), "Robot",
+        DateFormat('hh:mm').format(DateTime.now())),
     RobotChatModel(LocaleKeys.whatTitleChat.tr(), "Robot",
         DateFormat('hh:mm').format(DateTime.now())),
-    RobotChatModel(
-        LocaleKeys.okaygreat.tr(), "Robot", DateFormat('hh:mm').format(DateTime.now())),
+    RobotChatModel(LocaleKeys.okaygreat.tr(), "Robot",
+        DateFormat('hh:mm').format(DateTime.now())),
     RobotChatModel(LocaleKeys.whatDescriptionChat.tr(), "Robot",
         DateFormat('hh:mm').format(DateTime.now())),
     RobotChatModel(LocaleKeys.whatTimeChat.tr(), "Robot",
@@ -78,7 +89,7 @@ class layoutCuibt extends Cubit<mytasks> {
   var kayScaffold = GlobalKey<ScaffoldState>();
   var kayForm = GlobalKey<FormState>();
   var addTask = GlobalKey<FormState>();
-  var firstValue = "5 Min";
+  var firstValue = "Never";
   var scondValue = "low";
   var id = 1;
   var onDate = DateFormat.yMMMd().format(DateTime.now());
@@ -87,6 +98,8 @@ class layoutCuibt extends Cubit<mytasks> {
   var catagoryController = TextEditingController();
   var dataController = TextEditingController();
   var moneyController = TextEditingController();
+  var salaryController = TextEditingController();
+  bool changeIncome= false;
   var controller = PageController(initialPage: 0);
   List body = [
     const HomeTasks(),
@@ -94,9 +107,6 @@ class layoutCuibt extends Cubit<mytasks> {
     analytics(),
     const Settings(),
   ];
-
-
-
   void ChangeIndex(index) {
     MyIndex = index;
     /*pageController.animateToPage(index,
@@ -108,6 +118,7 @@ class layoutCuibt extends Cubit<mytasks> {
   void createDataBase() async {
     datab = await openDatabase("endtask.db", version: 1,
         onCreate: (datab, version) {
+          sherdprefrence.setdate(key: "ResetBudget",value: true);
       print("create data base");
       datab.execute(
           'CREATE TABLE TASKS (id INTEGER PRIMARY KEY,title TEXT,desc TEXT,data TEXT ,time STRING,repeat INTEGER,priority TEXT)');
@@ -124,20 +135,10 @@ class layoutCuibt extends Cubit<mytasks> {
       });
     }, onOpen: (datab) {
       print("open data base");
-      getDataTasks(datab).then((value) {
-        task = value;
-        task.forEach((element) {
-          if (element["data"] == onDate) {
-            tasks.add(element);
-          }
-        });
-        print(value);
-        emit(GetDatatasksSucssesful());
-      }).catchError((Error) {
-        print("the error is ${Error.toString()}");
-        emit(GetDataBaseError());
-      });
-      getDataBudget(datab).then((value) {
+      onDate = DateFormat.yMMMd("en").format(DateTime.now());
+      insertTaskIntoVar(datab: datab);
+      insertBudgetIntoVar(datab: datab);
+      getAllDataBudget(datab).then((value) {
         budget = [];
         budget = value;
         emit(GetDatabudgetSucssesful());
@@ -151,25 +152,44 @@ class layoutCuibt extends Cubit<mytasks> {
     });
   }
 
-  //get data from Database
+  //get All tasks from Database
   Future<List<Map>> getDataTasks(datab) async {
     return await datab.rawQuery('SELECT*FROM TASKS');
   }
 
+  //get Specific Task from Database
+  Future<List<Map>> getTask(datab, id) async {
+    return await datab.rawQuery('SELECT*FROM TASKS WHERE id=?', [id]);
+  }
+
+  //get all Tasks in the specific date from Database
   Future<List<Map>> getTasksDays(datab) async {
     return await datab.rawQuery('SELECT*FROM TASKS WHERE data=?', [onDate]);
   }
 
-  void insertTaskIntoVar() {
+// to insert task into List Which will be used in the HomeTasks page
+  void insertTaskIntoVar({datab}) {
     getTasksDays(datab).then((value) {
       tasks = [];
       tasks = value;
     });
   }
 
-  Future<List<Map>> getDataBudget(datab) async {
+  Future<List<Map>> getAllDataBudget(datab) async {
     return await datab.rawQuery('SELECT*FROM BUDGET');
   }
+  //get all Budget in the specific date from Database
+  Future<List<Map>> getDataBudget(datab) async {
+    return await datab.rawQuery('SELECT*FROM BUDGET WHERE data=?', [onDate]);
+  }
+  void insertBudgetIntoVar({datab,context}) {
+    getDataBudget(datab).then((value) {
+      budget = [];
+      budget = value;
+      emit(getsallaryafter());
+    });
+  }
+
 
   Future<List<Map>> getDateUsers(datab) async {
     return await datab.rawQuery('SELECT*FROM Users');
@@ -190,7 +210,7 @@ class layoutCuibt extends Cubit<mytasks> {
   }
 
   void getBudgetAfterChange() {
-    getDataBudget(datab).then((value) {
+    getAllDataBudget(datab).then((value) {
       budget = [];
       budget = value;
       print(budget);
@@ -219,8 +239,9 @@ class layoutCuibt extends Cubit<mytasks> {
       txn
           .rawInsert(
               'INSERT INTO TASKS(title,desc,time,data,repeat,priority)VALUES("$title","$desc","$time","$date","$repeat","$priority")')
-          .then((value) {
-        print("$value insertetd sucsseffly");
+          .then((Id) {
+        //to be can get the id of the task to make notification when the insert is done
+        id = Id;
         getDataTasksAfterChange();
       }).catchError((error) {
         print(" the error is ${error.toString()}");
@@ -267,7 +288,7 @@ class layoutCuibt extends Cubit<mytasks> {
             .then((value) {
           print("$value inserted successes");
           getBudgetAfterChange();
-          changePrecent(salaryAfter + money);
+          changPercent(salaryAfter + money);
           titleController.clear();
           descController.clear();
           moneyController.clear();
@@ -287,7 +308,7 @@ class layoutCuibt extends Cubit<mytasks> {
             .then((value) {
           print("$value inserted successes");
           getBudgetAfterChange();
-          changePrecent(salaryAfter - money);
+          changPercent(salaryAfter - money);
           titleController.clear();
           descController.clear();
           moneyController.clear();
@@ -307,46 +328,40 @@ class layoutCuibt extends Cubit<mytasks> {
 
   //update data in database
   void update(
-      {String? priority, String? repeat, int id = 1, time, date}) async {
-    print("$priority ,$repeat,$time,$date");
-
-    if (repeat != null) {
-      datab.rawUpdate(
-          'UPDATE TASKS SET repeat=? WHERE id=? ', [repeat, id]).then((value) {
-        print("repeat");
-        getDataTasksAfterChange();
-        emit(UpdateDataBaseError());
+      {String? priority,
+      String? repeat,
+      int id = 1,
+      Time,
+      Date,
+      Title,
+      Des}) async {
+    datab.rawUpdate('UPDATE TASKS SET repeat=? WHERE id=? ', [repeat, id]);
+    datab.rawUpdate('UPDATE TASKS SET priority=? WHERE id=? ', [priority, id]);
+    datab.rawUpdate('UPDATE TASKS SET time=? WHERE id=? ', [Time, id]);
+    datab.rawUpdate('UPDATE TASKS SET data=? WHERE id=? ', [Date, id]).then(
+        (value) {
+      getTask(datab, id).then((value) {
+        title.text = value[0]["title"];
+        desc.text = value[0]["desc"];
+        time.text = value[0]["time"].toString();
+        date.text = value[0]["data"].toString();
+        firstValue = value[0]["repeat"];
+        scondValue = value[0]["priority"];
+        AwesomeNotifications().cancel(id);
+        AwesomeNotifications().cancelSchedule(id).then((_) {
+          _handleNotification(value.first["repeat"], id);
+        });
       });
-    }
-    if (priority != null) {
-      datab.rawUpdate('UPDATE TASKS SET priority=? WHERE id=? ',
-          [priority, id]).then((value) {
-        print("priority");
-        getDataTasksAfterChange();
-        emit(UpdateDataBaseError());
-      });
-    }
-    if (time != "") {
-      datab.rawUpdate('UPDATE TASKS SET time=? WHERE id=? ', [time, id]).then(
-          (value) {
-        print("time");
-        getDataTasksAfterChange();
-        emit(UpdateDataBaseError());
-      });
-    }
-    if (date != "") {
-      datab.rawUpdate('UPDATE TASKS SET data=? WHERE id=? ', [date, id]).then(
-          (value) {
-        print("data");
-        getDataTasksAfterChange();
-        emit(UpdateDataBaseError());
-      });
-    }
+      getDataTasksAfterChange();
+      emit(UpdateDataBaseError());
+    });
   }
 
   //delete task from database
   void delete({required int id}) async {
     await datab.rawDelete('DELETE FROM TASKS WHERE id=? ', [id]);
+    AwesomeNotifications().cancel(id);
+    AwesomeNotifications().cancelSchedule(id);
     getDataTasks(datab).then((value) {
       tasks = [];
       tasks = value;
@@ -357,11 +372,11 @@ class layoutCuibt extends Cubit<mytasks> {
 
   void deletebudget({required int id, required index}) async {
     await datab.rawDelete('DELETE FROM BUDGET WHERE id=? ', [id]);
-    getDataBudget(datab).then((value) {
+    getAllDataBudget(datab).then((value) {
       budget = [];
       budget = value;
       print(budget);
-      changePrecent(budget.isEmpty ? salary : budget[index - 1]["MONEYAfter"]);
+      changPercent(budget.isEmpty ? salary : budget[index - 1]["MONEYAfter"]);
       emit(getsallaryafter());
     });
   }
@@ -388,47 +403,17 @@ class layoutCuibt extends Cubit<mytasks> {
       currentStep += 1;
       emit(OnPressedonStepper());
     } else {
-      int year = int.parse(date.text.split(", ")[1]);
-      int month = _convertNameMonthToNumber(date.text.substring(0, 3));
-      int day = int.parse(date.text.split(" ")[1].split(",")[0]);
-      int hour = _convertHourWhenPm(time.text);
-      int minute = int.parse(time.text.split(":")[1].split(" ")[0]);
-      await AwesomeNotifications().getGlobalBadgeCounter().then(
-          (badge) => AwesomeNotifications().setGlobalBadgeCounter(badge + 1));
-
-      await AwesomeNotifications().createNotification(
-        content: NotificationContent(
-          id: task.length + 1,
-          channelKey: "tasks1",
-          title: title.text,
-          body: desc.text,
-          autoDismissible: true,
-          wakeUpScreen: true,
-          customSound: "resource://raw/alart_sound",
-          locked: true,
-          category: NotificationCategory.Reminder,
-          criticalAlert: true,
-          showWhen: true,
-          ticker: "ticker",
-        ),
-        schedule: NotificationCalendar.fromDate(
-            date: DateTime(year, month, day, hour, minute),
-            allowWhileIdle: true,
-            preciseAlarm: true,
-            repeats: false),
-      );
       insert(
-          title: title.text,
-          desc: desc.text,
-          time: time.text,
-          date: date.text,
-          repeat: firstValue,
-          priority: scondValue);
-      currentStep = 0;
-      title.clear();
-      desc.clear();
-      time.clear();
-      date.clear();
+              title: title.text,
+              desc: desc.text,
+              time: time.text,
+              date: date.text,
+              repeat: firstValue,
+              priority: scondValue)
+          .then((value) {
+        _handleNotification(firstValue, id);
+      });
+
       if (notification == false) {
         Navigator.pop(context);
       }
@@ -442,11 +427,14 @@ class layoutCuibt extends Cubit<mytasks> {
       emit(OnPressedonStepper());
     } else {
       update(
-          id: id,
-          priority: scondValue,
-          repeat: firstValue,
-          date: date.text,
-          time: time.text);
+        id: id,
+        priority: scondValue,
+        repeat: firstValue,
+        Date: date.text,
+        Time: time.text,
+        Title: title.text,
+        Des: desc.text,
+      );
       currentStep = 0;
       time.clear();
       date.clear();
@@ -467,7 +455,7 @@ class layoutCuibt extends Cubit<mytasks> {
     }
   }
 
-  void changePrecent(value) {
+  void changPercent(value) {
     salaryAfter = double.parse(value.toString());
     emit(getsallaryafter());
   }
@@ -476,6 +464,7 @@ class layoutCuibt extends Cubit<mytasks> {
     sherdprefrence.setdate(key: "salary", value: double.parse(value));
     salary = double.parse(value);
     salaryAfter = double.parse(value);
+    salaryController.clear();
     emit(getsallary());
   }
 
@@ -485,7 +474,7 @@ class layoutCuibt extends Cubit<mytasks> {
   }
 
   void budgetDate(value) {
-    dataController.text = DateFormat.yMMMd().format(value!);
+    dataController.text = DateFormat.yMMMd("en").format(value!);
     emit(changedate());
   }
 
@@ -682,9 +671,7 @@ class layoutCuibt extends Cubit<mytasks> {
         robotChat.add(robotResponded[6]);
         insertBudget(
             title: titleController.text,
-            money: double.parse(moneyController.text, (_) {
-              return 0.0;
-            }),
+            money: double.tryParse(moneyController.text)??0.0,
             data: dataController.text,
             category: catagoryController.text);
       }
@@ -702,37 +689,28 @@ class layoutCuibt extends Cubit<mytasks> {
   //to select Category
   void _handleSelectedCategory(String category) {
     log(category);
-    if(category==LocaleKeys.Home.tr()){
-    catagoryController.text = "lib/Image/House.png";
-    }
-  else if(category==LocaleKeys.clothes.tr()){
+    if (category == LocaleKeys.Home.tr()) {
+      catagoryController.text = "lib/Image/House.png";
+    } else if (category == LocaleKeys.clothes.tr()) {
       catagoryController.text = "lib/Image/Clothing-Logo-Vector.png";
-    }
-    else  if(category==LocaleKeys.Healthcare.tr()){
+    } else if (category == LocaleKeys.Healthcare.tr()) {
       catagoryController.text = "lib/Image/helthcare.jpg";
-    }
-    else  if(category==LocaleKeys.Fun.tr()){
+    } else if (category == LocaleKeys.Fun.tr()) {
       catagoryController.text =
-      "lib/Image/group-young-friends-having-fun-together-vector-26803087.jpg";    }
-    else  if(category==LocaleKeys.Travel.tr()){
+          "lib/Image/group-young-friends-having-fun-together-vector-26803087.jpg";
+    } else if (category == LocaleKeys.Travel.tr()) {
       catagoryController.text =
-      "lib/Image/travel-logo-vector-illustration-black-airplane-isolated-white-115729130.jpg";
-    }
-    else  if(category==LocaleKeys.MoneySaving.tr()){
+          "lib/Image/travel-logo-vector-illustration-black-airplane-isolated-white-115729130.jpg";
+    } else if (category == LocaleKeys.MoneySaving.tr()) {
       catagoryController.text = "lib/Image/logo-template-44-.jpg";
-
-    }
-    else  if(category==LocaleKeys.Teaching.tr()){
+    } else if (category == LocaleKeys.Teaching.tr()) {
       catagoryController.text = "lib/Image/Teaching.png";
-    }
-    else  if(category==LocaleKeys.food.tr()){
+    } else if (category == LocaleKeys.food.tr()) {
       catagoryController.text = "lib/Image/food.jpg";
-    }
-    else  if(category==LocaleKeys.GainedMoney.tr()){
+    } else if (category == LocaleKeys.GainedMoney.tr()) {
       catagoryController.text = "lib/Image/gainMoney.webp";
-    }
-  else{
-    catagoryController.text = "lib/Image/House.png";
+    } else {
+      catagoryController.text = "lib/Image/House.png";
     }
   }
 
@@ -760,13 +738,13 @@ class layoutCuibt extends Cubit<mytasks> {
         return "unknown";
     }
   }
-  void cancelTaskReminder(value){
-    taskReminder=value;
-    if(taskReminder==false) {
+
+  void cancelTaskReminder(value) {
+    taskReminder = value;
+    if (taskReminder == false) {
       AwesomeNotifications().cancel(2 * 6000);
       AwesomeNotifications().cancelSchedule(2 * 6000);
-    }
-    else{
+    } else {
       AwesomeNotifications().createNotification(
           content: NotificationContent(
             channelKey: 'chatBoot',
@@ -790,37 +768,160 @@ class layoutCuibt extends Cubit<mytasks> {
     }
     emit(CancelTasksRemind());
   }
-  void cancelMoneyReminder(value){
-    moneyReminder=value;
-    if(moneyReminder==false) {
+
+  void cancelMoneyReminder(value) {
+    moneyReminder = value;
+    if (moneyReminder == false) {
       AwesomeNotifications().cancel(2 * 700);
       AwesomeNotifications().cancelSchedule(2 * 700);
-    }
-    else{ AwesomeNotifications().createNotification(
-        content: NotificationContent(
-          channelKey: 'Budget',
-          id: 2 * 700,
-          title: 'Have you spent anything recently?',
-          fullScreenIntent: true,
-          notificationLayout: NotificationLayout.BigText,
-        ),
-        actionButtons: [
-          NotificationActionButton(
-            color: Colors.grey,
-            key: 'transaction',
-            label: 'Record the transaction',
+    } else {
+      AwesomeNotifications().createNotification(
+          content: NotificationContent(
+            channelKey: 'Budget',
+            id: 2 * 700,
+            title: 'Have you spent anything recently?',
+            fullScreenIntent: true,
+            notificationLayout: NotificationLayout.BigText,
           ),
-        ],
-        schedule: NotificationInterval(
-          interval: 21700,
-          preciseAlarm: true,
-          allowWhileIdle: true,
-          repeats: true,
-        ));}
+          actionButtons: [
+            NotificationActionButton(
+              color: Colors.grey,
+              key: 'transaction',
+              label: 'Record the transaction',
+            ),
+          ],
+          schedule: NotificationInterval(
+            interval: 21700,
+            preciseAlarm: true,
+            allowWhileIdle: true,
+            repeats: true,
+          ));
+    }
     emit(CancelMoneyRemind());
   }
-  void changeLocale(BuildContext context ,language){
+
+  void changeLocale(BuildContext context, language) {
     context.setLocale(language);
     emit(ChangeLocale());
+  }
+
+  void _handleNotification(String Repeat, id) async {
+    log("${Repeat} ${id}");
+    //handle Time resource
+    int year = int.parse(date.text.split(", ")[1]);
+    int month = _convertNameMonthToNumber(date.text.substring(0, 3));
+    int day = int.parse(date.text.split(" ")[1].split(",")[0]);
+    int hour = _convertHourWhenPm(time.text);
+    int minute = int.parse(time.text.split(":")[1].split(" ")[0]);
+    //to increase the badge number
+    await AwesomeNotifications().getGlobalBadgeCounter().then(
+        (badge) => AwesomeNotifications().setGlobalBadgeCounter(badge + 1));
+    if (Repeat == "Daily") {
+      print("daily");
+      await AwesomeNotifications().createNotification(
+          content: NotificationContent(
+            id: id,
+            channelKey: "tasks1",
+            title: title.text,
+            body: desc.text,
+            autoDismissible: true,
+            wakeUpScreen: true,
+            customSound: "resource://raw/alart_sound",
+            locked: true,
+            category: NotificationCategory.Reminder,
+            criticalAlert: true,
+            showWhen: true,
+            ticker: "ticker",
+          ),
+          schedule: NotificationCalendar(
+            allowWhileIdle: true,
+            repeats: true,
+            preciseAlarm: true,
+            hour: hour,
+            minute: minute,
+            second: 00,
+          ));
+    } else if (Repeat == "weekly") {
+      print("weekly");
+      await AwesomeNotifications().createNotification(
+          content: NotificationContent(
+            id: id,
+            channelKey: "tasks1",
+            title: title.text,
+            body: desc.text,
+            autoDismissible: true,
+            wakeUpScreen: true,
+            customSound: "resource://raw/alart_sound",
+            locked: true,
+            category: NotificationCategory.Reminder,
+            criticalAlert: true,
+            showWhen: true,
+            ticker: "ticker",
+          ),
+          schedule: NotificationCalendar(
+            repeats: true,
+            allowWhileIdle: true,
+            preciseAlarm: true,
+            weekday: 6,
+            hour: hour,
+            minute: minute,
+            second: 00,
+          ));
+    } else if (Repeat == "Monthly") {
+      print("monthly");
+      await AwesomeNotifications().createNotification(
+          content: NotificationContent(
+            id: id,
+            channelKey: "tasks1",
+            title: title.text,
+            body: desc.text,
+            autoDismissible: true,
+            wakeUpScreen: true,
+            customSound: "resource://raw/alart_sound",
+            locked: true,
+            category: NotificationCategory.Reminder,
+            criticalAlert: true,
+            showWhen: true,
+            ticker: "ticker",
+          ),
+          schedule: NotificationCalendar(
+            repeats: true,
+            allowWhileIdle: true,
+            preciseAlarm: true,
+            weekOfMonth: 1,
+            weekday: 6,
+            hour: hour,
+            minute: minute,
+            second: 00,
+          ));
+    } else if (Repeat == "Never") {
+      print("never");
+      await AwesomeNotifications().createNotification(
+        content: NotificationContent(
+          id: id,
+          channelKey: "tasks1",
+          title: title.text,
+          body: desc.text,
+          autoDismissible: true,
+          wakeUpScreen: true,
+          customSound: "resource://raw/alart_sound",
+          locked: true,
+          category: NotificationCategory.Reminder,
+          criticalAlert: true,
+          showWhen: true,
+          ticker: "ticker",
+        ),
+        schedule: NotificationCalendar.fromDate(
+            date: DateTime(year, month, day, hour, minute),
+            allowWhileIdle: true,
+            preciseAlarm: true,
+            repeats: false),
+      );
+    }
+    currentStep = 0;
+    title.clear();
+    desc.clear();
+    time.clear();
+    date.clear();
   }
 }
