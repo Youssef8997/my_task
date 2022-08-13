@@ -2,7 +2,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:intl/intl.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:my_task/Componads/my%20textformfild.dart';
 import 'package:my_task/Translition/locale_kays.g.dart';
 import '../../Model/Model.dart';
@@ -16,6 +16,18 @@ class RobotChat extends StatefulWidget {
 }
 
 class _RobotChatState extends State<RobotChat> {
+  final BannerAd myBanner = BannerAd(
+    adUnitId: 'ca-app-pub-3940256099942544/6300978111',
+    size: AdSize.fullBanner,
+    request: AdRequest(),
+    listener: BannerAdListener(
+      onAdFailedToLoad:(Ad ad, LoadAdError error) {
+        print(error);
+      },
+
+    ),
+  );
+
   @override
   void initState() {
     setState(() {

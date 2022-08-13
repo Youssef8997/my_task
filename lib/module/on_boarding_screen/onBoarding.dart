@@ -1,15 +1,13 @@
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:my_task/Componads/Com.dart';
-import 'package:my_task/module/Login/Login.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:my_task/lib/sherdeprefrence/sherdhelp.dart';
 
 import '../../Translition/locale_kays.g.dart';
 import '../../resorces/Resorces.dart';
+import '../homelayout/layout.dart';
 
 class OnBoarding extends StatefulWidget {
   const OnBoarding({super.key});
@@ -97,7 +95,7 @@ class _OnBoardingState extends State<OnBoarding> {
                               ),
                             ],
                             schedule: NotificationInterval(
-                              interval: 21600,
+                              interval: 32400,
                               preciseAlarm: true,
                               allowWhileIdle: true,
                               repeats: true,
@@ -123,7 +121,7 @@ class _OnBoardingState extends State<OnBoarding> {
                               allowWhileIdle: true,
                               repeats: true,
                             ));
-                        Nevigator(bool: false, page: Login(), context: context);
+                        Nevigator(bool: false, page: homelayout(), context: context);
                       } else {
                         controlar.nextPage(
                             duration: const Duration(
@@ -156,7 +154,7 @@ class _OnBoardingState extends State<OnBoarding> {
         onPageChanged: (index) {
           if (index == module.length - 1) {
             setState(() {
-              sherdprefrence.setdate(key: "spalsh", value: true);
+              sherdprefrence.setdate(key: "spalsh", value: false);
             });
           }
         },

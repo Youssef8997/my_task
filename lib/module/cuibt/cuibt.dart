@@ -23,28 +23,12 @@ class layoutCuibt extends Cubit<mytasks> {
   List<Map> tasks = [];
   List<Map> task = [];
   List<Map> budget = [];
-  var  _now=DateFormat.d("en").format(DateTime.now());
-  List<Map> users = [];
   var controllerChat = ScrollController();
   String category = "Gained money";
   var dialogFormKey = GlobalKey<FormState>();
-  bool isDarkMode = false;
   bool taskReminder = true;
   bool moneyReminder = true;
-  void faceBook() async{
-    var url = 'fb://facewebmodal/f?href=https://www.facebook.com/yuossfa';
-    if (await canLaunch(url)) {
-      await launchUrl(Uri.parse(url),mode: LaunchMode.externalNonBrowserApplication);
-    } else { throw 'There was a problem to open the url: $url'; }
 
-  }
-  void instagram() async{
-    var url = "instagram://user?username=_youssef_ahmed44";
-    if (await canLaunchUrl(Uri.parse(url))) {
-      await launchUrl(Uri.parse(url),mode: LaunchMode.externalNonBrowserApplication);
-    } else { throw 'There was a problem to open the url: $url'; }
-
-  }
   // massage which will be send from the robot
   List<RobotChatModel> robotResponded = [
     RobotChatModel(LocaleKeys.firstMassage.tr(), "Robot",
@@ -89,8 +73,9 @@ class layoutCuibt extends Cubit<mytasks> {
   var kayScaffold = GlobalKey<ScaffoldState>();
   var kayForm = GlobalKey<FormState>();
   var addTask = GlobalKey<FormState>();
-  var firstValue = "Never";
-  var scondValue = "low";
+  var repeated = "Never";
+  var priorityed = "low";
+  var Weekday = "1";
   var id = 1;
   var onDate = DateFormat.yMMMd().format(DateTime.now());
   var titleController = TextEditingController();
@@ -121,9 +106,7 @@ class layoutCuibt extends Cubit<mytasks> {
           sherdprefrence.setdate(key: "ResetBudget",value: true);
       print("create data base");
       datab.execute(
-          'CREATE TABLE TASKS (id INTEGER PRIMARY KEY,title TEXT,desc TEXT,data TEXT ,time STRING,repeat INTEGER,priority TEXT)');
-      datab.execute(
-          'CREATE TABLE Users (id INTEGER PRIMARY KEY, Name TEXT,Email TEXT,pass TEXT ,Phone TEXT,status STRING)');
+          'CREATE TABLE TASKS (id INTEGER PRIMARY KEY,title TEXT,desc TEXT,data TEXT ,time STRING,repeat TEXT,priority TEXT)');
       datab
           .execute(
               'CREATE TABLE BUDGET (id INTEGER PRIMARY KEY,title TEXT,MONEY num, MONEYAfter num,data STRING,catogry TEXT)')
@@ -136,18 +119,12 @@ class layoutCuibt extends Cubit<mytasks> {
     }, onOpen: (datab) {
       print("open data base");
       onDate = DateFormat.yMMMd("en").format(DateTime.now());
-      insertTaskIntoVar(datab: datab);
+      insertTaskIntoVar("daily",datab: datab);
       insertBudgetIntoVar(datab: datab);
       getAllDataBudget(datab).then((value) {
         budget = [];
         budget = value;
         emit(GetDatabudgetSucssesful());
-      });
-      getDateUsers(datab).then((value) {
-        users = [];
-        users = value;
-        print(users);
-        emit(getUsersData());
       });
     });
   }
@@ -166,15 +143,52 @@ class layoutCuibt extends Cubit<mytasks> {
   Future<List<Map>> getTasksDays(datab) async {
     return await datab.rawQuery('SELECT*FROM TASKS WHERE data=?', [onDate]);
   }
-
-// to insert task into List Which will be used in the HomeTasks page
-  void insertTaskIntoVar({datab}) {
-    getTasksDays(datab).then((value) {
-      tasks = [];
-      tasks = value;
-    });
+  //get all Tasks which repeatedly every week from Database
+  Future<List<Map>> getTasksWeekly(datab) async {
+    return await datab.rawQuery('SELECT*FROM TASKS WHERE repeat=?', ["Weekly"]);
+  }
+  Future<List<Map>> getTasksDaily(datab) async {
+    return await datab.rawQuery('SELECT*FROM TASKS WHERE repeat=? ', ["Daily"]);
+  }
+  //get all Tasks which repeatedly every month from Database
+  Future<List<Map>> getTasksMonthly(datab) async {
+    return await datab.rawQuery('SELECT*FROM TASKS WHERE repeat=?', ["Monthly"]);
   }
 
+// to insert task into List Which will be used in the HomeTasks page
+  void insertTaskIntoVar(repeat,{datab}) {
+    print(" this is $repeat");
+    if (repeat == "weekly") {
+      getTasksWeekly(datab).then((value) {
+        tasks = [];
+        tasks = value;
+        emit(GetTasksSucssesful());
+      });
+    }
+    else if (repeat == "daily") {
+      getTasksDaily(datab).then((value) {
+        tasks = [];
+        tasks = value;
+        emit(GetTasksSucssesful());
+      });
+    }
+    else if (repeat == "Monthly") {
+      getTasksMonthly(datab).then((value) {
+        tasks = [];
+        tasks = value;
+        emit(GetTasksSucssesful());
+      });
+    }
+    else if (repeat == "Never") {
+      getTasksDays(datab).then((value) {
+        tasks = [];
+        tasks = value;
+        print("tasks is ${tasks.toString()}");
+        emit(GetTasksSucssesful());
+      });
+    }
+
+  }
   Future<List<Map>> getAllDataBudget(datab) async {
     return await datab.rawQuery('SELECT*FROM BUDGET');
   }
@@ -218,14 +232,6 @@ class layoutCuibt extends Cubit<mytasks> {
     });
   }
 
-  void getUsersAfterChange() {
-    getDateUsers(datab).then((value) {
-      users = [];
-      users = value;
-      print(users);
-      emit(getUsersData());
-    });
-  }
 
   //insert new task in DateBase
   Future insert(
@@ -242,8 +248,8 @@ class layoutCuibt extends Cubit<mytasks> {
           .then((Id) {
         //to be can get the id of the task to make notification when the insert is done
         id = Id;
-        getDataTasksAfterChange();
-      }).catchError((error) {
+        insertTaskIntoVar(repeat,datab: datab);
+          }).catchError((error) {
         print(" the error is ${error.toString()}");
         emit(InsertDataBaseError());
       });
@@ -251,27 +257,7 @@ class layoutCuibt extends Cubit<mytasks> {
     });
   }
 
-  Future insertToUsers(
-      {required Name,
-      required Email,
-      required pass,
-      required phone,
-      required status}) async {
-    await datab.transaction((txn) {
-      txn
-          .rawInsert(
-              'INSERT INTO Users(Name,Email,pass,Phone,status)VALUES("$Name","$Email","$pass","$phone","$status")')
-          //'INSERT INTO TASKS(title,desc,time,data,repeat,priority)VALUES("$title","$desc","$time","$date","$repeat","$priority")')
-          .then((value) {
-        print("$value insertetd sucsseffly");
-        getUsersAfterChange();
-      }).catchError((error) {
-        print(" the error is ${error.toString()}");
-        emit(InsertDataBaseError());
-      });
-      return getname();
-    });
-  }
+
 
   //insert new budget in Database
   Future insertBudget(
@@ -345,8 +331,8 @@ class layoutCuibt extends Cubit<mytasks> {
         desc.text = value[0]["desc"];
         time.text = value[0]["time"].toString();
         date.text = value[0]["data"].toString();
-        firstValue = value[0]["repeat"];
-        scondValue = value[0]["priority"];
+        repeated = value[0]["repeat"];
+        priorityed = value[0]["priority"];
         AwesomeNotifications().cancel(id);
         AwesomeNotifications().cancelSchedule(id).then((_) {
           _handleNotification(value.first["repeat"], id);
@@ -358,16 +344,13 @@ class layoutCuibt extends Cubit<mytasks> {
   }
 
   //delete task from database
-  void delete({required int id}) async {
+  void delete({required int id,required rpeted}) async {
     await datab.rawDelete('DELETE FROM TASKS WHERE id=? ', [id]);
     AwesomeNotifications().cancel(id);
     AwesomeNotifications().cancelSchedule(id);
-    getDataTasks(datab).then((value) {
-      tasks = [];
-      tasks = value;
-      print(tasks);
-      emit(DeleteDataBaseSucssesful());
-    });
+    insertTaskIntoVar(rpeted,datab: datab);
+    emit(DeleteDataBaseSucssesful());
+
   }
 
   void deletebudget({required int id, required index}) async {
@@ -385,21 +368,26 @@ class layoutCuibt extends Cubit<mytasks> {
   void changevaluerepeat(
     value,
   ) {
-    firstValue = value;
+    repeated = value;
     emit(ChangeMyvaluerepet());
   }
-
+  void changeValueWeekDay(
+      value,
+      ) {
+    Weekday = value;
+    emit(ChangeMyvaluerepet());
+  }
   //change value of repeat priory
   void changevaluepri(
     value,
   ) {
-    scondValue = value;
+    priorityed = value;
     emit(ChangeMyvaluepri());
   }
 
   //method to press continue in step and insert task in database
-  void onPressedContinue(context, {notification = false}) async {
-    if (currentStep < 5) {
+  void onPressedContinue(context, {notification = false,myInterstitial}) async {
+    if (currentStep < 4) {
       currentStep += 1;
       emit(OnPressedonStepper());
     } else {
@@ -408,10 +396,14 @@ class layoutCuibt extends Cubit<mytasks> {
               desc: desc.text,
               time: time.text,
               date: date.text,
-              repeat: firstValue,
-              priority: scondValue)
+              repeat: repeated,
+              priority: priorityed
+      )
           .then((value) {
-        _handleNotification(firstValue, id);
+        _handleNotification(repeated, id);
+        if(myInterstitial!=null){
+          myInterstitial.show();
+        }
       });
 
       if (notification == false) {
@@ -421,15 +413,15 @@ class layoutCuibt extends Cubit<mytasks> {
     }
   }
 
-  void pressedContinueEdit({context, id, priority, repeat}) async {
+  void pressedContinueEdit({context, id, priority, repeat,myInterstitial}) async {
     if (currentStep < 5) {
       currentStep += 1;
       emit(OnPressedonStepper());
     } else {
       update(
         id: id,
-        priority: scondValue,
-        repeat: firstValue,
+        priority: priorityed,
+        repeat: repeated,
         Date: date.text,
         Time: time.text,
         Title: title.text,
@@ -439,6 +431,9 @@ class layoutCuibt extends Cubit<mytasks> {
       time.clear();
       date.clear();
       Navigator.pop(context);
+      if(myInterstitial!=null){
+        myInterstitial.show();
+      }
       emit(OnPressedonStepper());
     }
   }
@@ -464,7 +459,9 @@ class layoutCuibt extends Cubit<mytasks> {
     sherdprefrence.setdate(key: "salary", value: double.parse(value));
     salary = double.parse(value);
     salaryAfter = double.parse(value);
+
     salaryController.clear();
+print("salary is $salary and salary after is $salaryAfter");
     emit(getsallary());
   }
 
@@ -624,7 +621,7 @@ class layoutCuibt extends Cubit<mytasks> {
           "do you wanna repeat it ") {
         //to make method work to insert data to database and make notification
         currentStep = 6;
-        firstValue = robotChat[robotChat.length - 1].massage;
+        repeated = robotChat[robotChat.length - 1].massage;
         robotChat.add(robotResponded[6]);
         onPressedContinue(context, notification: true);
       } else if (robotChat[robotChat.length - 2].massage ==
@@ -841,7 +838,8 @@ class layoutCuibt extends Cubit<mytasks> {
             minute: minute,
             second: 00,
           ));
-    } else if (Repeat == "weekly") {
+    }
+    else if (Repeat == "weekly") {
       print("weekly");
       await AwesomeNotifications().createNotification(
           content: NotificationContent(
@@ -862,12 +860,13 @@ class layoutCuibt extends Cubit<mytasks> {
             repeats: true,
             allowWhileIdle: true,
             preciseAlarm: true,
-            weekday: 6,
+            weekday:int.parse(Weekday),
             hour: hour,
             minute: minute,
             second: 00,
           ));
-    } else if (Repeat == "Monthly") {
+    }
+    else if (Repeat == "Monthly") {
       print("monthly");
       await AwesomeNotifications().createNotification(
           content: NotificationContent(
@@ -888,13 +887,15 @@ class layoutCuibt extends Cubit<mytasks> {
             repeats: true,
             allowWhileIdle: true,
             preciseAlarm: true,
-            weekOfMonth: 1,
-            weekday: 6,
+            day: day,
             hour: hour,
             minute: minute,
+
             second: 00,
+
           ));
-    } else if (Repeat == "Never") {
+    }
+    else if (Repeat == "Never") {
       print("never");
       await AwesomeNotifications().createNotification(
         content: NotificationContent(
@@ -923,5 +924,19 @@ class layoutCuibt extends Cubit<mytasks> {
     desc.clear();
     time.clear();
     date.clear();
+  }
+  void faceBook() async{
+    var url = 'fb://facewebmodal/f?href=https://www.facebook.com/yuossfa';
+    if (await canLaunchUrl(Uri.parse(url))) {
+      await launchUrl(Uri.parse(url),mode: LaunchMode.externalNonBrowserApplication);
+    } else { throw 'There was a problem to open the url: $url'; }
+
+  }
+  void instagram() async{
+    var url = "instagram://user?username=_youssef_ahmed44";
+    if (await canLaunchUrl(Uri.parse(url))) {
+      await launchUrl(Uri.parse(url),mode: LaunchMode.externalNonBrowserApplication);
+    } else { throw 'There was a problem to open the url: $url'; }
+
   }
 }

@@ -1,4 +1,4 @@
-import 'dart:developer';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:my_task/lib/sherdeprefrence/sherdhelp.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -7,7 +7,6 @@ import 'package:my_task/Componads/Com.dart';
 import 'package:my_task/module/cuibt/cuibt.dart';
 import 'package:my_task/module/cuibt/loginstates.dart';
 import 'package:shimmer/shimmer.dart';
-import 'package:url_launcher/url_launcher.dart';
 import '../../Translition/locale_kays.g.dart';
 import '../bootChat/bootChat.dart';
 
@@ -19,7 +18,28 @@ class Settings extends StatefulWidget {
 }
 
 class _SettingsState extends State<Settings> {
-  @override
+ var myBanner;
+@override
+  void initState() {
+  BannerAd(
+    adUnitId: 'ca-app-pub-7041190612164401/7202609420',
+    size: AdSize.fullBanner,
+    request: AdRequest(),
+    listener: BannerAdListener(
+      onAdFailedToLoad:(Ad ad, LoadAdError error) {
+        myBanner=null;
+      },
+      onAdLoaded: (Ad ad) {
+        setState(() {
+          myBanner = ad;
+
+        });
+      },
+
+    ),
+  ).load();
+  super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<layoutCuibt, mytasks>(
@@ -27,6 +47,7 @@ class _SettingsState extends State<Settings> {
       builder: (context, state) {
         var _cuibt = layoutCuibt.get(context);
         var _size = MediaQuery.of(context).size;
+
         return Container(
           height: _size.height,
           width: _size.width,
@@ -46,6 +67,13 @@ class _SettingsState extends State<Settings> {
               ),
               child: ListView(
                 children: [
+                  if(myBanner!=null)
+                    Container(
+                      width:_size.width,
+                      height: _size.height*.06,
+                      child: AdWidget(
+                        ad: myBanner,
+                      )),
                   const SizedBox(height: 35),
                   Shimmer.fromColors(
                     child: Text(LocaleKeys.Settings.tr(),
@@ -57,32 +85,6 @@ class _SettingsState extends State<Settings> {
                     baseColor: Colors.black,
                     highlightColor: Colors.grey[400]!,
                     period: const Duration(milliseconds: 1000),
-                  ),
-                  const SizedBox(height: 35),
-                  ExpansionTile(
-                    title: Text(
-                      LocaleKeys.DarkMood.tr(),
-                      style: const TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    leading: const Icon(Icons.nightlight_round, size: 25),
-                    trailing: Switch.adaptive(
-                      autofocus: true,
-                      value: _cuibt.isDarkMode,
-                      onChanged: (value) {
-                        setState(() {
-                          _cuibt.isDarkMode = value;
-                          log("${_cuibt.isDarkMode}");
-                        });
-                      },
-                      splashRadius: 30,
-                      activeColor: Colors.teal,
-                      activeTrackColor: Colors.grey,
-                    ),
-                    textColor: Colors.black,
-                    iconColor: Colors.black,
                   ),
                   const SizedBox(height: 35),
                   ExpansionTile(
@@ -100,7 +102,7 @@ class _SettingsState extends State<Settings> {
                           leading: const Icon(Icons.language,
                               size: 25, color: Colors.black),
                           title: const Text(
-                            "Arabic",
+                            "العربيه",
                             style: TextStyle(
                                 fontSize: 20,
                                 fontWeight: FontWeight.bold,
@@ -149,15 +151,14 @@ class _SettingsState extends State<Settings> {
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        leading:
-                            Icon(Icons.add, size: 30, color: Colors.blue[700]),
+                        leading: Icon(Icons.add, size: 30, color: Colors.black),
                         trailing: Switch.adaptive(
                           autofocus: true,
                           value: _cuibt.taskReminder,
                           onChanged: (value) =>
                               _cuibt.cancelTaskReminder(value),
                           splashRadius: 30,
-                          activeColor: Colors.teal,
+                          activeColor: Colors.lightBlueAccent[700],
                           activeTrackColor: Colors.grey,
                         ),
                         textColor: Colors.black,
@@ -172,14 +173,14 @@ class _SettingsState extends State<Settings> {
                           ),
                         ),
                         leading: const Icon(Icons.attach_money,
-                            size: 30, color: Colors.teal),
+                            size: 30, color: Colors.lightGreenAccent),
                         trailing: Switch.adaptive(
                           autofocus: true,
                           value: _cuibt.moneyReminder,
                           onChanged: (value) =>
                               _cuibt.cancelMoneyReminder(value),
                           splashRadius: 30,
-                          activeColor: Colors.teal,
+                          activeColor: Colors.lightBlueAccent[700],
                           activeTrackColor: Colors.grey,
                         ),
                         textColor: Colors.black,
@@ -190,13 +191,13 @@ class _SettingsState extends State<Settings> {
                   const SizedBox(height: 35),
                   ExpansionTile(
                       title: Text(
-                        "income money",
+                        LocaleKeys.IncomeMoney.tr(),
                         style: const TextStyle(
                             fontSize: 20, fontWeight: FontWeight.bold),
                       ),
                       leading: const Icon(Icons.attach_money, size: 25),
                       subtitle: Text(
-                        "Select the date to get the money per month",
+                        LocaleKeys.IncomeMoneyDesc.tr(),
                         style: const TextStyle(
                           fontSize: 17,
                           fontWeight: FontWeight.bold,
@@ -205,14 +206,14 @@ class _SettingsState extends State<Settings> {
                       children: [
                         ListTile(
                           title: Text(
-                            "reset Budget",
+                            LocaleKeys.resetBudget.tr(),
                             style: const TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
                           leading: Icon(Icons.restart_alt_sharp,
-                              size: 25, color: Colors.blue[700]),
+                              size: 25, color: Colors.black),
                           style: ListTileStyle.drawer,
                           onTap: () {
                             showDialog(
@@ -258,14 +259,14 @@ class _SettingsState extends State<Settings> {
                         if (_cuibt.changeIncome == false)
                           ListTile(
                             title: Text(
-                              "Change your monthly income",
+                              LocaleKeys.ChangeIncome.tr(),
                               style: const TextStyle(
                                 fontSize: 20,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
                             leading: const Icon(Icons.attach_money,
-                                size: 25, color: Colors.teal),
+                                size: 30, color: Colors.lightGreenAccent),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(25),
                             ),
@@ -315,7 +316,7 @@ class _SettingsState extends State<Settings> {
                     ),
                     leading: const Icon(Icons.contacts_rounded, size: 25),
                     subtitle: Text(
-                      "Contact us for any help or suggestions",
+                      LocaleKeys.descContact.tr(),
                       style: const TextStyle(
                         fontSize: 17,
                         fontWeight: FontWeight.bold,
@@ -323,7 +324,7 @@ class _SettingsState extends State<Settings> {
                     ),
                     children: [
                       ListTile(
-                        title: Text("facebook",
+                        title: Text(LocaleKeys.Facebook.tr(),
                             style: const TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.bold,
@@ -337,7 +338,7 @@ class _SettingsState extends State<Settings> {
                         },
                       ),
                       ListTile(
-                        title: Text("instagram",
+                        title: Text(LocaleKeys.instagram.tr(),
                             style: const TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.bold,
@@ -361,16 +362,16 @@ class _SettingsState extends State<Settings> {
                     ),
                     leading: const Icon(Icons.person, size: 25),
                     children: [
-                      Padding(
-                        padding: const EdgeInsets.all(10.0),
-                        child: Text(
-                          "i'm youssef ahmed ✌️ \ni'm have a big dream to make a app that help people ❤️\nand manage their money and there time and there is a lot of thing that i want to do to make this app better and better 💪 ",
+                      Text(LocaleKeys.DevelopedBy.tr(),
                           style: const TextStyle(
-                            fontSize: 17,
+                            fontSize: 20,
                             fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      )
+                          )),
+                      Text(LocaleKeys.Version.tr(),
+                          style: const TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          )),
                     ],
                   ),
                   const SizedBox(height: 35),

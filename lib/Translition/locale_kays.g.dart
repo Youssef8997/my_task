@@ -88,5 +88,19 @@ abstract class  LocaleKeys {
   static const cancel = 'cancel';
   static const AddTaskReminder = 'AddTaskReminder';
   static const AddMoneyReminder = 'AddMoneyReminder';
+  static const instagram = 'instagram';
+  static const Facebook = 'Facebook';
+  static const resetBudget = 'resetBudget';
+  static const ChangeIncome = 'ChangeIncome';
+  static const descContact = 'descContact';
+  static const IncomeMoney = 'IncomeMoney';
+  static const IncomeMoneyDesc = 'IncomeMoneyDesc';
+  static const Never = 'Never';
+  static const Monthly = 'Monthly';
+  static const Weekly = 'Weekly';
+  static const Daily = 'Daily';
+  static const repeat = 'repeat';
+  static const DevelopedBy = 'DevelopedBy';
+  static const Version = 'Version';
 
 }

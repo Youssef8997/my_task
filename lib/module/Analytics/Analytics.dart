@@ -1,10 +1,10 @@
-import 'dart:io';
 
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:date_picker_timeline/date_picker_widget.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:shimmer/shimmer.dart';
 import '../../Translition/locale_kays.g.dart';
 import '../../resorces/Resorces.dart';
@@ -17,6 +17,26 @@ class analytics extends StatefulWidget {
 
 class _analyticsState extends State<analytics> {
   var _date = DateFormat.yMMMd().format(DateTime.now());
+  var myBanner ;
+@override
+  void initState() {
+  BannerAd(
+  adUnitId: 'ca-app-pub-7041190612164401/3454936100',
+  size: AdSize.fullBanner,
+  request: AdRequest(),
+  listener: BannerAdListener(
+  onAdFailedToLoad:(Ad ad, LoadAdError error) {
+  print(error);
+  },
+  onAdLoaded: (Ad ad) {
+    setState(() {
+      myBanner = ad;
+    });
+  }
+  ),
+  ).load();
+  super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<layoutCuibt,mytasks>
@@ -37,6 +57,13 @@ class _analyticsState extends State<analytics> {
             child:SafeArea(
               child: Column(
                 children: [
+                  if(myBanner!=null)
+                  Container(
+                      width: myBanner.size.width.toDouble(),
+                      height: myBanner.size.height.toDouble(),
+                      child: AdWidget(
+                        ad: myBanner,
+                      )),
                   dateCalendar(context,size),
                   Align(
                     alignment: Alignment.topRight,
@@ -117,6 +144,7 @@ class _analyticsState extends State<analytics> {
       child: DatePicker(
           DateTime(DateTime.now().year, DateTime.now().month-1, DateTime.now().day+15),
           initialSelectedDate: DateTime.now(),
+          daysCount: 18,
           selectionColor: Colors.black,
           selectedTextColor: Colors.white,
           locale:context.locale.languageCode,

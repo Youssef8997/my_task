@@ -41,18 +41,14 @@ dependencies:
   easy_localization: ^3.0.1
   condition: ^0.0.8
   conditional_builder_null_safety: ^0.0.6
-  hexcolor: ^2.0.5
   shared_preferences: ^2.0.11
   bottom_navy_bar: ^6.0.0
-  flutter_zoom_drawer: ^2.2.2+1
   google_fonts: ^2.2.0
   cupertino_stepper: ^0.2.1
   date_picker_timeline: ^1.2.3
   blurrycontainer: ^0.1.0
-  fl_chart: ^0.41.0
   awesome_notifications: ^0.6.21
   percent_indicator: ^3.4.0
-  motion_toast: ^2.1.1
   shimmer: ^2.0.0
   google_mobile_ads: ^2.0.0
   url_launcher: ^6.1.5

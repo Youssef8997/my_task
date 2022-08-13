@@ -70,7 +70,6 @@ Future<void> main() async {
   );
   await sherdprefrence.init();
   bool? IsfirstTime = sherdprefrence.getdate(key: "spalsh");
-  bool? IsLogin = sherdprefrence.getdate(key: "login");
   runApp(
     EasyLocalization(
         supportedLocales:const [
@@ -80,18 +79,15 @@ Future<void> main() async {
         path: 'Asset/Translition', // <-- change the path of the translation files
         fallbackLocale:const Locale('en'),
         assetLoader: CodegenLoader(),
-        child:MyApp(IsfirstTime, IsLogin)
+        child:MyApp(IsfirstTime)
     ),
   );
-/*
-  runApp(MyApp(IsfirstTime, IsLogin));
-*/
-}
 
+}
+// ignore: must_be_immutable
 class MyApp extends StatelessWidget {
   bool? firstTime;
-  bool? isLogin;
-  MyApp(this.firstTime, this.isLogin);
+  MyApp(this.firstTime);
 
   // This widget is the root of your application.
   @override
@@ -125,7 +121,7 @@ class MyApp extends StatelessWidget {
                       fontWeight: FontWeight.bold,
                       fontStyle: FontStyle.italic))),
           home: SplashScreen(
-              firstTime: firstTime ?? false, isLogin: isLogin ?? false),
+              firstTime: firstTime ?? true,),
         ));
   }
 }

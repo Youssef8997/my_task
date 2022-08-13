@@ -2,33 +2,45 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:lottie/lottie.dart';
 import 'package:my_task/Componads/Com.dart';
-import 'package:my_task/module/Login/Login.dart';
 import '../../resorces/Resorces.dart';
 import '../homelayout/layout.dart';
 import '../on_boarding_screen/onBoarding.dart';
+// ignore: must_be_immutable
 class SplashScreen extends StatefulWidget {
   late bool firstTime;
-  late bool isLogin;
-   SplashScreen({super.key, required this.firstTime, required this.isLogin});
+   SplashScreen({super.key, required this.firstTime,});
 
   @override
-  State<SplashScreen> createState() => _SplashScreenState(firstTime: firstTime,isLogin: isLogin);
+  State<SplashScreen> createState() => _SplashScreenState(firstTime: firstTime);
 }
 
 class _SplashScreenState extends State<SplashScreen>
     with TickerProviderStateMixin {
   late final AnimationController _controller;
 late bool? firstTime;
-late bool? isLogin;
-  _SplashScreenState({required this.firstTime,required this.isLogin});
+  _SplashScreenState({required this.firstTime});
+  var rewardedAd;
   @override
   void initState() {
+    RewardedAd.load(
+        adUnitId: 'ca-app-pub-7041190612164401/4845136872',
+        request: AdRequest(),
+        rewardedAdLoadCallback: RewardedAdLoadCallback(
+          onAdLoaded: (RewardedAd ad) {
+            print('$ad loaded.');
+            rewardedAd = ad;
+          },
+          onAdFailedToLoad: (LoadAdError error) {
+            print('RewardedAd failed to load: $error');
+          },
+
+        ));
     _controller = AnimationController(vsync: this);
-    firstTime ??= false;
-    isLogin ??= false;
-    log("firstTime:$firstTime ,isLogin:$isLogin");
+    firstTime ??= true;
+
     super.initState();
 
   }
@@ -61,7 +73,7 @@ late bool? isLogin;
                 reverse: true,
                 repeat: true,
                 onLoaded: (composition) {
-                  if (firstTime==false) {
+                  if (firstTime==true) {
                     log("Im in FIRST TIME");
                     _controller
                       ..duration = composition.duration
@@ -70,24 +82,22 @@ late bool? isLogin;
                           page: const OnBoarding(),
                           bool: false));
                   }
-                  if(firstTime==true){
-                   if (isLogin == false) {
-                    _controller
-                      ..duration = composition.duration
-                      ..forward().then((value) => Nevigator(
-                          context: context,
-                          page:  Login(),
-                          bool: false));
-                  }
                    else{
                      _controller
                        ..duration = composition.duration
-                       ..forward().then((value) => Nevigator(
-                           context: context,
-                           page:  homelayout(),
-                           bool: false));
+                       ..forward().then((value) {
+                         Nevigator(
+                             context: context,
+                             page: homelayout(),
+                             bool: false);
+                         if(rewardedAd!=null) {
+                           rewardedAd.show(
+                               onUserEarnedReward: (AdWithoutView ad,
+                                   RewardItem rewardItem) {});
+                         }
+                       });
                    }
-                  }
+
 
                 },
               ),

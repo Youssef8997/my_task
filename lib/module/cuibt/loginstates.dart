@@ -1,6 +1,7 @@
 
 abstract class mytasks{}
 class  mytasksstateinisal  extends mytasks{}
+class  GetTasksSucssesful  extends mytasks{}
 class  ChangeMyIndex  extends mytasks{}
 class  ChangeMyvaluerepet  extends mytasks{}
 class  ChangeMyvaluepri  extends mytasks{}

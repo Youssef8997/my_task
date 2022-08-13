@@ -55,6 +55,7 @@ class _homelayoutState extends State<homelayout> {
           layoutCuibt.get(context).MyIndex = 1;
         });
       }
+
     });
     //to ask for permission to access the notification
     AwesomeNotifications().isNotificationAllowed().then(
@@ -98,7 +99,11 @@ class _homelayoutState extends State<homelayout> {
               setState(() {
                 layoutCuibt.get(context).MyIndex = 0;
               });
-              layoutCuibt.get(context).delete(id: notification.id!);
+
+              print(notification.dismissedDate);
+/*
+              layoutCuibt.get(context).delete(id: notification.id!,rpeted: "Never");
+*/
             }
             if (notification.channelKey == "chatBoot") {
               Navigator.push(
@@ -166,7 +171,7 @@ class _homelayoutState extends State<homelayout> {
                 containerHeight: 60,
                 itemCornerRadius: 25.0,
                 curve: Curves.fastOutSlowIn,
-                animationDuration: const Duration(milliseconds: 900),
+                animationDuration: const Duration(milliseconds: 600),
                 selectedIndex: cuibt.MyIndex,
                 showElevation: false, // use this to remove appBar's elevation
                 onItemSelected: (index) {
