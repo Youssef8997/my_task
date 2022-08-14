@@ -3,6 +3,8 @@ import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:my_task/Componads/Com.dart';
+import 'package:my_task/Model/Model.dart';
 import 'package:my_task/Translition/locale_kays.g.dart';
 import 'package:my_task/lib/sherdeprefrence/sherdhelp.dart';
 import 'package:my_task/module/AddTasks/AddTasks.dart';
@@ -12,11 +14,11 @@ import 'package:my_task/module/Setting/Settings.dart';
 import 'package:my_task/module/cuibt/loginstates.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:url_launcher/url_launcher.dart';
-import '../../../Componads/Com.dart';
-import '../../../Model/Model.dart';
 import '../Analytics/Analytics.dart';
+
 class layoutCuibt extends Cubit<mytasks> {
   layoutCuibt() : super(mytasksstateinisal());
+
   static layoutCuibt get(context) => BlocProvider.of(context);
   var MyIndex = 0;
   late Database datab;
@@ -75,7 +77,7 @@ class layoutCuibt extends Cubit<mytasks> {
   var addTask = GlobalKey<FormState>();
   var repeated = "Never";
   var priorityed = "low";
-  var Weekday = "1";
+  var Weekday = 1;
   var id = 1;
   var onDate = DateFormat.yMMMd().format(DateTime.now());
   var titleController = TextEditingController();
@@ -84,7 +86,7 @@ class layoutCuibt extends Cubit<mytasks> {
   var dataController = TextEditingController();
   var moneyController = TextEditingController();
   var salaryController = TextEditingController();
-  bool changeIncome= false;
+  bool changeIncome = false;
   var controller = PageController(initialPage: 0);
   List body = [
     const HomeTasks(),
@@ -92,6 +94,7 @@ class layoutCuibt extends Cubit<mytasks> {
     analytics(),
     const Settings(),
   ];
+
   void ChangeIndex(index) {
     MyIndex = index;
     /*pageController.animateToPage(index,
@@ -103,10 +106,10 @@ class layoutCuibt extends Cubit<mytasks> {
   void createDataBase() async {
     datab = await openDatabase("endtask.db", version: 1,
         onCreate: (datab, version) {
-          sherdprefrence.setdate(key: "ResetBudget",value: true);
+      sherdprefrence.setdate(key: "ResetBudget", value: true);
       print("create data base");
       datab.execute(
-          'CREATE TABLE TASKS (id INTEGER PRIMARY KEY,title TEXT,desc TEXT,data TEXT ,time STRING,repeat TEXT,priority TEXT)');
+            'CREATE TABLE TASKS (id INTEGER PRIMARY KEY,title TEXT,desc TEXT,data TEXT ,time STRING,repeat TEXT,priority TEXT,WeekDay TEXT)');
       datab
           .execute(
               'CREATE TABLE BUDGET (id INTEGER PRIMARY KEY,title TEXT,MONEY num, MONEYAfter num,data STRING,catogry TEXT)')
@@ -117,15 +120,9 @@ class layoutCuibt extends Cubit<mytasks> {
         emit(CreateDataBaseError());
       });
     }, onOpen: (datab) {
-      print("open data base");
       onDate = DateFormat.yMMMd("en").format(DateTime.now());
-      insertTaskIntoVar("daily",datab: datab);
+      insertTaskIntoVar("Never", datab: datab);
       insertBudgetIntoVar(datab: datab);
-      getAllDataBudget(datab).then((value) {
-        budget = [];
-        budget = value;
-        emit(GetDatabudgetSucssesful());
-      });
     });
   }
 
@@ -141,45 +138,46 @@ class layoutCuibt extends Cubit<mytasks> {
 
   //get all Tasks in the specific date from Database
   Future<List<Map>> getTasksDays(datab) async {
-    return await datab.rawQuery('SELECT*FROM TASKS WHERE data=?', [onDate]);
+    return await datab.rawQuery(
+        'SELECT*FROM TASKS WHERE data=? AND repeat=?', [onDate, "Never"]);
   }
+
   //get all Tasks which repeatedly every week from Database
   Future<List<Map>> getTasksWeekly(datab) async {
     return await datab.rawQuery('SELECT*FROM TASKS WHERE repeat=?', ["Weekly"]);
   }
+
   Future<List<Map>> getTasksDaily(datab) async {
     return await datab.rawQuery('SELECT*FROM TASKS WHERE repeat=? ', ["Daily"]);
   }
+
   //get all Tasks which repeatedly every month from Database
   Future<List<Map>> getTasksMonthly(datab) async {
-    return await datab.rawQuery('SELECT*FROM TASKS WHERE repeat=?', ["Monthly"]);
+    return await datab
+        .rawQuery('SELECT*FROM TASKS WHERE repeat=?', ["Monthly"]);
   }
 
 // to insert task into List Which will be used in the HomeTasks page
-  void insertTaskIntoVar(repeat,{datab}) {
-    print(" this is $repeat");
-    if (repeat == "weekly") {
+  void insertTaskIntoVar(repeat, {datab}) {
+    if (repeat == "Weekly") {
       getTasksWeekly(datab).then((value) {
         tasks = [];
         tasks = value;
         emit(GetTasksSucssesful());
       });
-    }
-    else if (repeat == "daily") {
+    } else if (repeat == "daily") {
       getTasksDaily(datab).then((value) {
         tasks = [];
         tasks = value;
         emit(GetTasksSucssesful());
       });
-    }
-    else if (repeat == "Monthly") {
+    } else if (repeat == "Monthly") {
       getTasksMonthly(datab).then((value) {
         tasks = [];
         tasks = value;
         emit(GetTasksSucssesful());
       });
-    }
-    else if (repeat == "Never") {
+    } else if (repeat == "Never") {
       getTasksDays(datab).then((value) {
         tasks = [];
         tasks = value;
@@ -187,23 +185,24 @@ class layoutCuibt extends Cubit<mytasks> {
         emit(GetTasksSucssesful());
       });
     }
-
   }
+
   Future<List<Map>> getAllDataBudget(datab) async {
     return await datab.rawQuery('SELECT*FROM BUDGET');
   }
+
   //get all Budget in the specific date from Database
   Future<List<Map>> getDataBudget(datab) async {
     return await datab.rawQuery('SELECT*FROM BUDGET WHERE data=?', [onDate]);
   }
-  void insertBudgetIntoVar({datab,context}) {
+
+  void insertBudgetIntoVar({datab, context}) {
     getDataBudget(datab).then((value) {
       budget = [];
       budget = value;
       emit(getsallaryafter());
     });
   }
-
 
   Future<List<Map>> getDateUsers(datab) async {
     return await datab.rawQuery('SELECT*FROM Users');
@@ -232,7 +231,6 @@ class layoutCuibt extends Cubit<mytasks> {
     });
   }
 
-
   //insert new task in DateBase
   Future insert(
       {required title,
@@ -244,20 +242,18 @@ class layoutCuibt extends Cubit<mytasks> {
     await datab.transaction((txn) {
       txn
           .rawInsert(
-              'INSERT INTO TASKS(title,desc,time,data,repeat,priority)VALUES("$title","$desc","$time","$date","$repeat","$priority")')
+              'INSERT INTO TASKS(title,desc,time,data,repeat,priority,WeekDay)VALUES("$title","$desc","$time","$date","$repeat","$priority","$Weekday")')
           .then((Id) {
         //to be can get the id of the task to make notification when the insert is done
         id = Id;
-        insertTaskIntoVar(repeat,datab: datab);
-          }).catchError((error) {
+        insertTaskIntoVar(repeat, datab: datab);
+      }).catchError((error) {
         print(" the error is ${error.toString()}");
         emit(InsertDataBaseError());
       });
       return getname();
     });
   }
-
-
 
   //insert new budget in Database
   Future insertBudget(
@@ -344,13 +340,12 @@ class layoutCuibt extends Cubit<mytasks> {
   }
 
   //delete task from database
-  void delete({required int id,required rpeted}) async {
+  void delete({required int id, required rpeted}) async {
     await datab.rawDelete('DELETE FROM TASKS WHERE id=? ', [id]);
     AwesomeNotifications().cancel(id);
     AwesomeNotifications().cancelSchedule(id);
-    insertTaskIntoVar(rpeted,datab: datab);
+    insertTaskIntoVar(rpeted, datab: datab);
     emit(DeleteDataBaseSucssesful());
-
   }
 
   void deletebudget({required int id, required index}) async {
@@ -363,7 +358,26 @@ class layoutCuibt extends Cubit<mytasks> {
       emit(getsallaryafter());
     });
   }
-
+  String handleWeekDays(String WeekDay){
+    switch(WeekDay){
+      case "7":
+        return "Sunday";
+      case "1":
+        return "Monday";
+      case "2":
+        return "Tuesday";
+      case "3":
+        return "Wednesday";
+      case "4":
+        return "Thursday";
+      case "5":
+        return "Friday";
+      case "6":
+        return "Saturday";
+      default:
+        return "unknown";
+    }
+  }
   //change value of repeat step
   void changevaluerepeat(
     value,
@@ -371,12 +385,14 @@ class layoutCuibt extends Cubit<mytasks> {
     repeated = value;
     emit(ChangeMyvaluerepet());
   }
+
   void changeValueWeekDay(
-      value,
-      ) {
+    value,
+  ) {
     Weekday = value;
     emit(ChangeMyvaluerepet());
   }
+
   //change value of repeat priory
   void changevaluepri(
     value,
@@ -386,7 +402,8 @@ class layoutCuibt extends Cubit<mytasks> {
   }
 
   //method to press continue in step and insert task in database
-  void onPressedContinue(context, {notification = false,myInterstitial}) async {
+  void onPressedContinue(context,
+      {notification = false, myInterstitial}) async {
     if (currentStep < 4) {
       currentStep += 1;
       emit(OnPressedonStepper());
@@ -397,11 +414,10 @@ class layoutCuibt extends Cubit<mytasks> {
               time: time.text,
               date: date.text,
               repeat: repeated,
-              priority: priorityed
-      )
+              priority: priorityed)
           .then((value) {
         _handleNotification(repeated, id);
-        if(myInterstitial!=null){
+        if (myInterstitial != null) {
           myInterstitial.show();
         }
       });
@@ -413,7 +429,8 @@ class layoutCuibt extends Cubit<mytasks> {
     }
   }
 
-  void pressedContinueEdit({context, id, priority, repeat,myInterstitial}) async {
+  void pressedContinueEdit(
+      {context, id, priority, repeat, myInterstitial}) async {
     if (currentStep < 5) {
       currentStep += 1;
       emit(OnPressedonStepper());
@@ -431,7 +448,7 @@ class layoutCuibt extends Cubit<mytasks> {
       time.clear();
       date.clear();
       Navigator.pop(context);
-      if(myInterstitial!=null){
+      if (myInterstitial != null) {
         myInterstitial.show();
       }
       emit(OnPressedonStepper());
@@ -461,7 +478,7 @@ class layoutCuibt extends Cubit<mytasks> {
     salaryAfter = double.parse(value);
 
     salaryController.clear();
-print("salary is $salary and salary after is $salaryAfter");
+    print("salary is $salary and salary after is $salaryAfter");
     emit(getsallary());
   }
 
@@ -524,7 +541,7 @@ print("salary is $salary and salary after is $salaryAfter");
   // to convert time when be pm to make hour 24 h
   int _convertHourWhenPm(String time) {
     log(time);
-    if (time.split(":")[1].split(" ")[1] == "PM") {
+    if (time.split(":")[1].split(" ")[1] == "PM"||time.split(":")[1].split(" ")[1] == "م") {
       if (int.parse(time.split(":")[0]) < 12) {
         return int.parse(time.split(":")[0]) + 12;
       } else {
@@ -668,7 +685,7 @@ print("salary is $salary and salary after is $salaryAfter");
         robotChat.add(robotResponded[6]);
         insertBudget(
             title: titleController.text,
-            money: double.tryParse(moneyController.text)??0.0,
+            money: double.tryParse(moneyController.text) ?? 0.0,
             data: dataController.text,
             category: catagoryController.text);
       }
@@ -810,11 +827,11 @@ print("salary is $salary and salary after is $salaryAfter");
     int day = int.parse(date.text.split(" ")[1].split(",")[0]);
     int hour = _convertHourWhenPm(time.text);
     int minute = int.parse(time.text.split(":")[1].split(" ")[0]);
+    print("${hour} ${minute}");
     //to increase the badge number
     await AwesomeNotifications().getGlobalBadgeCounter().then(
         (badge) => AwesomeNotifications().setGlobalBadgeCounter(badge + 1));
     if (Repeat == "Daily") {
-      print("daily");
       await AwesomeNotifications().createNotification(
           content: NotificationContent(
             id: id,
@@ -839,8 +856,7 @@ print("salary is $salary and salary after is $salaryAfter");
             second: 00,
           ));
     }
-    else if (Repeat == "weekly") {
-      print("weekly");
+    else if (Repeat == "Weekly") {
       await AwesomeNotifications().createNotification(
           content: NotificationContent(
             id: id,
@@ -860,14 +876,13 @@ print("salary is $salary and salary after is $salaryAfter");
             repeats: true,
             allowWhileIdle: true,
             preciseAlarm: true,
-            weekday:int.parse(Weekday),
+            weekday: Weekday,
             hour: hour,
             minute: minute,
             second: 00,
           ));
     }
     else if (Repeat == "Monthly") {
-      print("monthly");
       await AwesomeNotifications().createNotification(
           content: NotificationContent(
             id: id,
@@ -890,13 +905,10 @@ print("salary is $salary and salary after is $salaryAfter");
             day: day,
             hour: hour,
             minute: minute,
-
             second: 00,
-
           ));
     }
     else if (Repeat == "Never") {
-      print("never");
       await AwesomeNotifications().createNotification(
         content: NotificationContent(
           id: id,
@@ -925,18 +937,26 @@ print("salary is $salary and salary after is $salaryAfter");
     time.clear();
     date.clear();
   }
-  void faceBook() async{
+
+  void faceBook() async {
     var url = 'fb://facewebmodal/f?href=https://www.facebook.com/yuossfa';
     if (await canLaunchUrl(Uri.parse(url))) {
-      await launchUrl(Uri.parse(url),mode: LaunchMode.externalNonBrowserApplication);
-    } else { throw 'There was a problem to open the url: $url'; }
-
+      await launchUrl(Uri.parse(url),
+          mode: LaunchMode.externalNonBrowserApplication);
+    } else {
+      throw 'There was a problem to open the url: $url';
+    }
   }
-  void instagram() async{
+
+  void instagram() async {
     var url = "instagram://user?username=_youssef_ahmed44";
     if (await canLaunchUrl(Uri.parse(url))) {
-      await launchUrl(Uri.parse(url),mode: LaunchMode.externalNonBrowserApplication);
-    } else { throw 'There was a problem to open the url: $url'; }
-
+      await launchUrl(Uri.parse(url),
+          mode: LaunchMode.externalNonBrowserApplication);
+    } else {
+      throw 'There was a problem to open the url: $url';
+    }
   }
+
+
 }

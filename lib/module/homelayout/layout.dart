@@ -156,6 +156,7 @@ class _homelayoutState extends State<homelayout> {
                 activeColor: Colors.blue),
           ];
           return Scaffold(
+            resizeToAvoidBottomInset: false,
             appBar: AppBar(
               systemOverlayStyle: const SystemUiOverlayStyle(
                 statusBarColor: Colors.black,

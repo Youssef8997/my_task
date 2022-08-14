@@ -13,6 +13,9 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   MobileAds.instance.initialize();
+  ErrorWidget.builder = (FlutterErrorDetails details) {
+    return Container(color: Colors.transparent,);
+  };
   await EasyLocalization.ensureInitialized();
   AwesomeNotifications().initialize(
     null,

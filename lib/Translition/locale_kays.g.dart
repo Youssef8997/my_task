@@ -102,5 +102,19 @@ abstract class  LocaleKeys {
   static const repeat = 'repeat';
   static const DevelopedBy = 'DevelopedBy';
   static const Version = 'Version';
+  static const Filters = 'Filters';
+  static const dayOfWeek = 'dayOfWeek';
+  static const Sunday = 'Sunday';
+  static const Monday = 'Monday';
+  static const Tuesday = 'Tuesday';
+  static const Wednesday = 'Wednesday';
+  static const Thursday = 'Thursday';
+  static const Friday = 'Friday';
+  static const Saturday = 'Saturday';
+  static const dateReminder = 'dateReminder';
+  static const SavingTitle = 'SavingTitle';
+  static const ReasonSaving = 'ReasonSaving';
+  static const moneySaving = 'moneySaving';
+
 
 }

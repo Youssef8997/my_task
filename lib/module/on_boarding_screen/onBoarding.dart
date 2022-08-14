@@ -199,7 +199,7 @@ Widget page(pagemodel module, context) {
       Align(
         alignment: AlignmentDirectional.topCenter,
         child: SizedBox(
-            height: size.height * .6,
+            height: size.height * .7,
             width: 400,
             child: Image.asset(
               filterQuality: FilterQuality.high,

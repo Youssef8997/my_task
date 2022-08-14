@@ -22,25 +22,26 @@ class _moneyOraganizeState extends State<moneyOraganize> {
   var salaryController = TextEditingController();
   var scrollController = ScrollController();
   var gaining = false;
-  var myBanner ;
+  var myBanner;
 
   @override
   void initState() {
     layoutCuibt.get(context).insertBudgetIntoVar(
         datab: layoutCuibt.get(context).datab, context: context);
-     BannerAd(
-    adUnitId: 'ca-app-pub-7041190612164401/7394181118',
-    size: AdSize.fullBanner,
-    request: AdRequest(),
-    listener: BannerAdListener(
-    onAdFailedToLoad: (Ad ad, LoadAdError error) {
-     print(error);
-    },
-      onAdLoaded: (Ad ad) {
-setState(() {
-  myBanner= ad;
-});      },
-    ),
+    BannerAd(
+      adUnitId: 'ca-app-pub-7041190612164401/7394181118',
+      size: AdSize.fullBanner,
+      request: AdRequest(),
+      listener: BannerAdListener(
+        onAdFailedToLoad: (Ad ad, LoadAdError error) {
+          print(error);
+        },
+        onAdLoaded: (Ad ad) {
+          setState(() {
+            myBanner = ad;
+          });
+        },
+      ),
     ).load();
     super.initState();
   }
@@ -94,7 +95,7 @@ setState(() {
           var size = MediaQuery.of(context).size;
           double precent = (cuibt.salaryAfter / cuibt.salary);
           return ConditionalBuilder(
-            condition: cuibt.salary != 0 ,
+            condition: cuibt.salary != 0,
             builder: (context) => SafeArea(
               top: true,
               bottom: false,
@@ -111,13 +112,13 @@ setState(() {
                   ),
                   child: Column(
                     children: [
-                      if(myBanner != null)
-                      Container(
-                        width: size.width,
-                        height: size.height*.06,
-                          child: AdWidget(
-                        ad: myBanner,
-                      )),
+                      if (myBanner != null)
+                        Container(
+                            width: size.width,
+                            height: size.height * .06,
+                            child: AdWidget(
+                              ad: myBanner,
+                            )),
                       Flexible(
                           child: precentgeCircular(
                         size,
@@ -125,8 +126,8 @@ setState(() {
                       )),
                       Flexible(
                           flex: 2,
-                          child: showCategoryByGridView(
-                              context, cuibt,Category)),
+                          child:
+                              showCategoryByGridView(context, cuibt, Category)),
                       const SizedBox(height: 25)
                     ],
                   ),
@@ -144,12 +145,12 @@ setState(() {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    if(myBanner != null)
-                    Container(
-                      height: size.height * 0.07,
-                      width: size.width,
-                      child: AdWidget(ad: myBanner),
-                    ),
+                    if (myBanner != null)
+                      Container(
+                        height: size.height * 0.07,
+                        width: size.width,
+                        child: AdWidget(ad: myBanner),
+                      ),
                     const SizedBox(
                       height: 100,
                     ),
@@ -193,20 +194,15 @@ setState(() {
         });
   }
 
-  Widget showCategoryByGridView(
-      context, layoutCuibt cuibt,Category) {
+  Widget showCategoryByGridView(context, layoutCuibt cuibt, Category) {
     return GridView.count(
       shrinkWrap: true,
       controller: scrollController,
       keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.manual,
       scrollDirection: Axis.horizontal,
       crossAxisCount: 3,
-      children: List.generate(
-          Category.length,
-          (index) => categoryAvatar(
-              Category[index],
-              context,
-              cuibt)),
+      children: List.generate(Category.length,
+          (index) => categoryAvatar(Category[index], context, cuibt)),
     );
   }
 
@@ -427,7 +423,9 @@ setState(() {
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         Text(
-                          LocaleKeys.SheetTitle.tr(),
+                          category == LocaleKeys.MoneySaving.tr()
+                              ? LocaleKeys.SavingTitle.tr()
+                              : LocaleKeys.SheetTitle.tr(),
                           style: const TextStyle(
                               fontWeight: FontWeight.w900,
                               fontSize: 20.0,
@@ -436,7 +434,9 @@ setState(() {
                         ),
                         Mytextfield(
                             Controlr: cuibt.titleController,
-                            hint: LocaleKeys.ReasonHint.tr(),
+                            hint: category == LocaleKeys.MoneySaving.tr()
+                                ? LocaleKeys.ReasonSaving.tr()
+                                : LocaleKeys.ReasonHint.tr(),
                             validator: (value) {
                               if (value.isEmpty) {
                                 return "Please enter a title";
@@ -453,10 +453,12 @@ setState(() {
                                     hint: LocaleKeys.when.tr(),
                                     func: () => showDatePicker(
                                           context: context,
-                                          initialDate: DateTime.now(),
-                                          firstDate: DateTime.now(),
-                                          lastDate:
-                                              DateTime.parse('2022-11-07'),
+                                      initialDate: DateTime.now(),
+                                      firstDate: DateTime(
+                                          DateTime.now().year,
+                                          DateTime.now().month - 2,
+                                          DateTime.now().day),
+                                      lastDate: DateTime.now(),
                                         ).then((value) {
                                           value ??= DateTime.now();
                                           cuibt.budgetDate(value);
@@ -481,7 +483,9 @@ setState(() {
                             keybordtype:
                                 const TextInputType.numberWithOptions(),
                             Controlr: cuibt.moneyController,
-                            hint: LocaleKeys.HowMuch.tr(),
+                            hint: category == LocaleKeys.MoneySaving.tr()
+                                ? LocaleKeys.moneySaving.tr()
+                                : LocaleKeys.HowMuch.tr(),
                             validator: (value) {
                               if (value.isEmpty) {
                                 return "Please enter a money";

@@ -18,6 +18,7 @@ var now = DateTime.now();
 
 class Tasks extends StatefulWidget {
   final int? id;
+
   const Tasks({super.key, this.id});
 
   @override
@@ -26,8 +27,11 @@ class Tasks extends StatefulWidget {
 
 class _TasksState extends State<Tasks> {
   final int? id;
+
   _TasksState({this.id});
+
   var Interstitial;
+
   @override
   void initState() {
     time.text = DateFormat('H:mm a', "en").format(now);
@@ -58,10 +62,18 @@ class _TasksState extends State<Tasks> {
           var size = MediaQuery.of(context).size;
           var cuibt = layoutCuibt.get(context);
           List repeated = [
+            LocaleKeys.Never.tr(),
             LocaleKeys.Daily.tr(),
             LocaleKeys.Weekly.tr(),
             LocaleKeys.Monthly.tr(),
-            LocaleKeys.Never.tr()
+
+          ];
+          List values = [
+            "Never",
+            "Daily",
+           "Weekly",
+            "Monthly",
+
           ];
           return Scaffold(
             extendBodyBehindAppBar: true,
@@ -76,7 +88,7 @@ class _TasksState extends State<Tasks> {
                         child: ListView.separated(
                           scrollDirection: Axis.horizontal,
                           itemBuilder: (context, i) =>
-                              categoryAvatar(repeated[i], size, cuibt),
+                              categoryAvatar(repeated[i], size, cuibt, values[i]),
                           separatorBuilder: (context, _) => SizedBox(
                             width: 25,
                           ),
@@ -141,7 +153,7 @@ class _TasksState extends State<Tasks> {
         ),
         Step(
           title: Text(
-              cuibt.repeated == "Never" ? LocaleKeys.Date.tr() : "date of task",
+               LocaleKeys.Date.tr() ,
               style: const TextStyle(
                   color: Colors.black,
                   fontSize: 18,
@@ -153,6 +165,7 @@ class _TasksState extends State<Tasks> {
                 initialDate: DateTime.now(),
                 firstDate: DateTime.now(),
                 lastDate: DateTime(DateTime.now().year + 1),
+
               ).then((value) {
                 date.text = DateFormat.yMMMd("en").format(value!);
               });
@@ -184,7 +197,9 @@ class _TasksState extends State<Tasks> {
               showTimePicker(
                       context: context,
                       initialTime: TimeOfDay.now(),
-                      initialEntryMode: TimePickerEntryMode.input)
+                      initialEntryMode: TimePickerEntryMode.input,
+
+              )
                   .then((value) {
                 value ??= TimeOfDay.now();
                 time.text = value.format(context).toString();
@@ -197,7 +212,7 @@ class _TasksState extends State<Tasks> {
                 const SizedBox(
                   width: 10,
                 ),
-                Text(LocaleKeys.EnterDate.tr(),
+                Text(LocaleKeys.EnterTime.tr(),
                     style: const TextStyle(
                         color: Colors.black,
                         fontSize: 18,
@@ -290,7 +305,7 @@ class _TasksState extends State<Tasks> {
           state: cuibt.currentStep > 1 ? StepState.complete : StepState.indexed,
         ),
         Step(
-          title: Text("date of start reminder",
+          title: Text(LocaleKeys.dateReminder.tr(),
               style: const TextStyle(
                   color: Colors.black,
                   fontSize: 18,
@@ -346,7 +361,7 @@ class _TasksState extends State<Tasks> {
                 const SizedBox(
                   width: 10,
                 ),
-                Text(LocaleKeys.EnterDate.tr(),
+                Text(LocaleKeys.EnterTime.tr(),
                     style: const TextStyle(
                         color: Colors.black,
                         fontSize: 18,
@@ -473,48 +488,48 @@ class _TasksState extends State<Tasks> {
           state: cuibt.currentStep > 2 ? StepState.complete : StepState.indexed,
         ),
         Step(
-          title: Text("day of week",
+          title: Text(LocaleKeys.dayOfWeek.tr(),
               style: const TextStyle(
                   color: Colors.black,
                   fontSize: 18,
                   fontWeight: FontWeight.bold)),
           content: DropdownButton(
-              hint: Text("${cuibt.repeated}",
+              hint: Text("${cuibt.Weekday}",
                   style: const TextStyle(color: Colors.black)),
               items: [
                 DropdownMenuItem(
-                  child: Text("Sunday"),
-                  value: "7",
+                  child: Text(LocaleKeys.Sunday.tr()),
+                  value: 7,
                   enabled: true,
                 ),
                 DropdownMenuItem(
-                  child: Text("Monday"),
-                  value: "1",
+                  child: Text(LocaleKeys.Monday.tr()),
+                  value: 1,
                   enabled: true,
                 ),
                 DropdownMenuItem(
-                  child: Text("Tuesday"),
-                  value: "2",
+                  child: Text(LocaleKeys.Tuesday.tr()),
+                  value: 2,
                   enabled: true,
                 ),
                 DropdownMenuItem(
-                  child: Text("Wednesday"),
-                  value: "3",
+                  child: Text(LocaleKeys.Wednesday.tr()),
+                  value: 3,
                   enabled: true,
                 ),
                 DropdownMenuItem(
-                  child: Text("Thursday"),
-                  value: "4",
+                  child: Text("${LocaleKeys.Thursday.tr()}"),
+                  value: 4,
                   enabled: true,
                 ),
                 DropdownMenuItem(
-                  child: Text("Friday"),
-                  value: "5",
+                  child: Text(LocaleKeys.Friday.tr()),
+                  value: 5,
                   enabled: true,
                 ),
                 DropdownMenuItem(
-                  child: Text("Saturday"),
-                  value: "6",
+                  child: Text(LocaleKeys.Saturday.tr()),
+                  value: 6,
                   enabled: true,
                 ),
               ],
@@ -563,21 +578,21 @@ class _TasksState extends State<Tasks> {
     );
   }
 
-  Column categoryAvatar(title, Size size, layoutCuibt cuibt) {
+  Column categoryAvatar(title, Size size, layoutCuibt cuibt,values) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         InkWell(
           onTap: () {
             setState(() {
-              cuibt.repeated = title;
+              cuibt.repeated = values;
             });
           },
           child: Column(
             children: [
               CircleAvatar(
                 radius: 38,
-                backgroundColor: cuibt.repeated == title
+                backgroundColor: cuibt.repeated == values
                     ? Colors.teal
                     : Colors.redAccent.shade700,
                 foregroundColor: Colors.white,

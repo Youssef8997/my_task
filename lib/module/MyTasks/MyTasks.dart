@@ -12,7 +12,10 @@ import 'package:date_picker_timeline/date_picker_timeline.dart';
 import '../../Translition/locale_kays.g.dart';
 import '../../resorces/Resorces.dart';
 import '../AddTasks/AddTasks.dart';
-
+  bool _notRepeated = true;
+  bool _isDaily = false;
+  bool _isWeekly = false;
+  bool _isMonthly = false;
 class HomeTasks extends StatefulWidget {
   const HomeTasks({super.key});
 
@@ -23,10 +26,7 @@ class HomeTasks extends StatefulWidget {
 class _HomeTasksState extends State<HomeTasks> {
   var _date = DateFormat.yMMMd().format(DateTime.now());
   var myBanner;
-  bool _notRepeated = true;
-  bool _isDaily = false;
-  bool _isWeekly = false;
-  bool _isMonthly = false;
+
   @override
   void initState() {
     BannerAd(
@@ -141,7 +141,7 @@ class _HomeTasksState extends State<HomeTasks> {
             child: Container(
               padding:
                   const EdgeInsetsDirectional.only(start: 15, top: 5, end: 10),
-              height: 85,
+              height: 95,
               width: double.infinity - 40,
               clipBehavior: Clip.antiAlias,
               decoration: BoxDecoration(
@@ -172,6 +172,13 @@ class _HomeTasksState extends State<HomeTasks> {
                       ),
                     ],
                   ),
+                  Center(
+                    child: Text(
+                      "${tasks["repeat"]}",
+                      style: const TextStyle(
+                          fontSize: 20, fontWeight: FontWeight.bold),
+                    ),
+                  ),
                   const SizedBox(
                     height: 6,
                   ),
@@ -183,13 +190,26 @@ class _HomeTasksState extends State<HomeTasks> {
                           "${tasks["desc"]}",
                           style: TextStyle(
                               fontSize: 15,
-                              color: Colors.grey[300],
+                              color: Colors.grey[500],
                               fontWeight: FontWeight.bold),
                           overflow: TextOverflow.ellipsis,
                         ),
                       ),
                       const Spacer(),
+                      if(tasks["repeat"] == "Weekly")
+                        SizedBox(
+                          width: 70,
+                          child: Text(
+                            layoutCuibt.get(context).handleWeekDays(tasks["WeekDay"]),
+                            style: const TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                                overflow: TextOverflow.ellipsis),
+                          ),
+                        ),
+                      if(tasks["repeat"] != "Weekly")
                       const Icon(Icons.event),
+                      if(tasks["repeat"] != "Weekly")
                       SizedBox(
                         width: 70,
                         child: Text(
@@ -320,7 +340,7 @@ class _HomeTasksState extends State<HomeTasks> {
                   width: 10,
                 ),
                 Text(
-                  "Filters,....",
+                  "${LocaleKeys.Filters.tr()},...",
                   style: GoogleFonts.ptSerif(
                       color: Colors.black,
                       fontSize: 30.0,
@@ -404,7 +424,7 @@ class _HomeTasksState extends State<HomeTasks> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Text("Filters",
+                    Text(LocaleKeys.Filters.tr(),
                         style: GoogleFonts.ptSerif(
                             color: Colors.black,
                             fontSize: 30.0,
@@ -414,7 +434,7 @@ class _HomeTasksState extends State<HomeTasks> {
                       height: 20,
                     ),
                     ListTile(
-                        title: Text("Never",
+                        title: Text(LocaleKeys.Never.tr(),
                             style: GoogleFonts.ptSerif(
                                 color: Colors.black,
                                 fontSize: 30.0,
@@ -442,7 +462,7 @@ class _HomeTasksState extends State<HomeTasks> {
                       height: 20,
                     ),
                     ListTile(
-                        title: Text("daily",
+                        title: Text(LocaleKeys.Daily.tr(),
                             style: GoogleFonts.ptSerif(
                                 color: Colors.black,
                                 fontSize: 30.0,
@@ -471,7 +491,7 @@ class _HomeTasksState extends State<HomeTasks> {
                       height: 20,
                     ),
                     ListTile(
-                      title: Text("weekly",
+                      title: Text(LocaleKeys.Weekly.tr(),
                           style: GoogleFonts.ptSerif(
                               color: Colors.black,
                               fontSize: 30.0,
@@ -492,7 +512,7 @@ class _HomeTasksState extends State<HomeTasks> {
                         });
                         layoutCuibt
                             .get(context)
-                            .insertTaskIntoVar("weekly",datab: layoutCuibt.get(context).datab);
+                            .insertTaskIntoVar("Weekly",datab: layoutCuibt.get(context).datab);
                         Navigator.pop(context);
                       },
                       selected: _isWeekly,
@@ -501,7 +521,7 @@ class _HomeTasksState extends State<HomeTasks> {
                       height: 20,
                     ),
                     ListTile(
-                      title: Text("Monthly",
+                      title: Text(LocaleKeys.Monthly.tr(),
                           style: GoogleFonts.ptSerif(
                               color: Colors.black,
                               fontSize: 30.0,
