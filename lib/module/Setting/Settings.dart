@@ -3,12 +3,10 @@ import 'package:my_task/lib/sherdeprefrence/sherdhelp.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:my_task/Componads/Com.dart';
 import 'package:my_task/module/cuibt/cuibt.dart';
 import 'package:my_task/module/cuibt/loginstates.dart';
 import 'package:shimmer/shimmer.dart';
 import '../../Translition/locale_kays.g.dart';
-import '../bootChat/bootChat.dart';
 
 class Settings extends StatefulWidget {
   const Settings({Key? key}) : super(key: key);
@@ -375,23 +373,7 @@ class _SettingsState extends State<Settings> {
                     ],
                   ),
                   const SizedBox(height: 35),
-                  ListTile(
-                    title: Text(LocaleKeys.ChatWithUs.tr(),
-                        style: const TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black,
-                        )),
-                    leading:
-                        const Icon(Icons.chat, size: 25, color: Colors.black),
-                    style: ListTileStyle.drawer,
-                    onTap: () {
-                      Nevigator(
-                          bool: true,
-                          page: const RobotChat(),
-                          context: context);
-                    },
-                  )
+
                 ],
               ),
             ),

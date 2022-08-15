@@ -34,10 +34,12 @@ class _TasksState extends State<Tasks> {
 
   @override
   void initState() {
-    time.text = DateFormat('H:mm a', "en").format(now);
-    date.text = DateFormat.yMMMd("en").format(now);
-    layoutCuibt.get(context).repeated = "Never";
-    layoutCuibt.get(context).priorityed = "medium";
+    if(id == null){
+      time.text = DateFormat('H:mm a', "en").format(now);
+      date.text = DateFormat.yMMMd("en").format(now);
+      layoutCuibt.get(context).repeated = "Never";
+      layoutCuibt.get(context).priorityed = "medium";
+    }
     InterstitialAd.load(
         adUnitId: 'ca-app-pub-7041190612164401/5151161150',
         request: AdRequest(),
@@ -196,7 +198,7 @@ class _TasksState extends State<Tasks> {
             onTap: () {
               showTimePicker(
                       context: context,
-                      initialTime: TimeOfDay.now(),
+                      initialTime: TimeOfDay.fromDateTime(DateTime(cuibt.handleTime()["year"],cuibt. handleTime()["month"],cuibt. handleTime()["day"], cuibt.handleTime()["hour"],cuibt. handleTime()["minute"]),),
                       initialEntryMode: TimePickerEntryMode.input,
 
               )

@@ -431,7 +431,7 @@ class layoutCuibt extends Cubit<mytasks> {
 
   void pressedContinueEdit(
       {context, id, priority, repeat, myInterstitial}) async {
-    if (currentStep < 5) {
+    if (currentStep < 4) {
       currentStep += 1;
       emit(OnPressedonStepper());
     } else {
@@ -447,6 +447,8 @@ class layoutCuibt extends Cubit<mytasks> {
       currentStep = 0;
       time.clear();
       date.clear();
+      id=null;
+      Navigator.pop(context);
       Navigator.pop(context);
       if (myInterstitial != null) {
         myInterstitial.show();
@@ -493,11 +495,11 @@ class layoutCuibt extends Cubit<mytasks> {
   }
 
   void onPressedAdd(context) {
-    Nevigator(bool: true, context: context, page: const Tasks());
+    Nevigator(bool: true, context: context, page: const Tasks(id:null,));
   }
 
   int _convertNameMonthToNumber(month) {
-    log(month);
+
     switch (month) {
       case "Jan":
         return month = 1;
@@ -540,7 +542,6 @@ class layoutCuibt extends Cubit<mytasks> {
 
   // to convert time when be pm to make hour 24 h
   int _convertHourWhenPm(String time) {
-    log(time);
     if (time.split(":")[1].split(" ")[1] == "PM"||time.split(":")[1].split(" ")[1] == "م") {
       if (int.parse(time.split(":")[0]) < 12) {
         return int.parse(time.split(":")[0]) + 12;
@@ -820,14 +821,6 @@ class layoutCuibt extends Cubit<mytasks> {
   }
 
   void _handleNotification(String Repeat, id) async {
-    log("${Repeat} ${id}");
-    //handle Time resource
-    int year = int.parse(date.text.split(", ")[1]);
-    int month = _convertNameMonthToNumber(date.text.substring(0, 3));
-    int day = int.parse(date.text.split(" ")[1].split(",")[0]);
-    int hour = _convertHourWhenPm(time.text);
-    int minute = int.parse(time.text.split(":")[1].split(" ")[0]);
-    print("${hour} ${minute}");
     //to increase the badge number
     await AwesomeNotifications().getGlobalBadgeCounter().then(
         (badge) => AwesomeNotifications().setGlobalBadgeCounter(badge + 1));
@@ -851,8 +844,8 @@ class layoutCuibt extends Cubit<mytasks> {
             allowWhileIdle: true,
             repeats: true,
             preciseAlarm: true,
-            hour: hour,
-            minute: minute,
+            hour: handleTime()["hour"],
+            minute: handleTime()["minute"],
             second: 00,
           ));
     }
@@ -877,8 +870,8 @@ class layoutCuibt extends Cubit<mytasks> {
             allowWhileIdle: true,
             preciseAlarm: true,
             weekday: Weekday,
-            hour: hour,
-            minute: minute,
+            hour: handleTime()["hour"],
+            minute: handleTime()["minute"],
             second: 00,
           ));
     }
@@ -902,9 +895,9 @@ class layoutCuibt extends Cubit<mytasks> {
             repeats: true,
             allowWhileIdle: true,
             preciseAlarm: true,
-            day: day,
-            hour: hour,
-            minute: minute,
+            day: handleTime()["day"],
+            hour: handleTime()["hour"],
+            minute: handleTime()["minute"],
             second: 00,
           ));
     }
@@ -925,7 +918,7 @@ class layoutCuibt extends Cubit<mytasks> {
           ticker: "ticker",
         ),
         schedule: NotificationCalendar.fromDate(
-            date: DateTime(year, month, day, hour, minute),
+            date: DateTime(handleTime()["year"], handleTime()["month"], handleTime()["day"], handleTime()["hour"], handleTime()["minute"]),
             allowWhileIdle: true,
             preciseAlarm: true,
             repeats: false),
@@ -937,7 +930,20 @@ class layoutCuibt extends Cubit<mytasks> {
     time.clear();
     date.clear();
   }
-
+Map handleTime(){
+  int year = int.parse(date.text.split(", ")[1]);
+  int month = _convertNameMonthToNumber(date.text.substring(0, 3));
+  int day = int.parse(date.text.split(" ")[1].split(",")[0]);
+  int hour = _convertHourWhenPm(time.text);
+  int minute = int.parse(time.text.split(":")[1].split(" ")[0]);
+  return {
+    "year": year,
+    "month": month,
+    "day": day,
+    "hour": hour,
+    "minute": minute,
+  };
+}
   void faceBook() async {
     var url = 'fb://facewebmodal/f?href=https://www.facebook.com/yuossfa';
     if (await canLaunchUrl(Uri.parse(url))) {

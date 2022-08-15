@@ -305,6 +305,10 @@ class _HomeTasksState extends State<HomeTasks> {
                     setState(() {
                       title.text = tasks["title"];
                       desc.text = tasks["desc"];
+                      time.text = tasks["time"];
+                      date.text = tasks["data"];
+                      layoutCuibt.get(context).repeated = tasks["repeat"];
+                      layoutCuibt.get(context).Weekday =int.parse(tasks["WeekDay"]) ;
                       layoutCuibt.get(context).currentStep = 2;
                     });
                     Nevigator(
