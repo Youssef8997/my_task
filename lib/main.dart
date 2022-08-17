@@ -34,8 +34,27 @@ Future<void> main() async {
         groupSort: GroupSort.Asc,
         vibrationPattern: Int64List(1000),
         groupAlertBehavior: GroupAlertBehavior.All,
-        soundSource: "resource://raw/alart_sound",
+        soundSource: "resource://raw/alarm",
         criticalAlerts:true
+
+      ),
+      NotificationChannel(
+        channelKey: 'tasksNever',
+        channelName: 'Task',
+        channelDescription: 'task',
+        importance: NotificationImportance.Max,
+        channelShowBadge: true,
+        enableLights: true,
+        enableVibration: true,
+        playSound: true,
+        ledColor: Colors.white,
+        defaultRingtoneType: DefaultRingtoneType.Alarm,
+        groupSort: GroupSort.Asc,
+        vibrationPattern: Int64List(1000),
+        groupAlertBehavior: GroupAlertBehavior.All,
+        soundSource: "resource://raw/alarm",
+        criticalAlerts:true
+
       ),
       NotificationChannel(
         channelKey: 'chatBoot',
@@ -50,7 +69,7 @@ Future<void> main() async {
         defaultRingtoneType: DefaultRingtoneType.Notification,
         vibrationPattern: Int64List(800),
         criticalAlerts: true,
-        soundSource: "resource://raw/chat_sound",
+        soundSource: "resource://raw/remindernotifications",
 
       ),
       NotificationChannel(
@@ -66,13 +85,13 @@ Future<void> main() async {
         defaultRingtoneType: DefaultRingtoneType.Notification,
         vibrationPattern: Int64List(1000),
         criticalAlerts: true,
-        soundSource: "resource://raw/chat_sound",
+        soundSource: "resource://raw/remindernotifications",
 
       ),
     ],
   );
   await sherdprefrence.init();
-  bool? IsfirstTime = sherdprefrence.getdate(key: "spalsh");
+  bool? isFirstTime = sherdprefrence.getdate(key: "spalsh");
   runApp(
     EasyLocalization(
         supportedLocales:const [
@@ -81,8 +100,8 @@ Future<void> main() async {
         ],
         path: 'Asset/Translition', // <-- change the path of the translation files
         fallbackLocale:const Locale('en'),
-        assetLoader: CodegenLoader(),
-        child:MyApp(IsfirstTime)
+        assetLoader: const CodegenLoader(),
+        child:MyApp(isFirstTime)
     ),
   );
 
@@ -90,7 +109,7 @@ Future<void> main() async {
 // ignore: must_be_immutable
 class MyApp extends StatelessWidget {
   bool? firstTime;
-  MyApp(this.firstTime);
+  MyApp(this.firstTime, {super.key});
 
   // This widget is the root of your application.
   @override

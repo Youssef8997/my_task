@@ -1,3 +1,5 @@
+// ignore_for_file: camel_case_types
+
 import 'package:shared_preferences/shared_preferences.dart';
 class sherdprefrence{
   static SharedPreferences? sharedpreferences;

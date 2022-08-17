@@ -1,4 +1,6 @@
 
+// ignore_for_file: file_names, camel_case_types
+
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:date_picker_timeline/date_picker_widget.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -11,6 +13,8 @@ import '../../resorces/Resorces.dart';
 import 'package:my_task/module/cuibt/cuibt.dart';
 import 'package:my_task/module/cuibt/loginstates.dart';
 class analytics extends StatefulWidget {
+  const analytics({super.key});
+
   @override
   State<analytics> createState() => _analyticsState();
 }
@@ -23,10 +27,9 @@ class _analyticsState extends State<analytics> {
   BannerAd(
   adUnitId: 'ca-app-pub-7041190612164401/3454936100',
   size: AdSize.fullBanner,
-  request: AdRequest(),
+  request: const AdRequest(),
   listener: BannerAdListener(
   onAdFailedToLoad:(Ad ad, LoadAdError error) {
-  print(error);
   },
   onAdLoaded: (Ad ad) {
     setState(() {
@@ -58,7 +61,7 @@ class _analyticsState extends State<analytics> {
               child: Column(
                 children: [
                   if(myBanner!=null)
-                  Container(
+                  SizedBox(
                       width: myBanner.size.width.toDouble(),
                       height: myBanner.size.height.toDouble(),
                       child: AdWidget(
@@ -70,6 +73,8 @@ class _analyticsState extends State<analytics> {
                     child: Padding(
                       padding: const EdgeInsets.all(10.0),
                       child: Shimmer.fromColors(
+                        baseColor: Colors.white,
+                        highlightColor: Colors.grey[700]!,
                         child: Text(
                          " ${cuibt.salaryAfter} LE",
                           style:const  TextStyle(
@@ -78,9 +83,7 @@ class _analyticsState extends State<analytics> {
                               fontStyle: FontStyle.italic,
                               color: Colors.white),
                           textAlign: TextAlign.right,
-                        ),
-                        baseColor: Colors.white,
-                        highlightColor: Colors.grey[700]!
+                        )
                       ),
                     ),
                   ),
@@ -151,7 +154,6 @@ class _analyticsState extends State<analytics> {
           onDateChange: (value) {
             setState(() {
               _date = DateFormat.yMMMd("en").format(value);
-              print(_date);
               layoutCuibt.get(context).onDate = _date;
               layoutCuibt.get(context).insertBudgetIntoVar(datab: layoutCuibt.get(context).datab);
 

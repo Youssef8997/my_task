@@ -1,10 +1,12 @@
+// ignore_for_file: file_names
+
 import 'package:blurrycontainer/blurrycontainer.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'package:my_task/Componads/Com.dart';
+import 'package:my_task/Componads/componads.dart';
 import 'package:my_task/Componads/mybutton.dart';
 import 'package:my_task/module/cuibt/cuibt.dart';
 import 'package:my_task/module/cuibt/loginstates.dart';
@@ -12,10 +14,10 @@ import 'package:date_picker_timeline/date_picker_timeline.dart';
 import '../../Translition/locale_kays.g.dart';
 import '../../resorces/Resorces.dart';
 import '../AddTasks/AddTasks.dart';
-  bool _notRepeated = true;
-  bool _isDaily = false;
-  bool _isWeekly = false;
-  bool _isMonthly = false;
+  bool notRepeated = true;
+  bool isDaily = false;
+  bool isWeekly = false;
+  bool isMonthly = false;
 class HomeTasks extends StatefulWidget {
   const HomeTasks({super.key});
 
@@ -32,7 +34,7 @@ class _HomeTasksState extends State<HomeTasks> {
     BannerAd(
       adUnitId: 'ca-app-pub-7041190612164401/1452686778',
       size: AdSize.fullBanner,
-      request: AdRequest(),
+      request: const AdRequest(),
       listener: BannerAdListener(
         onAdFailedToLoad: (Ad ad, LoadAdError error) {},
         onAdLoaded: (Ad ad) {
@@ -42,6 +44,18 @@ class _HomeTasksState extends State<HomeTasks> {
         },
       ),
     ).load();
+    setState(() {
+      notRepeated = true;
+      isDaily = false;
+      isWeekly = false;
+      isMonthly = false;
+      //to get data from data base when the user open to the page
+      if(layoutCuibt.get(context).datab.isOpen){
+
+        layoutCuibt.get(context).insertTaskIntoVar("Never",datab: layoutCuibt.get(context).datab);
+
+      }
+    });
     super.initState();
   }
 
@@ -51,29 +65,29 @@ class _HomeTasksState extends State<HomeTasks> {
       listener: (context, state) {},
       builder: (context, state) {
         var size = MediaQuery.of(context).size;
-        var _tasks = layoutCuibt.get(context).tasks;
+        var tasks = layoutCuibt.get(context).tasks;
         var cuibt = layoutCuibt.get(context);
         return wallPaperContainer(
-            Child: SafeArea(
+            child: SafeArea(
               child: Column(
                 mainAxisSize: MainAxisSize.max,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   if (myBanner != null)
-                    Container(
+                    SizedBox(
                       height: size.height * 0.06,
                       width: size.width,
                       child: AdWidget(ad: myBanner),
                     ),
                   //calender date to show tasks for that day
-                  if (_notRepeated)
+                  if (notRepeated)
                     dateCalendar(context, size),
                   // row of buttons to add tasks and hi massage,
                   textUpContainer(context, size, cuibt),
                   SizedBox(
                     height: size.height * 0.01,
                   ),
-                  if (_tasks.isEmpty)
+                  if (tasks.isEmpty)
                     Center(
                       heightFactor: 4,
                       child: Padding(
@@ -86,7 +100,7 @@ class _HomeTasksState extends State<HomeTasks> {
                       ),
                     )
                   else
-                    taskCard(_tasks, size),
+                    taskCard(tasks, size),
                 ],
               ),
             ),
@@ -124,7 +138,7 @@ class _HomeTasksState extends State<HomeTasks> {
         //to get the task details and to edit the task on dialog
         onTap: () => settingDialog(context, tasks, color, index),
         child: Dismissible(
-            key: Key("${tasks["id"].toString()}"),
+            key: Key(tasks["id"].toString()),
             onDismissed: (direction) {
               //to delete the task from the database
               layoutCuibt.get(context).delete(id: tasks["id"],rpeted: tasks["repeat"]);
@@ -299,8 +313,8 @@ class _HomeTasksState extends State<HomeTasks> {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              mybutton(
-                  Widget: const Icon(Icons.edit),
+              myButton(
+                  text: const Icon(Icons.edit),
                   function: () {
                     setState(() {
                       title.text = tasks["title"];
@@ -311,9 +325,9 @@ class _HomeTasksState extends State<HomeTasks> {
                       layoutCuibt.get(context).Weekday =int.parse(tasks["WeekDay"]) ;
                       layoutCuibt.get(context).currentStep = 2;
                     });
-                    Nevigator(
+                    navigator(
                         context: context,
-                        bool: true,
+                        returnPage: true,
                         page: Tasks(id: tasks["id"]));
                   }),
             ],
@@ -335,12 +349,12 @@ class _HomeTasksState extends State<HomeTasks> {
             },
             child: Row(
               children: [
-                Icon(
+                const Icon(
                   Icons.filter_alt_sharp,
                   size: 30,
                   color: Colors.black,
                 ),
-                SizedBox(
+                const SizedBox(
                   width: 10,
                 ),
                 Text(
@@ -358,8 +372,8 @@ class _HomeTasksState extends State<HomeTasks> {
         const Spacer(),
         Padding(
           padding: const EdgeInsets.only(top: 10, right: 20),
-          child: mybutton(
-              Widget: Text("${LocaleKeys.AddTask.tr()}....",
+          child: myButton(
+              text: Text("${LocaleKeys.AddTask.tr()}....",
                   style: const TextStyle(color: Colors.white)),
               function: () => cuibt.onPressedAdd(context)),
         )
@@ -378,7 +392,6 @@ class _HomeTasksState extends State<HomeTasks> {
           locale: context.locale.languageCode, onDateChange: (value) {
         setState(() {
           _date = DateFormat.yMMMd("en").format(value);
-          print(_date);
           layoutCuibt.get(context).onDate = _date;
           layoutCuibt
               .get(context)
@@ -444,18 +457,18 @@ class _HomeTasksState extends State<HomeTasks> {
                                 fontSize: 30.0,
                                 fontStyle: FontStyle.italic,
                                 fontWeight: FontWeight.w900)),
-                        leading: Icon(
+                        leading: const Icon(
                           Icons.today,
                           size: 30,
                           color: Colors.black,
                         ),
-                        selected: _notRepeated,
+                        selected: notRepeated,
                         onTap: () {
                           setState(() {
-                            _notRepeated = true;
-                            _isDaily = false;
-                            _isWeekly = false;
-                            _isMonthly = false;
+                            notRepeated = true;
+                            isDaily = false;
+                            isWeekly = false;
+                            isMonthly = false;
                           });
                           layoutCuibt
                               .get(context)
@@ -472,18 +485,18 @@ class _HomeTasksState extends State<HomeTasks> {
                                 fontSize: 30.0,
                                 fontStyle: FontStyle.italic,
                                 fontWeight: FontWeight.w900)),
-                        leading: Icon(
+                        leading: const Icon(
                           Icons.today,
                           size: 30,
                           color: Colors.black,
                         ),
-                        selected: _isDaily,
+                        selected: isDaily,
                         onTap: () {
                           setState(() {
-                            _isDaily = true;
-                            _isWeekly = false;
-                            _isMonthly = false;
-                            _notRepeated = false;
+                            isDaily = true;
+                            isWeekly = false;
+                            isMonthly = false;
+                            notRepeated = false;
 
                           });
                           layoutCuibt
@@ -501,17 +514,17 @@ class _HomeTasksState extends State<HomeTasks> {
                               fontSize: 30.0,
                               fontStyle: FontStyle.italic,
                               fontWeight: FontWeight.w900)),
-                      leading: Icon(
+                      leading: const Icon(
                         Icons.calendar_view_week_rounded,
                         size: 30,
                         color: Colors.black,
                       ),
                       onTap: () {
                         setState(() {
-                          _isDaily = false;
-                          _isWeekly = true;
-                          _isMonthly = false;
-                          _notRepeated = false;
+                          isDaily = false;
+                          isWeekly = true;
+                          isMonthly = false;
+                          notRepeated = false;
 
                         });
                         layoutCuibt
@@ -519,7 +532,7 @@ class _HomeTasksState extends State<HomeTasks> {
                             .insertTaskIntoVar("Weekly",datab: layoutCuibt.get(context).datab);
                         Navigator.pop(context);
                       },
-                      selected: _isWeekly,
+                      selected: isWeekly,
                     ),
                     const SizedBox(
                       height: 20,
@@ -531,17 +544,17 @@ class _HomeTasksState extends State<HomeTasks> {
                               fontSize: 30.0,
                               fontStyle: FontStyle.italic,
                               fontWeight: FontWeight.w900)),
-                      leading: Icon(
+                      leading: const Icon(
                         Icons.calendar_month_rounded,
                         size: 30,
                         color: Colors.black,
                       ),
                       onTap: () {
                         setState(() {
-                          _isDaily = false;
-                          _isWeekly = false;
-                          _isMonthly = true;
-                          _notRepeated = false;
+                          isDaily = false;
+                          isWeekly = false;
+                          isMonthly = true;
+                          notRepeated = false;
 
                         });
                         layoutCuibt
@@ -549,7 +562,7 @@ class _HomeTasksState extends State<HomeTasks> {
                             .insertTaskIntoVar("Monthly",datab: layoutCuibt.get(context).datab);
                         Navigator.pop(context);
                       },
-                      selected: _isMonthly,
+                      selected: isMonthly,
                     ),
                     const SizedBox(
                       height: 20,

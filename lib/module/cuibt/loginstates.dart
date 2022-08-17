@@ -1,4 +1,6 @@
 
+// ignore_for_file: camel_case_types
+
 abstract class mytasks{}
 class  mytasksstateinisal  extends mytasks{}
 class  GetTasksSucssesful  extends mytasks{}

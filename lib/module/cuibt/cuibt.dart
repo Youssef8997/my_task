@@ -1,10 +1,12 @@
+// ignore_for_file: non_constant_identifier_names
+
 import 'dart:developer';
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:my_task/Componads/Com.dart';
-import 'package:my_task/Model/Model.dart';
+import 'package:my_task/Componads/componads.dart';
+import 'package:my_task/Model/model.dart';
 import 'package:my_task/Translition/locale_kays.g.dart';
 import 'package:my_task/lib/sherdeprefrence/sherdhelp.dart';
 import 'package:my_task/module/AddTasks/AddTasks.dart';
@@ -18,7 +20,6 @@ import '../Analytics/Analytics.dart';
 
 class layoutCuibt extends Cubit<mytasks> {
   layoutCuibt() : super(mytasksstateinisal());
-
   static layoutCuibt get(context) => BlocProvider.of(context);
   var MyIndex = 0;
   late Database datab;
@@ -90,8 +91,8 @@ class layoutCuibt extends Cubit<mytasks> {
   var controller = PageController(initialPage: 0);
   List body = [
     const HomeTasks(),
-    moneyOraganize(),
-    analytics(),
+    const moneyOraganize(),
+    const analytics(),
     const Settings(),
   ];
 
@@ -107,16 +108,14 @@ class layoutCuibt extends Cubit<mytasks> {
     datab = await openDatabase("endtask.db", version: 1,
         onCreate: (datab, version) {
       sherdprefrence.setdate(key: "ResetBudget", value: true);
-      print("create data base");
       datab.execute(
-            'CREATE TABLE TASKS (id INTEGER PRIMARY KEY,title TEXT,desc TEXT,data TEXT ,time STRING,repeat TEXT,priority TEXT,WeekDay TEXT)');
+          'CREATE TABLE TASKS (id INTEGER PRIMARY KEY,title TEXT,desc TEXT,data TEXT ,time STRING,repeat TEXT,priority TEXT,WeekDay TEXT)');
       datab
           .execute(
               'CREATE TABLE BUDGET (id INTEGER PRIMARY KEY,title TEXT,MONEY num, MONEYAfter num,data STRING,catogry TEXT)')
           .then((value) {
         emit(CreateDataBaseSucssesful());
       }).catchError((error) {
-        print("error is${error.toString()}");
         emit(CreateDataBaseError());
       });
     }, onOpen: (datab) {
@@ -181,7 +180,6 @@ class layoutCuibt extends Cubit<mytasks> {
       getTasksDays(datab).then((value) {
         tasks = [];
         tasks = value;
-        print("tasks is ${tasks.toString()}");
         emit(GetTasksSucssesful());
       });
     }
@@ -213,12 +211,12 @@ class layoutCuibt extends Cubit<mytasks> {
       task = [];
       tasks = [];
       task = value;
-      task.forEach((element) {
+      for (var element in task) {
         if (element["data"] == onDate) {
           tasks.add(element);
         }
         emit(GetDatatasksSucssesful());
-      });
+      }
     });
   }
 
@@ -226,7 +224,6 @@ class layoutCuibt extends Cubit<mytasks> {
     getAllDataBudget(datab).then((value) {
       budget = [];
       budget = value;
-      print(budget);
       emit(getsallaryafter());
     });
   }
@@ -246,9 +243,8 @@ class layoutCuibt extends Cubit<mytasks> {
           .then((Id) {
         //to be can get the id of the task to make notification when the insert is done
         id = Id;
-        insertTaskIntoVar(repeat, datab: datab);
+        insertTaskIntoVar("Never", datab: datab);
       }).catchError((error) {
-        print(" the error is ${error.toString()}");
         emit(InsertDataBaseError());
       });
       return getname();
@@ -268,7 +264,6 @@ class layoutCuibt extends Cubit<mytasks> {
             .rawInsert(
                 'INSERT INTO BUDGET(title,MONEY,MONEYAfter,data,catogry)VALUES("$title","$money","${salaryAfter + money}","$data","$category")')
             .then((value) {
-          print("$value inserted successes");
           getBudgetAfterChange();
           changPercent(salaryAfter + money);
           titleController.clear();
@@ -278,7 +273,6 @@ class layoutCuibt extends Cubit<mytasks> {
           catagoryController.clear();
           emit(getsallaryafter());
         }).catchError((error) {
-          print(" the error is ${error.toString()}");
           emit(InsertDataBaseError());
         });
       }
@@ -288,7 +282,6 @@ class layoutCuibt extends Cubit<mytasks> {
             .rawInsert(
                 'INSERT INTO BUDGET(title,MONEY,MONEYAfter,data,catogry)VALUES("$title","$money","${salaryAfter - money}","$data","$category")')
             .then((value) {
-          print("$value inserted successes");
           getBudgetAfterChange();
           changPercent(salaryAfter - money);
           titleController.clear();
@@ -298,7 +291,6 @@ class layoutCuibt extends Cubit<mytasks> {
           catagoryController.clear();
           emit(getsallaryafter());
         }).catchError((error) {
-          print(" the error is ${error.toString()}");
           emit(InsertDataBaseError());
         });
       }
@@ -334,7 +326,7 @@ class layoutCuibt extends Cubit<mytasks> {
           _handleNotification(value.first["repeat"], id);
         });
       });
-      getDataTasksAfterChange();
+      insertTaskIntoVar("Never", datab: datab);
       emit(UpdateDataBaseError());
     });
   }
@@ -353,13 +345,13 @@ class layoutCuibt extends Cubit<mytasks> {
     getAllDataBudget(datab).then((value) {
       budget = [];
       budget = value;
-      print(budget);
       changPercent(budget.isEmpty ? salary : budget[index - 1]["MONEYAfter"]);
       emit(getsallaryafter());
     });
   }
-  String handleWeekDays(String WeekDay){
-    switch(WeekDay){
+
+  String handleWeekDays(String weekDay) {
+    switch (weekDay) {
       case "7":
         return "Sunday";
       case "1":
@@ -378,6 +370,7 @@ class layoutCuibt extends Cubit<mytasks> {
         return "unknown";
     }
   }
+
   //change value of repeat step
   void changevaluerepeat(
     value,
@@ -447,7 +440,11 @@ class layoutCuibt extends Cubit<mytasks> {
       currentStep = 0;
       time.clear();
       date.clear();
-      id=null;
+      id = null;
+      notRepeated = true;
+      isDaily = false;
+      isWeekly = false;
+      isMonthly = false;
       Navigator.pop(context);
       Navigator.pop(context);
       if (myInterstitial != null) {
@@ -480,14 +477,9 @@ class layoutCuibt extends Cubit<mytasks> {
     salaryAfter = double.parse(value);
 
     salaryController.clear();
-    print("salary is $salary and salary after is $salaryAfter");
     emit(getsallary());
   }
 
-  void Catogerye(value) {
-    catagoryController.text = "$value";
-    emit(changeCatogery());
-  }
 
   void budgetDate(value) {
     dataController.text = DateFormat.yMMMd("en").format(value!);
@@ -495,11 +487,16 @@ class layoutCuibt extends Cubit<mytasks> {
   }
 
   void onPressedAdd(context) {
-    Nevigator(bool: true, context: context, page: const Tasks(id:null,));
+    navigator(
+        returnPage: true,
+        context: context,
+        page: const Tasks(
+          id: null,
+        ));
+    time.text = DateFormat('H:mm a', "en").format(DateTime.now());
   }
 
   int _convertNameMonthToNumber(month) {
-
     switch (month) {
       case "Jan":
         return month = 1;
@@ -542,7 +539,8 @@ class layoutCuibt extends Cubit<mytasks> {
 
   // to convert time when be pm to make hour 24 h
   int _convertHourWhenPm(String time) {
-    if (time.split(":")[1].split(" ")[1] == "PM"||time.split(":")[1].split(" ")[1] == "م") {
+    if (time.split(":")[1].split(" ")[1] == "PM" ||
+        time.split(":")[1].split(" ")[1] == "م") {
       if (int.parse(time.split(":")[0]) < 12) {
         return int.parse(time.split(":")[0]) + 12;
       } else {
@@ -820,11 +818,11 @@ class layoutCuibt extends Cubit<mytasks> {
     emit(ChangeLocale());
   }
 
-  void _handleNotification(String Repeat, id) async {
+  void _handleNotification(String repeat, id) async {
     //to increase the badge number
     await AwesomeNotifications().getGlobalBadgeCounter().then(
         (badge) => AwesomeNotifications().setGlobalBadgeCounter(badge + 1));
-    if (Repeat == "Daily") {
+    if (repeat == "Daily") {
       await AwesomeNotifications().createNotification(
           content: NotificationContent(
             id: id,
@@ -833,7 +831,7 @@ class layoutCuibt extends Cubit<mytasks> {
             body: desc.text,
             autoDismissible: true,
             wakeUpScreen: true,
-            customSound: "resource://raw/alart_sound",
+            customSound: "resource://raw/alarm",
             locked: true,
             category: NotificationCategory.Reminder,
             criticalAlert: true,
@@ -849,7 +847,7 @@ class layoutCuibt extends Cubit<mytasks> {
             second: 00,
           ));
     }
-    else if (Repeat == "Weekly") {
+    else if (repeat == "Weekly") {
       await AwesomeNotifications().createNotification(
           content: NotificationContent(
             id: id,
@@ -858,7 +856,7 @@ class layoutCuibt extends Cubit<mytasks> {
             body: desc.text,
             autoDismissible: true,
             wakeUpScreen: true,
-            customSound: "resource://raw/alart_sound",
+            customSound: "resource://raw/alarm",
             locked: true,
             category: NotificationCategory.Reminder,
             criticalAlert: true,
@@ -875,7 +873,7 @@ class layoutCuibt extends Cubit<mytasks> {
             second: 00,
           ));
     }
-    else if (Repeat == "Monthly") {
+    else if (repeat == "Monthly") {
       await AwesomeNotifications().createNotification(
           content: NotificationContent(
             id: id,
@@ -884,7 +882,7 @@ class layoutCuibt extends Cubit<mytasks> {
             body: desc.text,
             autoDismissible: true,
             wakeUpScreen: true,
-            customSound: "resource://raw/alart_sound",
+            customSound: "resource://raw/alarm",
             locked: true,
             category: NotificationCategory.Reminder,
             criticalAlert: true,
@@ -901,16 +899,16 @@ class layoutCuibt extends Cubit<mytasks> {
             second: 00,
           ));
     }
-    else if (Repeat == "Never") {
+    else if (repeat == "Never") {
       await AwesomeNotifications().createNotification(
         content: NotificationContent(
           id: id,
-          channelKey: "tasks1",
+          channelKey: "tasksNever",
           title: title.text,
           body: desc.text,
           autoDismissible: true,
           wakeUpScreen: true,
-          customSound: "resource://raw/alart_sound",
+          customSound: "resource://raw/alarm",
           locked: true,
           category: NotificationCategory.Reminder,
           criticalAlert: true,
@@ -918,7 +916,12 @@ class layoutCuibt extends Cubit<mytasks> {
           ticker: "ticker",
         ),
         schedule: NotificationCalendar.fromDate(
-            date: DateTime(handleTime()["year"], handleTime()["month"], handleTime()["day"], handleTime()["hour"], handleTime()["minute"]),
+            date: DateTime(
+                handleTime()["year"],
+                handleTime()["month"],
+                handleTime()["day"],
+                handleTime()["hour"],
+                handleTime()["minute"]),
             allowWhileIdle: true,
             preciseAlarm: true,
             repeats: false),
@@ -930,20 +933,22 @@ class layoutCuibt extends Cubit<mytasks> {
     time.clear();
     date.clear();
   }
-Map handleTime(){
-  int year = int.parse(date.text.split(", ")[1]);
-  int month = _convertNameMonthToNumber(date.text.substring(0, 3));
-  int day = int.parse(date.text.split(" ")[1].split(",")[0]);
-  int hour = _convertHourWhenPm(time.text);
-  int minute = int.parse(time.text.split(":")[1].split(" ")[0]);
-  return {
-    "year": year,
-    "month": month,
-    "day": day,
-    "hour": hour,
-    "minute": minute,
-  };
-}
+
+  Map handleTime() {
+    int year = int.parse(date.text.split(", ")[1]);
+    int month = _convertNameMonthToNumber(date.text.substring(0, 3));
+    int day = int.parse(date.text.split(" ")[1].split(",")[0]);
+    int hour = _convertHourWhenPm(time.text);
+    int minute = int.parse(time.text.split(":")[1].split(" ")[0]);
+    return {
+      "year": year,
+      "month": month,
+      "day": day,
+      "hour": hour,
+      "minute": minute,
+    };
+  }
+
   void faceBook() async {
     var url = 'fb://facewebmodal/f?href=https://www.facebook.com/yuossfa';
     if (await canLaunchUrl(Uri.parse(url))) {
@@ -963,6 +968,4 @@ Map handleTime(){
       throw 'There was a problem to open the url: $url';
     }
   }
-
-
 }

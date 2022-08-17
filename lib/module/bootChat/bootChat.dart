@@ -3,9 +3,9 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'package:my_task/Componads/my%20textformfild.dart';
 import 'package:my_task/Translition/locale_kays.g.dart';
-import '../../Model/Model.dart';
+import '../../Componads/my_text_form.dart';
+import '../../Model/model.dart';
 import 'package:my_task/module/cuibt/cuibt.dart';
 import 'package:my_task/module/cuibt/loginstates.dart';
 class RobotChat extends StatefulWidget {
@@ -19,10 +19,9 @@ class _RobotChatState extends State<RobotChat> {
   final BannerAd myBanner = BannerAd(
     adUnitId: 'ca-app-pub-3940256099942544/6300978111',
     size: AdSize.fullBanner,
-    request: AdRequest(),
+    request: const AdRequest(),
     listener: BannerAdListener(
       onAdFailedToLoad:(Ad ad, LoadAdError error) {
-        print(error);
       },
 
     ),
@@ -81,7 +80,7 @@ class _RobotChatState extends State<RobotChat> {
                 SizedBox(
                   height: 50,
                   width: Size.width,
-                  child: Mytextfield(
+                  child: myTextForm(
                       hint: LocaleKeys.MessageHint.tr(),
                       suffix: IconButton(
                         onPressed: () {
@@ -103,8 +102,8 @@ class _RobotChatState extends State<RobotChat> {
                         },
                         icon: const Icon(Icons.send, color: Colors.teal),
                       ),
-                      Controlr: cuibt.chatField,
-                      keybordtype: TextInputType.text
+                      controller: cuibt.chatField,
+                      keyboardType: TextInputType.text
                   ),
                 ),
               ],
@@ -256,7 +255,7 @@ Column suggestionWords(layoutCuibt cuibt){
             borderRadius:
                 const BorderRadiusDirectional.all(Radius.circular(20.0))),
         child: Text(
-          "$massage",
+          massage,
           style: const TextStyle(
               color: Colors.black, fontSize: 22, fontWeight: FontWeight.bold),
           textAlign: TextAlign.left,

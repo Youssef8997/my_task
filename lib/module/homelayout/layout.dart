@@ -14,6 +14,8 @@ import '../../Translition/locale_kays.g.dart';
 import '../AddTasks/AddTasks.dart';
 
 class homelayout extends StatefulWidget {
+  const homelayout({super.key});
+
   @override
   State<homelayout> createState() => _homelayoutState();
 }
@@ -25,8 +27,8 @@ class _homelayoutState extends State<homelayout> {
       adUnitId: Platform.isAndroid
           ? 'ca-app-pub-3940256099942544/3419835294'
           : 'ca-app-pub-3940256099942544/2934735716',
-      listener: BannerAdListener(),
-      request: AdRequest());
+      listener: const BannerAdListener(),
+      request: const AdRequest());
 
   @override
   void initState() {
@@ -100,10 +102,11 @@ class _homelayoutState extends State<homelayout> {
                 layoutCuibt.get(context).MyIndex = 0;
               });
 
-              print(notification.dismissedDate);
-/*
-              layoutCuibt.get(context).delete(id: notification.id!,rpeted: "Never");
-*/
+if(notification.channelKey=="tasksNever"){
+  layoutCuibt.get(context).delete(id: notification.id!,rpeted: "Never");
+
+}
+
             }
             if (notification.channelKey == "chatBoot") {
               Navigator.push(
@@ -191,11 +194,4 @@ class _homelayoutState extends State<homelayout> {
     super.dispose();
   }
 
-  SizedBox Wallpaperstack(Size size, context) {
-    return SizedBox(
-      height: (MediaQuery.of(context).size.height - 60),
-      width: size.width,
-      child: Image.asset("lib/Image/wallpaper.jpg", fit: BoxFit.fill),
-    );
-  }
 }

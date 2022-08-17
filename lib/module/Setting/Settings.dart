@@ -22,7 +22,7 @@ class _SettingsState extends State<Settings> {
   BannerAd(
     adUnitId: 'ca-app-pub-7041190612164401/7202609420',
     size: AdSize.fullBanner,
-    request: AdRequest(),
+    request: const AdRequest(),
     listener: BannerAdListener(
       onAdFailedToLoad:(Ad ad, LoadAdError error) {
         myBanner=null;
@@ -43,12 +43,12 @@ class _SettingsState extends State<Settings> {
     return BlocConsumer<layoutCuibt, mytasks>(
       listener: (context, state) {},
       builder: (context, state) {
-        var _cuibt = layoutCuibt.get(context);
-        var _size = MediaQuery.of(context).size;
+        var cuibt = layoutCuibt.get(context);
+        var size = MediaQuery.of(context).size;
 
         return Container(
-          height: _size.height,
-          width: _size.width,
+          height: size.height,
+          width: size.width,
           decoration: const BoxDecoration(
             image: DecorationImage(
               image: AssetImage("lib/Image/SettingWallpaper.jpg"),
@@ -66,23 +66,23 @@ class _SettingsState extends State<Settings> {
               child: ListView(
                 children: [
                   if(myBanner!=null)
-                    Container(
-                      width:_size.width,
-                      height: _size.height*.06,
+                    SizedBox(
+                      width:size.width,
+                      height: size.height*.06,
                       child: AdWidget(
                         ad: myBanner,
                       )),
                   const SizedBox(height: 35),
                   Shimmer.fromColors(
+                    baseColor: Colors.black,
+                    highlightColor: Colors.grey[400]!,
+                    period: const Duration(milliseconds: 1000),
                     child: Text(LocaleKeys.Settings.tr(),
                         style: const TextStyle(
                           fontSize: 35,
                           fontWeight: FontWeight.w800,
                         ),
                         textAlign: TextAlign.center),
-                    baseColor: Colors.black,
-                    highlightColor: Colors.grey[400]!,
-                    period: const Duration(milliseconds: 1000),
                   ),
                   const SizedBox(height: 35),
                   ExpansionTile(
@@ -107,7 +107,7 @@ class _SettingsState extends State<Settings> {
                                 color: Colors.black),
                           ),
                           onTap: () =>
-                              _cuibt.changeLocale(context, const Locale("ar"))),
+                              cuibt.changeLocale(context, const Locale("ar"))),
                       ListTile(
                           textColor: Colors.white,
                           iconColor: Colors.white,
@@ -122,7 +122,7 @@ class _SettingsState extends State<Settings> {
                                 color: Colors.black),
                           ),
                           onTap: () =>
-                              _cuibt.changeLocale(context, const Locale("en"))),
+                              cuibt.changeLocale(context, const Locale("en"))),
                     ],
                   ),
                   const SizedBox(height: 35),
@@ -149,12 +149,12 @@ class _SettingsState extends State<Settings> {
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        leading: Icon(Icons.add, size: 30, color: Colors.black),
+                        leading: const Icon(Icons.add, size: 30, color: Colors.black),
                         trailing: Switch.adaptive(
                           autofocus: true,
-                          value: _cuibt.taskReminder,
+                          value: cuibt.taskReminder,
                           onChanged: (value) =>
-                              _cuibt.cancelTaskReminder(value),
+                              cuibt.cancelTaskReminder(value),
                           splashRadius: 30,
                           activeColor: Colors.lightBlueAccent[700],
                           activeTrackColor: Colors.grey,
@@ -174,9 +174,9 @@ class _SettingsState extends State<Settings> {
                             size: 30, color: Colors.lightGreenAccent),
                         trailing: Switch.adaptive(
                           autofocus: true,
-                          value: _cuibt.moneyReminder,
+                          value: cuibt.moneyReminder,
                           onChanged: (value) =>
-                              _cuibt.cancelMoneyReminder(value),
+                              cuibt.cancelMoneyReminder(value),
                           splashRadius: 30,
                           activeColor: Colors.lightBlueAccent[700],
                           activeTrackColor: Colors.grey,
@@ -210,7 +210,7 @@ class _SettingsState extends State<Settings> {
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-                          leading: Icon(Icons.restart_alt_sharp,
+                          leading: const Icon(Icons.restart_alt_sharp,
                               size: 25, color: Colors.black),
                           style: ListTileStyle.drawer,
                           onTap: () {
@@ -253,8 +253,8 @@ class _SettingsState extends State<Settings> {
                             );
                           },
                         ),
-                        SizedBox(height: 10),
-                        if (_cuibt.changeIncome == false)
+                        const SizedBox(height: 10),
+                        if (cuibt.changeIncome == false)
                           ListTile(
                             title: Text(
                               LocaleKeys.ChangeIncome.tr(),
@@ -271,11 +271,11 @@ class _SettingsState extends State<Settings> {
                             style: ListTileStyle.drawer,
                             onTap: () {
                               setState(() {
-                                _cuibt.changeIncome = !_cuibt.changeIncome;
+                                cuibt.changeIncome = !cuibt.changeIncome;
                               });
                             },
                           ),
-                        if (_cuibt.changeIncome == true)
+                        if (cuibt.changeIncome == true)
                           Center(
                             child: Container(
                               decoration: BoxDecoration(
@@ -283,7 +283,7 @@ class _SettingsState extends State<Settings> {
                                   borderRadius:
                                       BorderRadiusDirectional.circular(25.0)),
                               child: TextFormField(
-                                  controller: _cuibt.salaryController,
+                                  controller: cuibt.salaryController,
                                   keyboardType: TextInputType.number,
                                   decoration: InputDecoration(
                                       border: InputBorder.none,
@@ -293,15 +293,14 @@ class _SettingsState extends State<Settings> {
                                         color: Colors.green,
                                       )),
                                   onFieldSubmitted: (salary) =>
-                                      _cuibt.setSalary(salary)),
+                                      cuibt.setSalary(salary)),
                             ),
                           )
                       ],
                       onExpansionChanged: (value) {
-                        print(value);
                         if (value == false) {
                           setState(() {
-                            _cuibt.changeIncome = false;
+                            cuibt.changeIncome = false;
                           });
                         }
                       }),
@@ -332,7 +331,7 @@ class _SettingsState extends State<Settings> {
                             fit: BoxFit.cover, height: 25, width: 25),
                         style: ListTileStyle.drawer,
                         onTap: () {
-                          _cuibt.faceBook();
+                          cuibt.faceBook();
                         },
                       ),
                       ListTile(
@@ -346,7 +345,7 @@ class _SettingsState extends State<Settings> {
                             fit: BoxFit.cover, height: 25, width: 25),
                         style: ListTileStyle.drawer,
                         onTap: () {
-                          _cuibt.instagram();
+                          cuibt.instagram();
                         },
                       ),
                     ],

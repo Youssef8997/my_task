@@ -1,14 +1,17 @@
+// ignore_for_file: file_names, prefer_typing_uninitialized_variables, non_constant_identifier_names
+
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'package:my_task/Componads/Com.dart';
-import 'package:my_task/Componads/my%20textformfild.dart';
+import 'package:my_task/Componads/componads.dart';
 import 'package:my_task/module/cuibt/cuibt.dart';
 import 'package:my_task/module/cuibt/loginstates.dart';
 import 'package:shimmer/shimmer.dart';
 
+import '../../Componads/my_text_form.dart';
 import '../../Translition/locale_kays.g.dart';
+import '../MyTasks/MyTasks.dart';
 
 var title = TextEditingController();
 var desc = TextEditingController();
@@ -34,7 +37,7 @@ class _TasksState extends State<Tasks> {
 
   @override
   void initState() {
-    if(id == null){
+    if (id == null) {
       time.text = DateFormat('H:mm a', "en").format(now);
       date.text = DateFormat.yMMMd("en").format(now);
       layoutCuibt.get(context).repeated = "Never";
@@ -42,7 +45,7 @@ class _TasksState extends State<Tasks> {
     }
     InterstitialAd.load(
         adUnitId: 'ca-app-pub-7041190612164401/5151161150',
-        request: AdRequest(),
+        request: const AdRequest(),
         adLoadCallback: InterstitialAdLoadCallback(
           onAdLoaded: (InterstitialAd ad) {
             setState(() {
@@ -50,7 +53,6 @@ class _TasksState extends State<Tasks> {
             });
           },
           onAdFailedToLoad: (LoadAdError error) {
-            print('InterstitialAd failed to load: $error');
           },
         ));
     super.initState();
@@ -68,20 +70,18 @@ class _TasksState extends State<Tasks> {
             LocaleKeys.Daily.tr(),
             LocaleKeys.Weekly.tr(),
             LocaleKeys.Monthly.tr(),
-
           ];
           List values = [
             "Never",
             "Daily",
-           "Weekly",
+            "Weekly",
             "Monthly",
-
           ];
           return Scaffold(
             extendBodyBehindAppBar: true,
             appBar: appbar(),
             body: wallPaperContainer(
-              Child: SafeArea(
+              child: SafeArea(
                 child: SingleChildScrollView(
                   child: Column(
                     children: [
@@ -89,18 +89,18 @@ class _TasksState extends State<Tasks> {
                         height: size.height * 0.12,
                         child: ListView.separated(
                           scrollDirection: Axis.horizontal,
-                          itemBuilder: (context, i) =>
-                              categoryAvatar(repeated[i], size, cuibt, values[i]),
-                          separatorBuilder: (context, _) => SizedBox(
+                          itemBuilder: (context, i) => categoryAvatar(
+                              repeated[i], size, cuibt, values[i]),
+                          separatorBuilder: (context, _) => const SizedBox(
                             width: 25,
                           ),
                           itemCount: 4,
                         ),
                       ),
-                      if (cuibt.repeated == "Never") NeverStepper(cuibt),
+                      if (cuibt.repeated == "Never") neverStepper(cuibt),
                       if (cuibt.repeated == "Daily") DailyStepper(cuibt),
                       if (cuibt.repeated == "Weekly") weeklyStepper(cuibt),
-                      if (cuibt.repeated == "Monthly") NeverStepper(cuibt),
+                      if (cuibt.repeated == "Monthly") neverStepper(cuibt),
                     ],
                   ),
                 ),
@@ -112,7 +112,7 @@ class _TasksState extends State<Tasks> {
         });
   }
 
-  Stepper NeverStepper(layoutCuibt cuibt) {
+  Stepper neverStepper(layoutCuibt cuibt) {
     return Stepper(
       currentStep: cuibt.currentStep,
       type: StepperType.vertical,
@@ -123,9 +123,9 @@ class _TasksState extends State<Tasks> {
                   color: Colors.black,
                   fontSize: 18,
                   fontWeight: FontWeight.bold)),
-          content: Mytextfield(
+          content: myTextForm(
             hint: "${LocaleKeys.TitleHint.tr()}......",
-            Controlr: title,
+            controller: title,
             validator: (value) {
               if (value.isEmpty) {
                 return "Please write title";
@@ -141,9 +141,9 @@ class _TasksState extends State<Tasks> {
                   color: Colors.black,
                   fontSize: 18,
                   fontWeight: FontWeight.bold)),
-          content: Mytextfield(
+          content: myTextForm(
             hint: "${LocaleKeys.DescriptionHint.tr()}......",
-            Controlr: desc,
+            controller: desc,
             validator: (value) {
               if (value.isEmpty) {
                 return "Please write description";
@@ -154,8 +154,7 @@ class _TasksState extends State<Tasks> {
           state: cuibt.currentStep > 1 ? StepState.complete : StepState.indexed,
         ),
         Step(
-          title: Text(
-               LocaleKeys.Date.tr() ,
+          title: Text(LocaleKeys.Date.tr(),
               style: const TextStyle(
                   color: Colors.black,
                   fontSize: 18,
@@ -167,7 +166,6 @@ class _TasksState extends State<Tasks> {
                 initialDate: DateTime.now(),
                 firstDate: DateTime.now(),
                 lastDate: DateTime(DateTime.now().year + 1),
-
               ).then((value) {
                 date.text = DateFormat.yMMMd("en").format(value!);
               });
@@ -197,12 +195,20 @@ class _TasksState extends State<Tasks> {
           content: InkWell(
             onTap: () {
               showTimePicker(
-                      context: context,
-                      initialTime: TimeOfDay.fromDateTime(DateTime(cuibt.handleTime()["year"],cuibt. handleTime()["month"],cuibt. handleTime()["day"], cuibt.handleTime()["hour"],cuibt. handleTime()["minute"]),),
-                      initialEntryMode: TimePickerEntryMode.input,
-
-              )
-                  .then((value) {
+                context: context,
+                initialTime: id == null
+                    ? TimeOfDay.now()
+                    : TimeOfDay.fromDateTime(
+                        DateTime(
+                            cuibt.handleTime()["year"],
+                            cuibt.handleTime()["month"],
+                            cuibt.handleTime()["day"],
+                            cuibt.handleTime()["hour"],
+                            cuibt.handleTime()["minute"]),
+                      ),
+                initialEntryMode: TimePickerEntryMode.dial,
+                helpText: LocaleKeys.EnterTime.tr(),
+              ).then((value) {
                 value ??= TimeOfDay.now();
                 time.text = value.format(context).toString();
               });
@@ -235,19 +241,19 @@ class _TasksState extends State<Tasks> {
                   style: const TextStyle(color: Colors.black)),
               items: [
                 DropdownMenuItem(
-                  child: Text(LocaleKeys.High.tr()),
                   value: "high",
                   enabled: true,
+                  child: Text(LocaleKeys.High.tr()),
                 ),
                 DropdownMenuItem(
-                  child: Text(LocaleKeys.Medium.tr()),
                   value: "medium",
                   enabled: true,
+                  child: Text(LocaleKeys.Medium.tr()),
                 ),
                 DropdownMenuItem(
-                  child: Text(LocaleKeys.Low.tr()),
                   value: "low",
                   enabled: true,
+                  child: Text(LocaleKeys.Low.tr()),
                 ),
               ],
               value: cuibt.priorityed,
@@ -276,9 +282,9 @@ class _TasksState extends State<Tasks> {
                   color: Colors.black,
                   fontSize: 18,
                   fontWeight: FontWeight.bold)),
-          content: Mytextfield(
+          content: myTextForm(
             hint: "${LocaleKeys.TitleHint.tr()}......",
-            Controlr: title,
+            controller: title,
             validator: (value) {
               if (value.isEmpty) {
                 return "Please write title";
@@ -294,9 +300,9 @@ class _TasksState extends State<Tasks> {
                   color: Colors.black,
                   fontSize: 18,
                   fontWeight: FontWeight.bold)),
-          content: Mytextfield(
+          content: myTextForm(
             hint: "${LocaleKeys.DescriptionHint.tr()}......",
-            Controlr: desc,
+            controller: desc,
             validator: (value) {
               if (value.isEmpty) {
                 return "Please write description";
@@ -349,8 +355,19 @@ class _TasksState extends State<Tasks> {
             onTap: () {
               showTimePicker(
                       context: context,
-                      initialTime: TimeOfDay.now(),
-                      initialEntryMode: TimePickerEntryMode.input)
+                      initialTime: id == null
+                          ? TimeOfDay.now()
+                          : TimeOfDay.fromDateTime(
+                              DateTime(
+                                  cuibt.handleTime()["year"],
+                                  cuibt.handleTime()["month"],
+                                  cuibt.handleTime()["day"],
+                                  cuibt.handleTime()["hour"],
+                                  cuibt.handleTime()["minute"]),
+                            ),
+                initialEntryMode: TimePickerEntryMode.dial,
+                helpText: LocaleKeys.EnterTime.tr(),
+              )
                   .then((value) {
                 value ??= TimeOfDay.now();
                 time.text = value.format(context).toString();
@@ -384,19 +401,19 @@ class _TasksState extends State<Tasks> {
                   style: const TextStyle(color: Colors.black)),
               items: [
                 DropdownMenuItem(
-                  child: Text(LocaleKeys.High.tr()),
                   value: "high",
                   enabled: true,
+                  child: Text(LocaleKeys.High.tr()),
                 ),
                 DropdownMenuItem(
-                  child: Text(LocaleKeys.Medium.tr()),
                   value: "medium",
                   enabled: true,
+                  child: Text(LocaleKeys.Medium.tr()),
                 ),
                 DropdownMenuItem(
-                  child: Text(LocaleKeys.Low.tr()),
                   value: "low",
                   enabled: true,
+                  child: Text(LocaleKeys.Low.tr()),
                 ),
               ],
               value: cuibt.priorityed,
@@ -425,9 +442,9 @@ class _TasksState extends State<Tasks> {
                   color: Colors.black,
                   fontSize: 18,
                   fontWeight: FontWeight.bold)),
-          content: Mytextfield(
+          content: myTextForm(
             hint: "${LocaleKeys.TitleHint.tr()}......",
-            Controlr: title,
+            controller: title,
             validator: (value) {
               if (value.isEmpty) {
                 return "Please write title";
@@ -443,9 +460,9 @@ class _TasksState extends State<Tasks> {
                   color: Colors.black,
                   fontSize: 18,
                   fontWeight: FontWeight.bold)),
-          content: Mytextfield(
+          content: myTextForm(
             hint: "${LocaleKeys.DescriptionHint.tr()}......",
-            Controlr: desc,
+            controller: desc,
             validator: (value) {
               if (value.isEmpty) {
                 return "Please write description";
@@ -465,8 +482,18 @@ class _TasksState extends State<Tasks> {
             onTap: () {
               showTimePicker(
                       context: context,
-                      initialTime: TimeOfDay.now(),
-                      initialEntryMode: TimePickerEntryMode.input)
+                      initialTime: id == null
+                          ? TimeOfDay.now()
+                          : TimeOfDay.fromDateTime(
+                              DateTime(
+                                  cuibt.handleTime()["year"],
+                                  cuibt.handleTime()["month"],
+                                  cuibt.handleTime()["day"],
+                                  cuibt.handleTime()["hour"],
+                                  cuibt.handleTime()["minute"]),
+                            ),
+                initialEntryMode: TimePickerEntryMode.dial,
+                helpText: LocaleKeys.EnterTime.tr(),              )
                   .then((value) {
                 value ??= TimeOfDay.now();
                 time.text = value.format(context).toString();
@@ -500,39 +527,39 @@ class _TasksState extends State<Tasks> {
                   style: const TextStyle(color: Colors.black)),
               items: [
                 DropdownMenuItem(
-                  child: Text(LocaleKeys.Sunday.tr()),
                   value: 7,
                   enabled: true,
+                  child: Text(LocaleKeys.Sunday.tr()),
                 ),
                 DropdownMenuItem(
-                  child: Text(LocaleKeys.Monday.tr()),
                   value: 1,
                   enabled: true,
+                  child: Text(LocaleKeys.Monday.tr()),
                 ),
                 DropdownMenuItem(
-                  child: Text(LocaleKeys.Tuesday.tr()),
                   value: 2,
                   enabled: true,
+                  child: Text(LocaleKeys.Tuesday.tr()),
                 ),
                 DropdownMenuItem(
-                  child: Text(LocaleKeys.Wednesday.tr()),
                   value: 3,
                   enabled: true,
+                  child: Text(LocaleKeys.Wednesday.tr()),
                 ),
                 DropdownMenuItem(
-                  child: Text("${LocaleKeys.Thursday.tr()}"),
                   value: 4,
                   enabled: true,
+                  child: Text(LocaleKeys.Thursday.tr()),
                 ),
                 DropdownMenuItem(
-                  child: Text(LocaleKeys.Friday.tr()),
                   value: 5,
                   enabled: true,
+                  child: Text(LocaleKeys.Friday.tr()),
                 ),
                 DropdownMenuItem(
-                  child: Text(LocaleKeys.Saturday.tr()),
                   value: 6,
                   enabled: true,
+                  child: Text(LocaleKeys.Saturday.tr()),
                 ),
               ],
               value: cuibt.Weekday,
@@ -550,19 +577,19 @@ class _TasksState extends State<Tasks> {
                   style: const TextStyle(color: Colors.black)),
               items: [
                 DropdownMenuItem(
-                  child: Text(LocaleKeys.High.tr()),
                   value: "high",
                   enabled: true,
+                  child: Text(LocaleKeys.High.tr()),
                 ),
                 DropdownMenuItem(
-                  child: Text(LocaleKeys.Medium.tr()),
                   value: "medium",
                   enabled: true,
+                  child: Text(LocaleKeys.Medium.tr()),
                 ),
                 DropdownMenuItem(
-                  child: Text(LocaleKeys.Low.tr()),
                   value: "low",
                   enabled: true,
+                  child: Text(LocaleKeys.Low.tr()),
                 ),
               ],
               value: cuibt.priorityed,
@@ -580,7 +607,7 @@ class _TasksState extends State<Tasks> {
     );
   }
 
-  Column categoryAvatar(title, Size size, layoutCuibt cuibt,values) {
+  Column categoryAvatar(title, Size size, layoutCuibt cuibt, values) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
@@ -593,20 +620,20 @@ class _TasksState extends State<Tasks> {
           child: Column(
             children: [
               CircleAvatar(
-                radius: 38,
+                radius: 40,
                 backgroundColor: cuibt.repeated == values
                     ? Colors.teal
                     : Colors.redAccent.shade700,
                 foregroundColor: Colors.white,
                 child: CircleAvatar(
                   foregroundColor: Colors.white,
+                  radius: 38.0,
+                  backgroundColor: Colors.white,
                   child: Text(
                     "$title",
-                    style: TextStyle(
+                    style: const TextStyle(
                         color: Colors.black, fontWeight: FontWeight.w900),
                   ),
-                  radius: 35.0,
-                  backgroundColor: Colors.white,
                 ),
               ),
               Text(
@@ -626,6 +653,14 @@ class _TasksState extends State<Tasks> {
         icon: const Icon(Icons.arrow_back, color: Colors.black),
         onPressed: () {
           Navigator.pop(context);
+          layoutCuibt.get(context).currentStep = 0;
+          layoutCuibt.get(context).insertTaskIntoVar("Never",datab: layoutCuibt.get(context).datab);
+setState(() {
+  notRepeated = true;
+  isDaily = false;
+  isWeekly = false;
+  isMonthly = false;
+});
         },
       ),
       backgroundColor: Colors.transparent,

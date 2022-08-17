@@ -10,7 +10,7 @@ class CodegenLoader extends AssetLoader {
   const CodegenLoader();
 
   @override
-  Future<Map<String, dynamic>> load(String fullPath, Locale locale) {
+  Future<Map<String, dynamic>> load(String path, Locale locale) {
     return Future.value(mapLocales[locale.toString()]);
   }
 
@@ -188,7 +188,7 @@ class CodegenLoader extends AssetLoader {
     "Description ": "Description ",
     "DescriptionHint ": "Write description of your task ",
     "time": "Time",
-    "EnterTime": "Enter Time",
+    "EnterTime": "Enter Time of your task",
     "Date": "Date",
     "EnterDate": "Enter Date",
     " Repeat": "Repeat",

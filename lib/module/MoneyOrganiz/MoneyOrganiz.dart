@@ -3,17 +3,19 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'package:my_task/Componads/my%20textformfild.dart';
 import 'package:my_task/Componads/mybutton.dart';
 import 'package:my_task/module/cuibt/cuibt.dart';
 import 'package:my_task/module/cuibt/loginstates.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:percent_indicator/percent_indicator.dart';
-import '../../Model/Model.dart';
+import '../../Componads/my_text_form.dart';
+import '../../Model/model.dart';
 import '../../Translition/locale_kays.g.dart';
 import '../../resorces/Resorces.dart';
 
 class moneyOraganize extends StatefulWidget {
+  const moneyOraganize({super.key});
+
   @override
   State<moneyOraganize> createState() => _moneyOraganizeState();
 }
@@ -31,10 +33,9 @@ class _moneyOraganizeState extends State<moneyOraganize> {
     BannerAd(
       adUnitId: 'ca-app-pub-7041190612164401/7394181118',
       size: AdSize.fullBanner,
-      request: AdRequest(),
+      request: const AdRequest(),
       listener: BannerAdListener(
         onAdFailedToLoad: (Ad ad, LoadAdError error) {
-          print(error);
         },
         onAdLoaded: (Ad ad) {
           setState(() {
@@ -51,7 +52,7 @@ class _moneyOraganizeState extends State<moneyOraganize> {
     return BlocConsumer<layoutCuibt, mytasks>(
         listener: (context, state) {},
         builder: (context, state) {
-          List<CategoryModel> Category = [
+          List<CategoryModel> category = [
             CategoryModel(
               photo: "lib/Image/House.png",
               title: LocaleKeys.Home.tr(),
@@ -113,7 +114,7 @@ class _moneyOraganizeState extends State<moneyOraganize> {
                   child: Column(
                     children: [
                       if (myBanner != null)
-                        Container(
+                        SizedBox(
                             width: size.width,
                             height: size.height * .06,
                             child: AdWidget(
@@ -127,7 +128,7 @@ class _moneyOraganizeState extends State<moneyOraganize> {
                       Flexible(
                           flex: 2,
                           child:
-                              showCategoryByGridView(context, cuibt, Category)),
+                              showCategoryByGridView(context, cuibt, category)),
                       const SizedBox(height: 25)
                     ],
                   ),
@@ -146,7 +147,7 @@ class _moneyOraganizeState extends State<moneyOraganize> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     if (myBanner != null)
-                      Container(
+                      SizedBox(
                         height: size.height * 0.07,
                         width: size.width,
                         child: AdWidget(ad: myBanner),
@@ -337,8 +338,8 @@ class _moneyOraganizeState extends State<moneyOraganize> {
                               fontStyle: FontStyle.italic,
                               color: Colors.black),
                         ),
-                        Mytextfield(
-                            Controlr: cuibt.titleController,
+                        myTextForm(
+                            controller: cuibt.titleController,
                             hint: LocaleKeys.ReasonGainMoney.tr(),
                             validator: (value) {
                               if (value.isEmpty) {
@@ -350,11 +351,11 @@ class _moneyOraganizeState extends State<moneyOraganize> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Expanded(
-                                child: Mytextfield(
-                                    keybordtype: TextInputType.none,
-                                    Controlr: cuibt.dataController,
+                                child: myTextForm(
+                                    keyboardType: TextInputType.none,
+                                    controller: cuibt.dataController,
                                     hint: LocaleKeys.when.tr(),
-                                    func: () => showDatePicker(
+                                    onTap: () => showDatePicker(
                                           context: context,
                                           initialDate: DateTime.now(),
                                           firstDate: DateTime(
@@ -376,16 +377,16 @@ class _moneyOraganizeState extends State<moneyOraganize> {
                               width: 5,
                             ),
                             Expanded(
-                                child: Mytextfield(
-                              Enabled: false,
+                                child: myTextForm(
+                              enabled: false,
                               hint: category,
                             )),
                           ],
                         ),
-                        Mytextfield(
-                            keybordtype:
-                                const TextInputType.numberWithOptions(),
-                            Controlr: cuibt.moneyController,
+                        myTextForm(
+                            keyboardType:
+                            TextInputType.number,
+                            controller: cuibt.moneyController,
                             hint: LocaleKeys.HowMuchGain.tr(),
                             validator: (value) {
                               if (value.isEmpty) {
@@ -393,8 +394,8 @@ class _moneyOraganizeState extends State<moneyOraganize> {
                               }
                               return null;
                             }),
-                        mybutton(
-                            Widget: Text(LocaleKeys.okay.tr()),
+                        myButton(
+                            text: Text(LocaleKeys.okay.tr()),
                             function: () {
                               if (cuibt.dialogFormKey.currentState!
                                   .validate()) {
@@ -432,8 +433,8 @@ class _moneyOraganizeState extends State<moneyOraganize> {
                               fontStyle: FontStyle.italic,
                               color: Colors.black),
                         ),
-                        Mytextfield(
-                            Controlr: cuibt.titleController,
+                        myTextForm(
+                            controller: cuibt.titleController,
                             hint: category == LocaleKeys.MoneySaving.tr()
                                 ? LocaleKeys.ReasonSaving.tr()
                                 : LocaleKeys.ReasonHint.tr(),
@@ -447,11 +448,11 @@ class _moneyOraganizeState extends State<moneyOraganize> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Expanded(
-                                child: Mytextfield(
-                                    keybordtype: TextInputType.none,
-                                    Controlr: cuibt.dataController,
+                                child: myTextForm(
+                                    keyboardType: TextInputType.none,
+                                    controller: cuibt.dataController,
                                     hint: LocaleKeys.when.tr(),
-                                    func: () => showDatePicker(
+                                    onTap: () => showDatePicker(
                                           context: context,
                                       initialDate: DateTime.now(),
                                       firstDate: DateTime(
@@ -473,16 +474,16 @@ class _moneyOraganizeState extends State<moneyOraganize> {
                               width: 5,
                             ),
                             Expanded(
-                                child: Mytextfield(
-                              Enabled: false,
+                                child: myTextForm(
+                              enabled: false,
                               hint: category,
                             )),
                           ],
                         ),
-                        Mytextfield(
-                            keybordtype:
-                                const TextInputType.numberWithOptions(),
-                            Controlr: cuibt.moneyController,
+                        myTextForm(
+                            keyboardType:
+                                 TextInputType.number,
+                            controller: cuibt.moneyController,
                             hint: category == LocaleKeys.MoneySaving.tr()
                                 ? LocaleKeys.moneySaving.tr()
                                 : LocaleKeys.HowMuch.tr(),
@@ -492,8 +493,8 @@ class _moneyOraganizeState extends State<moneyOraganize> {
                               }
                               return null;
                             }),
-                        mybutton(
-                            Widget: Text(LocaleKeys.okay.tr()),
+                        myButton(
+                            text: Text(LocaleKeys.okay.tr()),
                             function: () {
                               if (cuibt.dialogFormKey.currentState!
                                   .validate()) {
@@ -538,15 +539,15 @@ class _moneyOraganizeState extends State<moneyOraganize> {
                                                     });
                                                     Navigator.pop(context);
                                                   },
+                                                  style: const ButtonStyle(
+                                                    animationDuration: Duration(
+                                                        milliseconds: 900),
+                                                  ),
                                                   child: const Text("okay!",
                                                       style: TextStyle(
                                                         color: Colors.black,
                                                         fontSize: 20,
                                                       )),
-                                                  style: const ButtonStyle(
-                                                    animationDuration: Duration(
-                                                        milliseconds: 900),
-                                                  ),
                                                 ),
                                               )
                                             ],

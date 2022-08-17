@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:lottie/lottie.dart';
-import 'package:my_task/Componads/Com.dart';
+import 'package:my_task/Componads/componads.dart';
 import '../../resorces/Resorces.dart';
 import '../homelayout/layout.dart';
 import '../on_boarding_screen/onBoarding.dart';
@@ -27,14 +27,13 @@ late bool? firstTime;
   void initState() {
     RewardedAd.load(
         adUnitId: 'ca-app-pub-7041190612164401/4845136872',
-        request: AdRequest(),
+        request: const AdRequest(),
         rewardedAdLoadCallback: RewardedAdLoadCallback(
           onAdLoaded: (RewardedAd ad) {
-            print('$ad loaded.');
             rewardedAd = ad;
           },
           onAdFailedToLoad: (LoadAdError error) {
-            print('RewardedAd failed to load: $error');
+            log('RewardedAd failed to load: $error');
           },
 
         ));
@@ -77,19 +76,19 @@ late bool? firstTime;
                     log("Im in FIRST TIME");
                     _controller
                       ..duration = composition.duration
-                      ..forward().then((value) => Nevigator(
+                      ..forward().then((value) => navigator(
                           context: context,
                           page: const OnBoarding(),
-                          bool: false));
+                          returnPage: false));
                   }
                    else{
                      _controller
                        ..duration = composition.duration
                        ..forward().then((value) {
-                         Nevigator(
+                         navigator(
                              context: context,
-                             page: homelayout(),
-                             bool: false);
+                             page: const homelayout(),
+                             returnPage: false);
                          if(rewardedAd!=null) {
                            rewardedAd.show(
                                onUserEarnedReward: (AdWithoutView ad,
