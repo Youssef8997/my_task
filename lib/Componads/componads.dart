@@ -4,7 +4,7 @@ Future navigator({page, context, returnPage = false}) {
       return Navigator.pushAndRemoveUntil(context,MaterialPageRoute(builder: (context)=> page),(Route route)=>returnPage);
 }
 
-Container wallPaperContainer({required child,required pathImage,required Size size}){
+Container wallPaperContainer({required child,required pathImage,required Size size,colorFilter}){
   return Container(
     height: size.height,
     width: size.width,
@@ -12,6 +12,7 @@ Container wallPaperContainer({required child,required pathImage,required Size si
       image: DecorationImage(
         image: AssetImage(pathImage),
         fit: BoxFit.fill,
+        colorFilter: colorFilter,
       ),
     ),
     child: child,

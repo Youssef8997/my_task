@@ -69,7 +69,8 @@ class _HomeTasksState extends State<HomeTasks> {
         var cuibt = layoutCuibt.get(context);
         return wallPaperContainer(
             child: SafeArea(
-              child: Column(
+              child: Column
+                (
                 mainAxisSize: MainAxisSize.max,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -85,11 +86,11 @@ class _HomeTasksState extends State<HomeTasks> {
                   // row of buttons to add tasks and hi massage,
                   textUpContainer(context, size, cuibt),
                   SizedBox(
-                    height: size.height * 0.01,
+                    height: size.height * 0.00001,
                   ),
                   if (tasks.isEmpty)
                     Center(
-                      heightFactor: 4,
+                      heightFactor: size.flipped.height * 0.005,
                       child: Padding(
                         padding: const EdgeInsets.all(15),
                         child: Text(
@@ -105,6 +106,8 @@ class _HomeTasksState extends State<HomeTasks> {
               ),
             ),
             pathImage: "lib/Image/wallpaper.jpg",
+            colorFilter:const  ColorFilter.mode(
+                Colors.black12, BlendMode.darken),
             size: size);
       },
     );
@@ -440,6 +443,7 @@ class _HomeTasksState extends State<HomeTasks> {
                 selectedTileColor: Colors.white,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     Text(LocaleKeys.Filters.tr(),
                         style: GoogleFonts.ptSerif(
@@ -447,9 +451,6 @@ class _HomeTasksState extends State<HomeTasks> {
                             fontSize: 30.0,
                             fontStyle: FontStyle.italic,
                             fontWeight: FontWeight.w900)),
-                    const SizedBox(
-                      height: 20,
-                    ),
                     ListTile(
                         title: Text(LocaleKeys.Never.tr(),
                             style: GoogleFonts.ptSerif(
@@ -475,9 +476,6 @@ class _HomeTasksState extends State<HomeTasks> {
                               .insertTaskIntoVar("Never",datab: layoutCuibt.get(context).datab);
                           Navigator.pop(context);
                         }),
-                    const SizedBox(
-                      height: 20,
-                    ),
                     ListTile(
                         title: Text(LocaleKeys.Daily.tr(),
                             style: GoogleFonts.ptSerif(
@@ -504,9 +502,6 @@ class _HomeTasksState extends State<HomeTasks> {
                               .insertTaskIntoVar("daily",datab: layoutCuibt.get(context).datab);
                           Navigator.pop(context);
                         }),
-                    const SizedBox(
-                      height: 20,
-                    ),
                     ListTile(
                       title: Text(LocaleKeys.Weekly.tr(),
                           style: GoogleFonts.ptSerif(
@@ -534,9 +529,6 @@ class _HomeTasksState extends State<HomeTasks> {
                       },
                       selected: isWeekly,
                     ),
-                    const SizedBox(
-                      height: 20,
-                    ),
                     ListTile(
                       title: Text(LocaleKeys.Monthly.tr(),
                           style: GoogleFonts.ptSerif(
@@ -563,9 +555,6 @@ class _HomeTasksState extends State<HomeTasks> {
                         Navigator.pop(context);
                       },
                       selected: isMonthly,
-                    ),
-                    const SizedBox(
-                      height: 20,
                     ),
                   ],
                 ),

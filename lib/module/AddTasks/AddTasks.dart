@@ -82,17 +82,20 @@ class _TasksState extends State<Tasks> {
             appBar: appbar(),
             body: wallPaperContainer(
               child: SafeArea(
+
                 child: SingleChildScrollView(
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
                   child: Column(
                     children: [
                       SizedBox(
-                        height: size.height * 0.12,
+                        height: size.height * 0.15,
+                        width: size.width,
                         child: ListView.separated(
                           scrollDirection: Axis.horizontal,
                           itemBuilder: (context, i) => categoryAvatar(
                               repeated[i], size, cuibt, values[i]),
-                          separatorBuilder: (context, _) => const SizedBox(
-                            width: 25,
+                          separatorBuilder: (context, _) =>  SizedBox(
+                            width:  size.width*.1,
                           ),
                           itemCount: 4,
                         ),
@@ -620,19 +623,20 @@ class _TasksState extends State<Tasks> {
           child: Column(
             children: [
               CircleAvatar(
-                radius: 40,
+                radius: size.height * 0.045 ,
                 backgroundColor: cuibt.repeated == values
                     ? Colors.teal
                     : Colors.redAccent.shade700,
                 foregroundColor: Colors.white,
                 child: CircleAvatar(
                   foregroundColor: Colors.white,
-                  radius: 38.0,
+                  radius:  size.height * 0.04,
                   backgroundColor: Colors.white,
                   child: Text(
                     "$title",
                     style: const TextStyle(
-                        color: Colors.black, fontWeight: FontWeight.w900),
+                        color: Colors.black, fontWeight: FontWeight.w900,
+                    ),
                   ),
                 ),
               ),

@@ -5,6 +5,7 @@ import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
 import 'package:my_task/Componads/componads.dart';
 import 'package:my_task/Model/model.dart';
 import 'package:my_task/Translition/locale_kays.g.dart';
@@ -480,7 +481,6 @@ class layoutCuibt extends Cubit<mytasks> {
     emit(getsallary());
   }
 
-
   void budgetDate(value) {
     dataController.text = DateFormat.yMMMd("en").format(value!);
     emit(changedate());
@@ -846,8 +846,7 @@ class layoutCuibt extends Cubit<mytasks> {
             minute: handleTime()["minute"],
             second: 00,
           ));
-    }
-    else if (repeat == "Weekly") {
+    } else if (repeat == "Weekly") {
       await AwesomeNotifications().createNotification(
           content: NotificationContent(
             id: id,
@@ -872,8 +871,7 @@ class layoutCuibt extends Cubit<mytasks> {
             minute: handleTime()["minute"],
             second: 00,
           ));
-    }
-    else if (repeat == "Monthly") {
+    } else if (repeat == "Monthly") {
       await AwesomeNotifications().createNotification(
           content: NotificationContent(
             id: id,
@@ -898,8 +896,7 @@ class layoutCuibt extends Cubit<mytasks> {
             minute: handleTime()["minute"],
             second: 00,
           ));
-    }
-    else if (repeat == "Never") {
+    } else if (repeat == "Never") {
       await AwesomeNotifications().createNotification(
         content: NotificationContent(
           id: id,
@@ -954,8 +951,9 @@ class layoutCuibt extends Cubit<mytasks> {
     if (await canLaunchUrl(Uri.parse(url))) {
       await launchUrl(Uri.parse(url),
           mode: LaunchMode.externalNonBrowserApplication);
+      emit(openApp());
     } else {
-      throw 'There was a problem to open the url: $url';
+      emit(openAppError());
     }
   }
 
@@ -964,8 +962,10 @@ class layoutCuibt extends Cubit<mytasks> {
     if (await canLaunchUrl(Uri.parse(url))) {
       await launchUrl(Uri.parse(url),
           mode: LaunchMode.externalNonBrowserApplication);
+      emit(openApp());
+
     } else {
-      throw 'There was a problem to open the url: $url';
+      emit(openAppError());
     }
   }
 }

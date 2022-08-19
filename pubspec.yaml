@@ -52,6 +52,7 @@ dependencies:
   shimmer: ^2.0.0
   google_mobile_ads: ^2.0.0
   url_launcher: ^6.1.5
+  motion_toast: ^2.3.2
 dev_dependencies:
   flutter_test:
     sdk: flutter

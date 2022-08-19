@@ -53,8 +53,11 @@ class _analyticsState extends State<analytics> {
             width: size.width,
             decoration: const BoxDecoration(
               image: DecorationImage(
-                image:AssetImage("lib/Image/businessWallpepar.jpg"),
+                image: AssetImage("lib/Image/analytics.jpg"),
                 fit: BoxFit.fill,
+                colorFilter: ColorFilter.mode(
+                    Colors.black26, BlendMode.darken),
+
               ),
             ),
             child:SafeArea(

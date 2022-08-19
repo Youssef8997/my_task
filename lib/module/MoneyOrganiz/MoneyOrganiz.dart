@@ -107,8 +107,11 @@ class _moneyOraganizeState extends State<moneyOraganize> {
                   height: size.height,
                   decoration: const BoxDecoration(
                     image: DecorationImage(
-                      image: AssetImage("lib/Image/businessWallpepar.jpg"),
-                      fit: BoxFit.cover,
+                      image: AssetImage("lib/Image/balance.jpg"),
+                      fit: BoxFit.fill,
+                      colorFilter: ColorFilter.mode(
+                          Colors.black12, BlendMode.darken),
+
                     ),
                   ),
                   child: Column(
@@ -125,10 +128,11 @@ class _moneyOraganizeState extends State<moneyOraganize> {
                         size,
                         precent,
                       )),
+                      const SizedBox(height: 25),
                       Flexible(
                           flex: 2,
                           child:
-                              showCategoryByGridView(context, cuibt, category)),
+                              showCategoryByGridView(context, cuibt, category,size)),
                       const SizedBox(height: 25)
                     ],
                   ),
@@ -138,13 +142,16 @@ class _moneyOraganizeState extends State<moneyOraganize> {
             fallback: (context) => Container(
               decoration: const BoxDecoration(
                 image: DecorationImage(
-                  image: AssetImage("lib/Image/businessWallpepar.jpg"),
-                  fit: BoxFit.cover,
+                  image: AssetImage("lib/Image/balance.jpg"),
+                  fit: BoxFit.fill,
+                  colorFilter: ColorFilter.mode(
+                      Colors.black12, BlendMode.darken),
+
                 ),
               ),
               child: SafeArea(
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     if (myBanner != null)
                       SizedBox(
@@ -152,8 +159,8 @@ class _moneyOraganizeState extends State<moneyOraganize> {
                         width: size.width,
                         child: AdWidget(ad: myBanner),
                       ),
-                    const SizedBox(
-                      height: 100,
+                     SizedBox(
+                      height: size.height * 0.2,
                     ),
                     Text(
                       LocaleKeys.EnterSalary.tr(),
@@ -164,8 +171,8 @@ class _moneyOraganizeState extends State<moneyOraganize> {
                           color: Colors.white),
                       textAlign: TextAlign.start,
                     ),
-                    const SizedBox(
-                      height: 25,
+                     SizedBox(
+                      height: size.height * 0.07,
                     ),
                     Center(
                       child: Container(
@@ -195,19 +202,21 @@ class _moneyOraganizeState extends State<moneyOraganize> {
         });
   }
 
-  Widget showCategoryByGridView(context, layoutCuibt cuibt, Category) {
+  Widget showCategoryByGridView(context, layoutCuibt cuibt, Category,Size size) {
     return GridView.count(
+      // mainAxisSpacing: 10,
+      childAspectRatio: (size.height/size.width)*.5 ,
       shrinkWrap: true,
       controller: scrollController,
       keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.manual,
       scrollDirection: Axis.horizontal,
       crossAxisCount: 3,
       children: List.generate(Category.length,
-          (index) => categoryAvatar(Category[index], context, cuibt)),
+          (index) => categoryAvatar(Category[index], context, cuibt,size)),
     );
   }
 
-  Column categoryAvatar(CategoryModel model, context, layoutCuibt cuibt) {
+  Column categoryAvatar(CategoryModel model, context, layoutCuibt cuibt,Size size) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
@@ -228,8 +237,8 @@ class _moneyOraganizeState extends State<moneyOraganize> {
             showBottomSheet(context, cuibt);
           },
           child: Container(
-            width: 130,
-            height: 140,
+            width: size.width * 0.32,
+            height: size.height * 0.17,
             decoration: BoxDecoration(
                 color: Colors.white.withOpacity(.8),
                 borderRadius: BorderRadiusDirectional.circular(30.0)),
@@ -239,7 +248,7 @@ class _moneyOraganizeState extends State<moneyOraganize> {
                   height: 3,
                 ),
                 CircleAvatar(
-                  radius: 53,
+                  radius: size.height * 0.068,
                   backgroundColor: Colors.redAccent.shade700,
                   foregroundColor: Colors.white,
                   child: CircleAvatar(
@@ -247,7 +256,7 @@ class _moneyOraganizeState extends State<moneyOraganize> {
                     backgroundImage: AssetImage(
                       model.photo!,
                     ),
-                    radius: 50.0,
+                    radius:size.height * 0.064,
                     backgroundColor: Colors.white,
                   ),
                 ),
@@ -267,30 +276,27 @@ class _moneyOraganizeState extends State<moneyOraganize> {
     Size size,
     double percent,
   ) {
-    return SizedBox(
-      height: size.height * .3,
-      width: size.width * .9,
-      child: CircularPercentIndicator(
-        radius: 250,
-        lineWidth: 12,
-        linearGradient: const LinearGradient(colors: [
-          Colors.tealAccent,
-          Colors.blue,
-        ]),
-        percent: percent > 1 ? 1 : percent,
-        center: Text("${(percent * 100).ceil()}%",
-            style: const TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
-                fontSize: 20)),
-        arcBackgroundColor: Colors.white54,
-        animation: true,
-        addAutomaticKeepAlive: true,
-        animationDuration: 1200,
-        animateFromLastPercent: false,
-        curve: Curves.easeInCubic,
-        arcType: ArcType.FULL,
-      ),
+    return CircularPercentIndicator(
+      radius: size.height * 0.29,
+      lineWidth: size.width * 0.03,
+      linearGradient:  LinearGradient(colors: [
+        Colors.red,
+        Colors.teal[400]!,
+        Colors.green,
+      ]),
+      percent: percent > 1 ? 1 : percent,
+      center: Text("${(percent * 100).ceil()}%",
+          style:  TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+              fontSize:  size.width * 0.05)),
+      arcBackgroundColor: Colors.white54,
+      animation: true,
+      addAutomaticKeepAlive: true,
+      animationDuration: 1200,
+      animateFromLastPercent: false,
+      curve: Curves.easeInCubic,
+      arcType: ArcType.FULL,
     );
   }
 

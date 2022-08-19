@@ -32,4 +32,6 @@ class  HandleMassage extends mytasks{}
 class  CancelTasksRemind extends mytasks{}
 class  CancelMoneyRemind extends mytasks{}
 class  ChangeLocale extends mytasks{}
+class  openApp extends mytasks{}
+class  openAppError extends mytasks{}
 

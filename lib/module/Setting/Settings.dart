@@ -1,4 +1,6 @@
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:motion_toast/motion_toast.dart';
+import 'package:motion_toast/resources/arrays.dart';
 import 'package:my_task/lib/sherdeprefrence/sherdhelp.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -41,7 +43,25 @@ class _SettingsState extends State<Settings> {
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<layoutCuibt, mytasks>(
-      listener: (context, state) {},
+      listener: (context, state) {
+        if (state is openAppError)
+          {
+            MotionToast.error(
+              description: const Text("maybe you need to install it"),
+              title: const Text("Couldn't lunch the faceBook"),
+              height: 100,
+              width: 350,
+              animationDuration: const Duration(milliseconds: 900),
+              borderRadius: 25,
+              barrierColor: Colors.black.withOpacity(0.5),
+              position: MotionToastPosition.bottom,
+              toastDuration: const Duration(milliseconds: 600,),
+              animationType: AnimationType.fromBottom,
+
+            ).show(context);
+
+          }
+      },
       builder: (context, state) {
         var cuibt = layoutCuibt.get(context);
         var size = MediaQuery.of(context).size;

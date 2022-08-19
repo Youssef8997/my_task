@@ -188,7 +188,7 @@ List<pagemodel> module = [
       title:LocaleKeys.onBoardingTitle2.tr(),
       body: ""),
   pagemodel(
-      page: "lib/Image/3index.jpg", title:LocaleKeys.onBoardingTitle3.tr(), body: "")
+      page: "lib/Image/3index.jpg", title:LocaleKeys.onBoardingDec1.tr(), body: "")
 ];
 
 Widget page(pagemodel module, context) {
@@ -209,8 +209,9 @@ Widget page(pagemodel module, context) {
             )),
       ),
       Container(
-        height: size.height * .25,
+        height: size.height * .2,
         width: size.width,
+        padding: const EdgeInsets.symmetric(horizontal: 20),
         decoration: BoxDecoration(
             color: ColorManger.maincolor,
             borderRadius: const BorderRadius.only(
@@ -218,29 +219,14 @@ Widget page(pagemodel module, context) {
               topRight: Radius.circular(55.0),
             )),
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const SizedBox(
-              height: 55,
-            ),
             SizedBox(
-              width: 250,
-              child: Text(module.body,
-                  style: const TextStyle(
-                    fontSize: 22,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black,
-                    fontStyle: FontStyle.italic,
-                  )),
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            SizedBox(
-              width: 250,
+              width: size.width,
               child: Text(
                 module.title,
                 style: TextStyle(
-                  fontSize: 22,
+                  fontSize: size.height*.04,
                   fontWeight: FontWeight.w600,
                   color: Colors.grey[700]!,
                   fontStyle: FontStyle.italic,
@@ -250,6 +236,6 @@ Widget page(pagemodel module, context) {
           ],
         ),
       ),
-    ],
+  ],
   );
 }
