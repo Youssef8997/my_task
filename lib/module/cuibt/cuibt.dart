@@ -5,6 +5,7 @@ import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:motion_toast/motion_toast.dart';
 
 import 'package:my_task/Componads/componads.dart';
 import 'package:my_task/Model/model.dart';
@@ -30,9 +31,9 @@ class layoutCuibt extends Cubit<mytasks> {
   var controllerChat = ScrollController();
   String category = "Gained money";
   var dialogFormKey = GlobalKey<FormState>();
-  bool taskReminder = true;
-  bool moneyReminder = true;
-
+  bool taskReminder =sherdprefrence.getdate(key: "taskReminder")??true;
+  bool moneyReminder = sherdprefrence.getdate(key: "moneyReminder")??true;
+  var pageController = PageController(initialPage: 0, keepPage: true);
   // massage which will be send from the robot
   List<RobotChatModel> robotResponded = [
     RobotChatModel(LocaleKeys.firstMassage.tr(), "Robot",
@@ -89,8 +90,8 @@ class layoutCuibt extends Cubit<mytasks> {
   var moneyController = TextEditingController();
   var salaryController = TextEditingController();
   bool changeIncome = false;
-  var controller = PageController(initialPage: 0);
-  List body = [
+  var controller = PageController();
+  List<Widget> body = [
     const HomeTasks(),
     const moneyOraganize(),
     const analytics(),
@@ -98,9 +99,10 @@ class layoutCuibt extends Cubit<mytasks> {
   ];
 
   void ChangeIndex(index) {
+      pageController.animateToPage(index,
+        duration: const Duration(milliseconds: 600), curve: Curves.easeInOutCubic);
     MyIndex = index;
-    /*pageController.animateToPage(index,
-      duration: Duration(milliseconds: 300), curve: Curves.ease);*/
+
     emit(ChangeMyIndex());
   }
 
@@ -110,7 +112,7 @@ class layoutCuibt extends Cubit<mytasks> {
         onCreate: (datab, version) {
       sherdprefrence.setdate(key: "ResetBudget", value: true);
       datab.execute(
-          'CREATE TABLE TASKS (id INTEGER PRIMARY KEY,title TEXT,desc TEXT,data TEXT ,time STRING,repeat TEXT,priority TEXT,WeekDay TEXT)');
+          'CREATE TABLE TASKS (id INTEGER PRIMARY KEY,title TEXT,desc TEXT,data TEXT ,time STRING,repeat TEXT,priority TEXT,WeekDay TEXT,isDismiss TEXT)');
       datab
           .execute(
               'CREATE TABLE BUDGET (id INTEGER PRIMARY KEY,title TEXT,MONEY num, MONEYAfter num,data STRING,catogry TEXT)')
@@ -165,7 +167,7 @@ class layoutCuibt extends Cubit<mytasks> {
         tasks = value;
         emit(GetTasksSucssesful());
       });
-    } else if (repeat == "daily") {
+    } else if (repeat == "Daily") {
       getTasksDaily(datab).then((value) {
         tasks = [];
         tasks = value;
@@ -240,7 +242,7 @@ class layoutCuibt extends Cubit<mytasks> {
     await datab.transaction((txn) {
       txn
           .rawInsert(
-              'INSERT INTO TASKS(title,desc,time,data,repeat,priority,WeekDay)VALUES("$title","$desc","$time","$date","$repeat","$priority","$Weekday")')
+              'INSERT INTO TASKS(title,desc,time,data,repeat,priority,WeekDay,isDismiss)VALUES("$title","$desc","$time","$date","$repeat","$priority","$Weekday","false")')
           .then((Id) {
         //to be can get the id of the task to make notification when the insert is done
         id = Id;
@@ -710,12 +712,12 @@ class layoutCuibt extends Cubit<mytasks> {
       catagoryController.text = "lib/Image/helthcare.jpg";
     } else if (category == LocaleKeys.Fun.tr()) {
       catagoryController.text =
-          "lib/Image/group-young-friends-having-fun-together-vector-26803087.jpg";
+          "lib/Image/fun.jpg";
     } else if (category == LocaleKeys.Travel.tr()) {
       catagoryController.text =
-          "lib/Image/travel-logo-vector-illustration-black-airplane-isolated-white-115729130.jpg";
+          "lib/Image/travel.jpg";
     } else if (category == LocaleKeys.MoneySaving.tr()) {
-      catagoryController.text = "lib/Image/logo-template-44-.jpg";
+      catagoryController.text = "lib/Image/savingMoney.jpg";
     } else if (category == LocaleKeys.Teaching.tr()) {
       catagoryController.text = "lib/Image/Teaching.png";
     } else if (category == LocaleKeys.food.tr()) {
@@ -735,11 +737,11 @@ class layoutCuibt extends Cubit<mytasks> {
         return LocaleKeys.clothes.tr();
       case "lib/Image/helthcare.jpg":
         return LocaleKeys.Healthcare.tr();
-      case "lib/Image/group-young-friends-having-fun-together-vector-26803087.jpg":
+      case "lib/Image/fun.jpg":
         return LocaleKeys.Fun.tr();
-      case "lib/Image/travel-logo-vector-illustration-black-airplane-isolated-white-115729130.jpg":
+      case "lib/Image/travel.jpg":
         return LocaleKeys.Travel.tr();
-      case "lib/Image/logo-template-44-.jpg":
+      case "lib/Image/savingMoney.jpg":
         return LocaleKeys.MoneySaving.tr();
       case "lib/Image/Teaching.png":
         return LocaleKeys.Teaching.tr();
@@ -755,9 +757,11 @@ class layoutCuibt extends Cubit<mytasks> {
   void cancelTaskReminder(value) {
     taskReminder = value;
     if (taskReminder == false) {
+      sherdprefrence.setdate(key: "taskReminder", value: false);
       AwesomeNotifications().cancel(2 * 6000);
       AwesomeNotifications().cancelSchedule(2 * 6000);
     } else {
+      sherdprefrence.setdate(key: "taskReminder", value: true);
       AwesomeNotifications().createNotification(
           content: NotificationContent(
             channelKey: 'chatBoot',
@@ -785,9 +789,11 @@ class layoutCuibt extends Cubit<mytasks> {
   void cancelMoneyReminder(value) {
     moneyReminder = value;
     if (moneyReminder == false) {
+      sherdprefrence.setdate(key: "moneyReminder", value: false);
       AwesomeNotifications().cancel(2 * 700);
       AwesomeNotifications().cancelSchedule(2 * 700);
     } else {
+      sherdprefrence.setdate(key: "moneyReminder", value: true);
       AwesomeNotifications().createNotification(
           content: NotificationContent(
             channelKey: 'Budget',
@@ -804,7 +810,7 @@ class layoutCuibt extends Cubit<mytasks> {
             ),
           ],
           schedule: NotificationInterval(
-            interval: 21700,
+            interval: 25200,
             preciseAlarm: true,
             allowWhileIdle: true,
             repeats: true,
@@ -931,6 +937,144 @@ class layoutCuibt extends Cubit<mytasks> {
     date.clear();
   }
 
+  void handleBuildNotification({
+    required title,
+    required desc,
+    required repeat,
+    required id,
+    required Time,
+    required Date,
+  }) async {
+    time.text=Time;
+   date.text=Date;
+    //to increase the badge number
+    await AwesomeNotifications().getGlobalBadgeCounter().then(
+        (badge) => AwesomeNotifications().setGlobalBadgeCounter(badge + 1));
+    if (repeat == "Daily") {
+      await AwesomeNotifications().createNotification(
+          content: NotificationContent(
+            id: id,
+            channelKey: "tasks1",
+            title: title,
+            body: desc,
+            autoDismissible: true,
+            wakeUpScreen: true,
+            customSound: "resource://raw/alarm",
+            locked: true,
+            category: NotificationCategory.Reminder,
+            criticalAlert: true,
+            showWhen: true,
+            ticker: "ticker",
+          ),
+          schedule: NotificationCalendar(
+            allowWhileIdle: true,
+            repeats: true,
+            preciseAlarm: true,
+            hour: handleTime()["hour"],
+            minute: handleTime()["minute"],
+            second: 00,
+          ));
+    }
+    else if (repeat == "Weekly") {
+      await AwesomeNotifications().createNotification(
+          content: NotificationContent(
+            id: id,
+            channelKey: "tasks1",
+            title: title,
+            body: desc,
+            autoDismissible: true,
+            wakeUpScreen: true,
+            customSound: "resource://raw/alarm",
+            locked: true,
+            category: NotificationCategory.Reminder,
+            criticalAlert: true,
+            showWhen: true,
+            ticker: "ticker",
+          ),
+          schedule: NotificationCalendar(
+            repeats: true,
+            allowWhileIdle: true,
+            preciseAlarm: true,
+            weekday: Weekday,
+            hour: handleTime()["hour"],
+            minute: handleTime()["minute"],
+            second: 00,
+          ));
+    }
+    else if (repeat == "Monthly") {
+      await AwesomeNotifications().createNotification(
+          content: NotificationContent(
+            id: id,
+            channelKey: "tasks1",
+            title: title,
+            body: desc,
+            autoDismissible: true,
+            wakeUpScreen: true,
+            customSound: "resource://raw/alarm",
+            locked: true,
+            category: NotificationCategory.Reminder,
+            criticalAlert: true,
+            showWhen: true,
+            ticker: "ticker",
+          ),
+          schedule: NotificationCalendar(
+            repeats: true,
+            allowWhileIdle: true,
+            preciseAlarm: true,
+            day: handleTime()["day"],
+            hour: handleTime()["hour"],
+            minute: handleTime()["minute"],
+            second: 00,
+          ));
+    }
+    else if (repeat == "Never") {
+      await AwesomeNotifications().createNotification(
+        content: NotificationContent(
+          id: id,
+          channelKey: "tasksNever",
+          title: title,
+          body: desc,
+          autoDismissible: true,
+          wakeUpScreen: true,
+          customSound: "resource://raw/alarm",
+          locked: true,
+          category: NotificationCategory.Reminder,
+          criticalAlert: true,
+          showWhen: true,
+          ticker: "ticker",
+        ),
+        schedule: NotificationCalendar.fromDate(
+            date: DateTime(
+                handleTime()["year"],
+                handleTime()["month"],
+                handleTime()["day"],
+                handleTime()["hour"],
+                handleTime()["minute"]),
+            allowWhileIdle: true,
+            preciseAlarm: true,
+            repeats: false),
+      );
+    }
+    await datab.rawUpdate('UPDATE TASKS SET isDismiss=? WHERE id=? ',["false", id]);
+    insertTaskIntoVar(repeat,datab: datab);
+
+  }
+
+  void dismissNotification(id, context,repeat) async {
+
+    await AwesomeNotifications().cancelSchedule(id).then((value) {
+       datab.rawUpdate('UPDATE TASKS SET isDismiss=? WHERE id=? ',["true", id]);
+       print(repeat);
+       insertTaskIntoVar(repeat,datab: datab);
+
+    });
+    MotionToast.warning(
+      description: const Text("Notification dismissed"),
+      borderRadius: 25,
+      toastDuration: const Duration(milliseconds: 600),
+    ).show(context);
+  }
+
   Map handleTime() {
     int year = int.parse(date.text.split(", ")[1]);
     int month = _convertNameMonthToNumber(date.text.substring(0, 3));
@@ -963,7 +1107,6 @@ class layoutCuibt extends Cubit<mytasks> {
       await launchUrl(Uri.parse(url),
           mode: LaunchMode.externalNonBrowserApplication);
       emit(openApp());
-
     } else {
       emit(openAppError());
     }

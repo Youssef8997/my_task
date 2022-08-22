@@ -131,6 +131,9 @@ class CodegenLoader extends AssetLoader {
     "SavingTitle": "ادخار المال",
     "ReasonSaving": "لماذا ستدخر هذا المال؟",
     "moneySaving":"كم ستدخر من المال؟",
+    "Edit":"تعديل",
+    "dismiss":"تعطيل",
+    "Activation":"تنشيط",
   };
   static const Map<String, dynamic> en = {
     "onBoardingTitle1":
@@ -249,6 +252,9 @@ class CodegenLoader extends AssetLoader {
     "SavingTitle": "Saving money",
     "ReasonSaving": "Why you will saving this money?",
     "moneySaving": "how much you will saving?",
+    "Edit": "Edit",
+    "dismiss": "dismiss",
+    "Activation": "Activation",
 
   };
   static const Map<String, Map<String, dynamic>> mapLocales = {

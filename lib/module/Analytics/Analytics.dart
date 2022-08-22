@@ -9,9 +9,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:shimmer/shimmer.dart';
 import '../../Translition/locale_kays.g.dart';
-import '../../resorces/Resorces.dart';
+import '../../resorces/Photo_manger.dart';
 import 'package:my_task/module/cuibt/cuibt.dart';
 import 'package:my_task/module/cuibt/loginstates.dart';
+
+import '../../resorces/colorsManger.dart';
+
 class analytics extends StatefulWidget {
   const analytics({super.key});
 
@@ -53,7 +56,7 @@ class _analyticsState extends State<analytics> {
             width: size.width,
             decoration: const BoxDecoration(
               image: DecorationImage(
-                image: AssetImage("lib/Image/analytics.jpg"),
+                image: AssetImage(PhotoManger.analyticsWallpaper),
                 fit: BoxFit.fill,
                 colorFilter: ColorFilter.mode(
                     Colors.black26, BlendMode.darken),

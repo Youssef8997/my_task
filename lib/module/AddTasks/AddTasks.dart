@@ -2,6 +2,7 @@
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:my_task/Componads/componads.dart';
@@ -11,6 +12,7 @@ import 'package:shimmer/shimmer.dart';
 
 import '../../Componads/my_text_form.dart';
 import '../../Translition/locale_kays.g.dart';
+import '../../resorces/Photo_manger.dart';
 import '../MyTasks/MyTasks.dart';
 
 var title = TextEditingController();
@@ -108,7 +110,7 @@ class _TasksState extends State<Tasks> {
                   ),
                 ),
               ),
-              pathImage: "lib/Image/AddtaskBack.jpg",
+              pathImage: PhotoManger.addWallpaper,
               size: size,
             ),
           );
@@ -653,6 +655,12 @@ class _TasksState extends State<Tasks> {
 
   AppBar appbar() {
     return AppBar(
+      systemOverlayStyle: const SystemUiOverlayStyle(
+        statusBarBrightness: Brightness.light,
+        statusBarColor: Colors.transparent,
+        statusBarIconBrightness: Brightness.dark,
+        systemNavigationBarContrastEnforced: true,
+      ),
       leading: IconButton(
         icon: const Icon(Icons.arrow_back, color: Colors.black),
         onPressed: () {
@@ -677,15 +685,7 @@ setState(() {
         ),
       ),
       centerTitle: true,
-      actions: const [
-        Padding(
-          padding: EdgeInsets.all(8.0),
-          child: CircleAvatar(
-            radius: 20,
-            backgroundImage: AssetImage("lib/Image/manavatar.jpg"),
-          ),
-        ),
-      ],
+
     );
   }
 }

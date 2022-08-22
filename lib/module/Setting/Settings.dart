@@ -9,6 +9,7 @@ import 'package:my_task/module/cuibt/cuibt.dart';
 import 'package:my_task/module/cuibt/loginstates.dart';
 import 'package:shimmer/shimmer.dart';
 import '../../Translition/locale_kays.g.dart';
+import '../../resorces/Photo_manger.dart';
 
 class Settings extends StatefulWidget {
   const Settings({Key? key}) : super(key: key);
@@ -71,7 +72,7 @@ class _SettingsState extends State<Settings> {
           width: size.width,
           decoration: const BoxDecoration(
             image: DecorationImage(
-              image: AssetImage("lib/Image/SettingWallpaper.jpg"),
+              image: AssetImage(PhotoManger.settingWallpaper),
               fit: BoxFit.fill,
             ),
           ),
@@ -347,7 +348,7 @@ class _SettingsState extends State<Settings> {
                               fontWeight: FontWeight.bold,
                               color: Colors.black,
                             )),
-                        leading: Image.asset("lib/Image/facebook.png",
+                        leading: Image.asset(PhotoManger.facebookLogo,
                             fit: BoxFit.cover, height: 25, width: 25),
                         style: ListTileStyle.drawer,
                         onTap: () {
@@ -361,7 +362,7 @@ class _SettingsState extends State<Settings> {
                               fontWeight: FontWeight.bold,
                               color: Colors.black,
                             )),
-                        leading: Image.asset("lib/Image/Instagram.png",
+                        leading: Image.asset(PhotoManger.instagramLogo,
                             fit: BoxFit.cover, height: 25, width: 25),
                         style: ListTileStyle.drawer,
                         onTap: () {

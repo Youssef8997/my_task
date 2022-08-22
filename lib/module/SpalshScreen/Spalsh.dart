@@ -5,7 +5,8 @@ import 'package:flutter/services.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:lottie/lottie.dart';
 import 'package:my_task/Componads/componads.dart';
-import '../../resorces/Resorces.dart';
+import '../../resorces/Photo_manger.dart';
+import '../../resorces/colorsManger.dart';
 import '../homelayout/layout.dart';
 import '../on_boarding_screen/onBoarding.dart';
 // ignore: must_be_immutable
@@ -67,7 +68,7 @@ late bool? firstTime;
           children: [
             Center(
               child: Lottie.asset(
-                "lib/Image/Splash json.json",
+                PhotoManger.lottieAnimation,
                 controller: _controller,
                 reverse: true,
                 repeat: true,

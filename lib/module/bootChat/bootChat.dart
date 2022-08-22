@@ -8,6 +8,9 @@ import '../../Componads/my_text_form.dart';
 import '../../Model/model.dart';
 import 'package:my_task/module/cuibt/cuibt.dart';
 import 'package:my_task/module/cuibt/loginstates.dart';
+
+import '../../resorces/Photo_manger.dart';
+
 class RobotChat extends StatefulWidget {
   const RobotChat({super.key});
 
@@ -53,7 +56,7 @@ class _RobotChatState extends State<RobotChat> {
             width: Size.width,
             decoration: const BoxDecoration(
               image: DecorationImage(
-                image: AssetImage("lib/Image/chatWallpaper.jpg"),
+                image: AssetImage(PhotoManger.chatWallpaper),
                 fit: BoxFit.fill,
               ),
             ),

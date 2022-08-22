@@ -6,12 +6,13 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:my_task/Componads/mybutton.dart';
 import 'package:my_task/module/cuibt/cuibt.dart';
 import 'package:my_task/module/cuibt/loginstates.dart';
+import 'package:my_task/resorces/Photo_manger.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 import '../../Componads/my_text_form.dart';
 import '../../Model/model.dart';
 import '../../Translition/locale_kays.g.dart';
-import '../../resorces/Resorces.dart';
+import '../../resorces/colorsManger.dart';
 
 class moneyOraganize extends StatefulWidget {
   const moneyOraganize({super.key});
@@ -35,8 +36,7 @@ class _moneyOraganizeState extends State<moneyOraganize> {
       size: AdSize.fullBanner,
       request: const AdRequest(),
       listener: BannerAdListener(
-        onAdFailedToLoad: (Ad ad, LoadAdError error) {
-        },
+        onAdFailedToLoad: (Ad ad, LoadAdError error) {},
         onAdLoaded: (Ad ad) {
           setState(() {
             myBanner = ad;
@@ -54,41 +54,39 @@ class _moneyOraganizeState extends State<moneyOraganize> {
         builder: (context, state) {
           List<CategoryModel> category = [
             CategoryModel(
-              photo: "lib/Image/House.png",
+              photo: PhotoManger.houseLogo,
               title: LocaleKeys.Home.tr(),
             ),
             CategoryModel(
-              photo: "lib/Image/Teaching.png",
+              photo: PhotoManger.teachingLogo,
               title: LocaleKeys.Teaching.tr(),
             ),
             CategoryModel(
-              photo: "lib/Image/food.png",
+              photo: PhotoManger.foodLogo,
               title: LocaleKeys.food.tr(),
             ),
             CategoryModel(
-              photo: "lib/Image/Clothing-Logo-Vector.png",
+              photo: PhotoManger.clothesLogo,
               title: LocaleKeys.clothes.tr(),
             ),
             CategoryModel(
-              photo: "lib/Image/helthcare.jpg",
+              photo: PhotoManger.healthCareLogo,
               title: LocaleKeys.Healthcare.tr(),
             ),
             CategoryModel(
-              photo:
-                  "lib/Image/group-young-friends-having-fun-together-vector-26803087.jpg",
+              photo: PhotoManger.funLogo,
               title: LocaleKeys.Fun.tr(),
             ),
             CategoryModel(
-              photo:
-                  "lib/Image/travel-logo-vector-illustration-black-airplane-isolated-white-115729130.jpg",
+              photo: PhotoManger.travelLogo,
               title: LocaleKeys.Travel.tr(),
             ),
             CategoryModel(
-              photo: "lib/Image/logo-template-44-.jpg",
+              photo: PhotoManger.savingMoneyLogo,
               title: LocaleKeys.MoneySaving.tr(),
             ),
             CategoryModel(
-              photo: "lib/Image/gainMoney.webp",
+              photo: PhotoManger.gainMoneyLogo,
               title: LocaleKeys.GainedMoney.tr(),
             ),
           ];
@@ -99,54 +97,49 @@ class _moneyOraganizeState extends State<moneyOraganize> {
             condition: cuibt.salary != 0,
             builder: (context) => SafeArea(
               top: true,
-              bottom: false,
-              right: false,
-              child: SingleChildScrollView(
-                child: Container(
-                  width: size.width,
-                  height: size.height,
-                  decoration: const BoxDecoration(
-                    image: DecorationImage(
-                      image: AssetImage("lib/Image/balance.jpg"),
-                      fit: BoxFit.fill,
-                      colorFilter: ColorFilter.mode(
-                          Colors.black12, BlendMode.darken),
+              child: Container(
+                padding: EdgeInsets.zero,
+                width: size.width,
+                height: size.height,
+                decoration: const BoxDecoration(
 
-                    ),
+                  image: DecorationImage(
+                    image: AssetImage(PhotoManger.balanceWallpaper),
+                    fit: BoxFit.fill,
+                    colorFilter:
+                        ColorFilter.mode(Colors.black12, BlendMode.darken),
                   ),
-                  child: Column(
-                    children: [
-                      if (myBanner != null)
-                        SizedBox(
-                            width: size.width,
-                            height: size.height * .06,
-                            child: AdWidget(
-                              ad: myBanner,
-                            )),
-                      Flexible(
-                          child: precentgeCircular(
-                        size,
-                        precent,
-                      )),
-                      const SizedBox(height: 25),
-                      Flexible(
-                          flex: 2,
-                          child:
-                              showCategoryByGridView(context, cuibt, category,size)),
-                      const SizedBox(height: 25)
-                    ],
-                  ),
+                ),
+                child: Column(
+                  children: [
+                 if (myBanner != null)
+                      SizedBox(
+                          width: size.width,
+                          height: size.height * .06,
+                          child: AdWidget(
+                            ad: myBanner,
+                          )),
+                    Expanded(
+                      flex: 1,
+                        child: precentgeCircular(
+                      size,
+                      precent,
+                    )),
+                    Expanded(
+                      flex: 2,
+                        child: showCategoryByGridView(
+                            context, cuibt, category, size)),
+                  ],
                 ),
               ),
             ),
             fallback: (context) => Container(
               decoration: const BoxDecoration(
                 image: DecorationImage(
-                  image: AssetImage("lib/Image/balance.jpg"),
+                  image: AssetImage(PhotoManger.balanceWallpaper),
                   fit: BoxFit.fill,
-                  colorFilter: ColorFilter.mode(
-                      Colors.black12, BlendMode.darken),
-
+                  colorFilter:
+                      ColorFilter.mode(Colors.black12, BlendMode.darken),
                 ),
               ),
               child: SafeArea(
@@ -159,7 +152,7 @@ class _moneyOraganizeState extends State<moneyOraganize> {
                         width: size.width,
                         child: AdWidget(ad: myBanner),
                       ),
-                     SizedBox(
+                    SizedBox(
                       height: size.height * 0.2,
                     ),
                     Text(
@@ -171,7 +164,7 @@ class _moneyOraganizeState extends State<moneyOraganize> {
                           color: Colors.white),
                       textAlign: TextAlign.start,
                     ),
-                     SizedBox(
+                    SizedBox(
                       height: size.height * 0.07,
                     ),
                     Center(
@@ -202,21 +195,23 @@ class _moneyOraganizeState extends State<moneyOraganize> {
         });
   }
 
-  Widget showCategoryByGridView(context, layoutCuibt cuibt, Category,Size size) {
+  Widget showCategoryByGridView(
+      context, layoutCuibt cuibt, Category, Size size) {
     return GridView.count(
-      // mainAxisSpacing: 10,
-      childAspectRatio: (size.height/size.width)*.5 ,
-      shrinkWrap: true,
+      childAspectRatio: 1/1.5,
+padding:EdgeInsets.zero    ,
+crossAxisSpacing: 1,
       controller: scrollController,
-      keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.manual,
+      keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
       scrollDirection: Axis.horizontal,
       crossAxisCount: 3,
       children: List.generate(Category.length,
-          (index) => categoryAvatar(Category[index], context, cuibt,size)),
+          (index) => categoryAvatar(Category[index], context, cuibt, size)),
     );
   }
 
-  Column categoryAvatar(CategoryModel model, context, layoutCuibt cuibt,Size size) {
+  Column categoryAvatar(
+      CategoryModel model, context, layoutCuibt cuibt, Size size) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
@@ -237,7 +232,7 @@ class _moneyOraganizeState extends State<moneyOraganize> {
             showBottomSheet(context, cuibt);
           },
           child: Container(
-            width: size.width * 0.32,
+            width: size.width * 0.33,
             height: size.height * 0.17,
             decoration: BoxDecoration(
                 color: Colors.white.withOpacity(.8),
@@ -256,13 +251,13 @@ class _moneyOraganizeState extends State<moneyOraganize> {
                     backgroundImage: AssetImage(
                       model.photo!,
                     ),
-                    radius:size.height * 0.064,
+                    radius: size.height * 0.064,
                     backgroundColor: Colors.white,
                   ),
                 ),
                 Text(
                   model.title!,
-                  style: const TextStyle(fontWeight: FontWeight.bold),
+                  style: TextStyle(fontWeight: FontWeight.bold,fontStyle: FontStyle.italic,fontSize: size.height*.02,color: Colors.black),
                 )
               ],
             ),
@@ -277,19 +272,20 @@ class _moneyOraganizeState extends State<moneyOraganize> {
     double percent,
   ) {
     return CircularPercentIndicator(
-      radius: size.height * 0.29,
+
+      radius: size.height * 0.26,
       lineWidth: size.width * 0.03,
-      linearGradient:  LinearGradient(colors: [
+      linearGradient: LinearGradient(colors: [
         Colors.red,
         Colors.teal[400]!,
         Colors.green,
       ]),
       percent: percent > 1 ? 1 : percent,
       center: Text("${(percent * 100).ceil()}%",
-          style:  TextStyle(
+          style: TextStyle(
               color: Colors.white,
               fontWeight: FontWeight.bold,
-              fontSize:  size.width * 0.05)),
+              fontSize: size.width * 0.05)),
       arcBackgroundColor: Colors.white54,
       animation: true,
       addAutomaticKeepAlive: true,
@@ -390,8 +386,7 @@ class _moneyOraganizeState extends State<moneyOraganize> {
                           ],
                         ),
                         myTextForm(
-                            keyboardType:
-                            TextInputType.number,
+                            keyboardType: TextInputType.number,
                             controller: cuibt.moneyController,
                             hint: LocaleKeys.HowMuchGain.tr(),
                             validator: (value) {
@@ -460,12 +455,12 @@ class _moneyOraganizeState extends State<moneyOraganize> {
                                     hint: LocaleKeys.when.tr(),
                                     onTap: () => showDatePicker(
                                           context: context,
-                                      initialDate: DateTime.now(),
-                                      firstDate: DateTime(
-                                          DateTime.now().year,
-                                          DateTime.now().month - 2,
-                                          DateTime.now().day),
-                                      lastDate: DateTime.now(),
+                                          initialDate: DateTime.now(),
+                                          firstDate: DateTime(
+                                              DateTime.now().year,
+                                              DateTime.now().month - 2,
+                                              DateTime.now().day),
+                                          lastDate: DateTime.now(),
                                         ).then((value) {
                                           value ??= DateTime.now();
                                           cuibt.budgetDate(value);
@@ -487,8 +482,7 @@ class _moneyOraganizeState extends State<moneyOraganize> {
                           ],
                         ),
                         myTextForm(
-                            keyboardType:
-                                 TextInputType.number,
+                            keyboardType: TextInputType.number,
                             controller: cuibt.moneyController,
                             hint: category == LocaleKeys.MoneySaving.tr()
                                 ? LocaleKeys.moneySaving.tr()

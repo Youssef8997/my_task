@@ -12,7 +12,8 @@ import 'package:my_task/module/cuibt/cuibt.dart';
 import 'package:my_task/module/cuibt/loginstates.dart';
 import 'package:date_picker_timeline/date_picker_timeline.dart';
 import '../../Translition/locale_kays.g.dart';
-import '../../resorces/Resorces.dart';
+import '../../resorces/Photo_manger.dart';
+import '../../resorces/colorsManger.dart';
 import '../AddTasks/AddTasks.dart';
   bool notRepeated = true;
   bool isDaily = false;
@@ -50,11 +51,7 @@ class _HomeTasksState extends State<HomeTasks> {
       isWeekly = false;
       isMonthly = false;
       //to get data from data base when the user open to the page
-      if(layoutCuibt.get(context).datab.isOpen){
 
-        layoutCuibt.get(context).insertTaskIntoVar("Never",datab: layoutCuibt.get(context).datab);
-
-      }
     });
     super.initState();
   }
@@ -105,7 +102,7 @@ class _HomeTasksState extends State<HomeTasks> {
                 ],
               ),
             ),
-            pathImage: "lib/Image/wallpaper.jpg",
+            pathImage: PhotoManger.taskWallpaper,
             colorFilter:const  ColorFilter.mode(
                 Colors.black12, BlendMode.darken),
             size: size);
@@ -129,18 +126,30 @@ class _HomeTasksState extends State<HomeTasks> {
   }
 
   Padding cardModel(tasks, context, index, Size size) {
-    //to get the color of the task depend on the priority
     var color;
-    if (tasks["priority"] == "low") color = ColorManger.TaskLowColors;
-    if (tasks["priority"] == "medium") color = ColorManger.TaskMedColors;
-    if (tasks["priority"] == "high") color = ColorManger.taskHighColors;
 
+    //to get the color of the task depend on the priority
+    if(tasks["isDismiss"]=="false")
+    {
+      if (tasks["priority"] == "low") color = ColorManger.TaskLowColors;
+      if (tasks["priority"] == "medium") color = ColorManger.TaskMedColors;
+      if (tasks["priority"] == "high") color = ColorManger.taskHighColors;
+
+    }
+
+    if(tasks["isDismiss"]=="true")
+                {
+                  color=ColorManger.dismissedColors;
+                }
     return Padding(
       padding: const EdgeInsets.all(10.0),
       child: GestureDetector(
         //to get the task details and to edit the task on dialog
-        onTap: () => settingDialog(context, tasks, color, index),
+        onTap: () => settingDialog(context, tasks, color, index,size),
         child: Dismissible(
+          secondaryBackground: Icon(Icons.delete_sweep,size: size.height * 0.03,color: Colors.red,),
+            background:  Icon(Icons.delete_sweep,size: size.height * 0.03,color: Colors.red,),
+
             key: Key(tasks["id"].toString()),
             onDismissed: (direction) {
               //to delete the task from the database
@@ -189,6 +198,7 @@ class _HomeTasksState extends State<HomeTasks> {
                       ),
                     ],
                   ),
+                  if(tasks["isDismiss"]!="true")
                   Center(
                     child: Text(
                       "${tasks["repeat"]}",
@@ -196,6 +206,14 @@ class _HomeTasksState extends State<HomeTasks> {
                           fontSize: 20, fontWeight: FontWeight.bold),
                     ),
                   ),
+                  if(tasks["isDismiss"]=="true")
+                  const   Center(
+                      child: Text(
+                        "it's Dismiss",
+                        style:  TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.bold),
+                      ),
+                    ),
                   const SizedBox(
                     height: 6,
                   ),
@@ -362,11 +380,12 @@ class _HomeTasksState extends State<HomeTasks> {
                 ),
                 Text(
                   "${LocaleKeys.Filters.tr()},...",
-                  style: GoogleFonts.ptSerif(
+                  style: const TextStyle(
+                      fontSize: 30,
                       color: Colors.black,
-                      fontSize: 30.0,
+                      fontWeight: FontWeight.bold,
                       fontStyle: FontStyle.italic,
-                      fontWeight: FontWeight.w900),
+                  ),
                 ),
               ],
             ),
@@ -377,7 +396,7 @@ class _HomeTasksState extends State<HomeTasks> {
           padding: const EdgeInsets.only(top: 10, right: 20),
           child: myButton(
               text: Text("${LocaleKeys.AddTask.tr()}....",
-                  style: const TextStyle(color: Colors.white)),
+                  style: const TextStyle(color: Colors.white,fontSize:20,fontWeight: FontWeight.bold)),
               function: () => cuibt.onPressedAdd(context)),
         )
       ],
@@ -459,7 +478,7 @@ class _HomeTasksState extends State<HomeTasks> {
                                 fontStyle: FontStyle.italic,
                                 fontWeight: FontWeight.w900)),
                         leading: const Icon(
-                          Icons.today,
+                          Icons.add_alert_rounded,
                           size: 30,
                           color: Colors.black,
                         ),
@@ -499,7 +518,7 @@ class _HomeTasksState extends State<HomeTasks> {
                           });
                           layoutCuibt
                               .get(context)
-                              .insertTaskIntoVar("daily",datab: layoutCuibt.get(context).datab);
+                              .insertTaskIntoVar("Daily",datab: layoutCuibt.get(context).datab);
                           Navigator.pop(context);
                         }),
                     ListTile(
@@ -564,7 +583,7 @@ class _HomeTasksState extends State<HomeTasks> {
     );
   }
 
-  settingDialog(context, tasks, color, index) {
+  settingDialog(context, tasks, color, index,size) {
     return showDialog(
         context: context,
         builder: (context) {
@@ -576,7 +595,160 @@ class _HomeTasksState extends State<HomeTasks> {
               clipBehavior: Clip.antiAliasWithSaveLayer,
               backgroundColor: Colors.white.withOpacity(0),
               elevation: 0,
-              content: dialogContainer(color, tasks, context),
+              content: Container(
+                padding: const EdgeInsetsDirectional.only(start: 15, top: 5, end: 10),
+                height: 280,
+                width: 300,
+                clipBehavior: Clip.antiAlias,
+                decoration:
+                BoxDecoration(borderRadius: BorderRadius.circular(25), color: color),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SizedBox(
+                      width: size.width / 2,
+                      height: 60,
+                      child: Text(
+                        "${tasks["title"]}",
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                    SizedBox(
+                      width: size.width / 2,
+                      height: 52,
+                      child: Text(
+                        "${tasks["desc"]}",
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                            fontSize: 20,
+                            color: Colors.grey[900],
+                            fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                    if(tasks["repeat"]=="Weekly")
+                      Row(
+                        children: [
+                          const Icon(Icons.repeat, size: 20),
+                          SizedBox(
+                            width: 120,
+                            child: Text(
+                              "${tasks["repeat"]}",
+                              style: const TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                  overflow: TextOverflow.ellipsis),
+                            ),
+                          ),
+                        ],
+                      ),
+                    if(tasks["repeat"]!="Weekly")
+                    Row(
+                      children: [
+                        const Icon(Icons.event, size: 20),
+                        SizedBox(
+                          width: 120,
+                          child: Text(
+                            "${tasks["data"]}",
+                            style: const TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                                overflow: TextOverflow.ellipsis),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    Row(
+                      children: [
+                        const Icon(Icons.access_time_outlined),
+                        Text(
+                          "${tasks["time"]}",
+                          style:
+                          const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 30,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Expanded(
+                          child: myButton(
+                              text: Text(LocaleKeys.Edit.tr(),
+                                  style: GoogleFonts.ptSerif(
+                                      color: Colors.black,
+                                      fontSize: 20.0,
+                                      fontStyle: FontStyle.italic,
+                                      fontWeight: FontWeight.w900)),
+                              function: () {
+                                setState(() {
+                                  title.text = tasks["title"];
+                                  desc.text = tasks["desc"];
+                                  time.text = tasks["time"];
+                                  date.text = tasks["data"];
+                                  layoutCuibt.get(context).repeated = tasks["repeat"];
+                                  layoutCuibt.get(context).Weekday =int.parse(tasks["WeekDay"]) ;
+                                  layoutCuibt.get(context).currentStep = 2;
+                                });
+                                navigator(
+                                    context: context,
+                                    returnPage: true,
+                                    page: Tasks(id: tasks["id"]));
+                              }),
+                        ),
+                        const SizedBox(
+                          width: 10,
+                        ),
+                        if(tasks["isDismiss"]=="false")
+                          Expanded(
+                          child: myButton(
+                              text: Text(LocaleKeys.dismiss.tr(),
+                                  style: GoogleFonts.ptSerif(
+                                      color: Colors.black,
+                                      fontSize: 19.0,
+                                      fontStyle: FontStyle.italic,
+                                      fontWeight: FontWeight.w900)),
+                              function: () {
+                                  layoutCuibt.get(context).dismissNotification(tasks["id"],context,tasks["repeat"]);
+                            Navigator.pop(context);
+                              }),
+                        ),
+                        if(tasks["isDismiss"]=="true")
+                          Expanded(
+                            child: myButton(
+                                text: Text(LocaleKeys.Activation.tr(),
+                                    style: GoogleFonts.ptSerif(
+                                        color: Colors.black,
+                                        fontSize: 18.0,
+                                        fontStyle: FontStyle.italic,
+                                        fontWeight: FontWeight.bold)),
+                                function: () {
+
+                                  layoutCuibt.get(context).handleBuildNotification(
+                                    id: tasks["id"],
+                                    title: tasks["title"],
+                                    desc: tasks["desc"],
+                                    repeat: tasks["repeat"],
+                                    Time: tasks["time"],
+                                    Date: tasks["data"],
+                                  );
+                                  Navigator.pop(context);
+                                }),
+                          ),
+
+                      ],
+                    )
+                  ],
+                ),
+              )
             ),
           );
         });

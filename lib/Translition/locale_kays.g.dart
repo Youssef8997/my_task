@@ -117,6 +117,9 @@ abstract class  LocaleKeys {
   static const SavingTitle = 'SavingTitle';
   static const ReasonSaving = 'ReasonSaving';
   static const moneySaving = 'moneySaving';
+  static const Edit = 'Edit';
+  static const dismiss= 'dismiss';
+  static const Activation= 'Activation';
 
 
 }

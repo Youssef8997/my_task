@@ -6,7 +6,8 @@ import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:my_task/lib/sherdeprefrence/sherdhelp.dart';
 
 import '../../Translition/locale_kays.g.dart';
-import '../../resorces/Resorces.dart';
+import '../../resorces/Photo_manger.dart';
+import '../../resorces/colorsManger.dart';
 import '../homelayout/layout.dart';
 
 class OnBoarding extends StatefulWidget {
@@ -116,7 +117,7 @@ class _OnBoardingState extends State<OnBoarding> {
                               ),
                             ],
                             schedule: NotificationInterval(
-                              interval: 28800,
+                              interval: 25200,
                               preciseAlarm: true,
                               allowWhileIdle: true,
                               repeats: true,
@@ -180,15 +181,15 @@ class pagemodel {
 
 List<pagemodel> module = [
   pagemodel(
-      page: "lib/Image/firstindex.png",
+      page: PhotoManger.onBoarding1,
       title:LocaleKeys.onBoardingTitle1.tr(),
       body: LocaleKeys.onBoardingDec1.tr()),
   pagemodel(
-      page: "lib/Image/scond2.png",
+      page: PhotoManger.onBoarding2,
       title:LocaleKeys.onBoardingTitle2.tr(),
       body: ""),
   pagemodel(
-      page: "lib/Image/3index.jpg", title:LocaleKeys.onBoardingDec1.tr(), body: "")
+      page: PhotoManger.onBoarding3, title:LocaleKeys.onBoardingDec1.tr(), body: "")
 ];
 
 Widget page(pagemodel module, context) {
@@ -226,8 +227,8 @@ Widget page(pagemodel module, context) {
               child: Text(
                 module.title,
                 style: TextStyle(
-                  fontSize: size.height*.04,
-                  fontWeight: FontWeight.w600,
+                  fontSize: size.height*.03,
+                  fontWeight: FontWeight.bold,
                   color: Colors.grey[700]!,
                   fontStyle: FontStyle.italic,
                 ),

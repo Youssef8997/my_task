@@ -13,7 +13,7 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   MobileAds.instance.initialize();
-  ErrorWidget.builder = (FlutterErrorDetails details) {
+ ErrorWidget.builder = (FlutterErrorDetails details) {
     return Container(color: Colors.transparent,);
   };
   await EasyLocalization.ensureInitialized();
@@ -129,7 +129,7 @@ class MyApp extends StatelessWidget {
                   systemOverlayStyle: SystemUiOverlayStyle(
                       systemNavigationBarContrastEnforced: true,
                       systemStatusBarContrastEnforced: true,
-                      statusBarColor: Colors.transparent,
+                      statusBarColor: Colors.black,
                       systemNavigationBarColor: Colors.teal,
                       statusBarIconBrightness: Brightness.dark,
                       statusBarBrightness: Brightness.dark,
@@ -141,7 +141,12 @@ class MyApp extends StatelessWidget {
                       color: Colors.white,
                       fontSize: 18.0,
                       fontWeight: FontWeight.bold,
-                      fontStyle: FontStyle.italic))),
+                      fontStyle: FontStyle.italic)),
+          textTheme: Theme.of(context).textTheme.apply(
+              bodyColor: Colors.black,
+              displayColor: Colors.black,
+              fontFamily: 'PTSerif'),
+          ),
           home: SplashScreen(
               firstTime: firstTime ?? true,),
         ));

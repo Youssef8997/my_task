@@ -8,6 +8,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:my_task/module/cuibt/cuibt.dart';
 import 'package:my_task/module/cuibt/loginstates.dart';
+import 'package:my_task/resorces/Photo_manger.dart';
 import 'package:quick_actions/quick_actions.dart';
 
 import '../../Translition/locale_kays.g.dart';
@@ -129,10 +130,11 @@ if(notification.channelKey=="tasksNever"){
         listener: (context, state) {},
         builder: (context, state) {
           var cuibt = layoutCuibt.get(context);
+          Size size = MediaQuery.of(context).size;
           List<BottomNavyBarItem> navigationItem = [
             BottomNavyBarItem(
               icon: Image.asset(
-                "lib/Image/icon.jpg",
+                PhotoManger.taskLogo,
                 height: 30,
                 width: 25,
               ),
@@ -170,7 +172,19 @@ if(notification.channelKey=="tasksNever"){
             ),
             extendBodyBehindAppBar: true,
             key: cuibt.kayScaffold,
-            body: cuibt.body[cuibt.MyIndex],
+            body: SizedBox(
+              height: size.height,
+              width: size.width,
+              child: PageView(
+                pageSnapping: true,
+                controller: cuibt.pageController,
+                children: cuibt.body,
+                onPageChanged: (index) {
+setState(() {
+  cuibt.MyIndex =index;
+});                },
+              ),
+            ) ,
             bottomNavigationBar: BottomNavyBar(
                 containerHeight: 60,
                 itemCornerRadius: 25.0,
